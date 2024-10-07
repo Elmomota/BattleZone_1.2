@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { AlertController, MenuController, ToastController } from '@ionic/angular';
+import { SqliteService } from 'src/app/services/sqlite.service';  // Asegúrate de importar tu servicio de SQLite
+import * as bcrypt from 'bcryptjs';  // Para comparar las contraseñas encriptadas
 
 @Component({
   selector: 'app-login-admin',
@@ -9,21 +11,27 @@ import { AlertController, MenuController, ToastController } from '@ionic/angular
 })
 export class LoginAdminPage implements OnInit {
   
-  newNameUser:string="";
-  nameAdmin:string="Admin";
-  password:any;
-  passwordAdmin:string="123";
-  
+  correo: string = "";
+  password: string = "";
 
-  constructor( private router:Router,private alertController: AlertController, private toastController: ToastController,private menuCtrl: MenuController) { }
+  constructor(
+    private router: Router,
+    private alertController: AlertController,
+    private toastController: ToastController,
+    private menuCtrl: MenuController,
+    private sqliteService: SqliteService  // Inyectamos el servicio
+  ) { }
 
   ngOnInit() {
-    this.menuCtrl.enable(false); 
+    this.menuCtrl.enable(false);
+    this.predefinirAdmin();  // Crear el admin predefinido al iniciar la página
   }
+
   ionViewWillLeave() {
-    this.menuCtrl.enable(true); 
+    this.menuCtrl.enable(true);
   }
-    async presentAlert(titulo:string, msj:string) {
+
+  async presentAlert(titulo: string, msj: string) {
     const alert = await this.alertController.create({
       header: titulo,
       message: msj,
@@ -32,41 +40,57 @@ export class LoginAdminPage implements OnInit {
 
     await alert.present();
   }
-  async presentToast(position: 'top' | 'middle' | 'bottom') {
-    const toast = await this.toastController.create({
-      message: 'Soy un mensaje',
-      duration: 2500,
-      position: position,
-    });
 
-    await toast.present();
+  // Función para crear un admin predefinido
+  async predefinirAdmin() {
+    try {
+      const adminExistente = await this.sqliteService.getAdminByEmail('elmoadicto770@gmail.com');
+      if (!adminExistente) {
+        await this.sqliteService.addAdministrador({
+          nombre: 'elmomota',
+          correo: 'elmoadicto770@gmail.com',
+          contraseña: 'elmo2003*'  // La contraseña será encriptada en el servicio
+        });
+        console.log('Administrador predefinido creado');
+      } else {
+        console.log('Administrador predefinido ya existe');
+      }
+    } catch (error) {
+      console.error('Error al crear el administrador predefinido', error);
+    }
   }
+
+  // Función para validar el login
   async validarRegistro() {
-    if (this.newNameUser === "" || this.password === "") {
+    if (this.correo === "" || this.password === "") {
       await this.presentAlert('Campos incompletos', 'Por favor, rellena todos los campos obligatorios.');
       return;
     }
 
-    if (this.password !== this.passwordAdmin || this.newNameUser!==this.nameAdmin ) {
-      await this.presentAlert('Datos incorrectos', 'los datos ingresados son incorrectos',);
-      return;
-    }
-
-    this.irPagina();
-
-
-
-
-  }
-  irPagina(){
-    let contex:NavigationExtras={
-      state:{
-        nombreUser:this.nameAdmin
+    try {
+      const admin = await this.sqliteService.getAdminByEmail(this.correo);
+      if (admin) {
+        const passwordCorrecta = await bcrypt.compare(this.password, admin.contraseña);
+        if (passwordCorrecta) {
+          this.irPagina(admin.nombre);
+        } else {
+          await this.presentAlert('Datos incorrectos', 'La contraseña es incorrecta.');
+        }
+      } else {
+        await this.presentAlert('Datos incorrectos', 'No se encontró una cuenta con este correo.');
       }
+    } catch (error) {
+      console.error('Error en el login', error);
+      await this.presentAlert('Error', 'Ocurrió un error al intentar iniciar sesión.');
     }
-    this.router.navigate(['/cuenta-admin'],contex);
-
   }
 
-
+  irPagina(nombreAdmin: string) {
+    let contex: NavigationExtras = {
+      state: {
+        nombreUser: nombreAdmin
+      }
+    };
+    this.router.navigate(['/cuenta-admin'], contex);
+  }
 }

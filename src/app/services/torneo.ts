@@ -6,5 +6,6 @@ export class Torneo {
     numEquipos!: number;
     fechaInicio!: string;
     imagen!: string;
+    
   }
   

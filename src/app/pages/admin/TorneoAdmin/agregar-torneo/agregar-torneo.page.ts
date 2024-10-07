@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { SqliteService } from 'src/app/services/sqlite.service';
+import { Storage } from '@ionic/storage-angular';  // Importar correctamente el módulo de almacenamiento
 
 interface Torneo {
   id?: number;
@@ -28,14 +29,25 @@ export class AgregarTorneoPage {
     imagen: ''
   };
 
-  constructor(private sqliteService: SqliteService, private navCtrl: NavController) {}
+  adminId: number | null = null;
+
+  constructor(
+    private sqliteService: SqliteService, 
+    private navCtrl: NavController, 
+    private storage: Storage  // Inyectar el almacenamiento
+  ) {}
+
+  async ngOnInit() {
+    await this.storage.create();  // Inicializar el almacenamiento
+    this.adminId = await this.storage.get('adminId');  // Obtener el adminId
+  }
 
   async onFileSelected() {
     const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: false,
       resultType: CameraResultType.DataUrl,
-      source: CameraSource.Photos // Esto abre la galería del móvil
+      source: CameraSource.Photos
     });
 
     if (image && image.dataUrl) {
@@ -48,13 +60,17 @@ export class AgregarTorneoPage {
       console.warn('Debes completar todos los campos obligatorios');
       return;
     }
-  
+
+    if (this.adminId === null) {
+      console.error('Admin ID no disponible');
+      return;
+    }
+
     try {
-      await this.sqliteService.addTorneo(this.nuevoTorneo);
-      this.navCtrl.navigateBack('/cuenta-admin'); // Redirige al admin tras agregar el torneo
+      await this.sqliteService.addTorneo(this.nuevoTorneo, this.adminId);
+      this.navCtrl.navigateBack('/cuenta-admin');
     } catch (error) {
       console.error('Error al agregar el torneo:', error);
-      // Puedes mostrar un mensaje de error al usuario aquí
     }
   }
 }
