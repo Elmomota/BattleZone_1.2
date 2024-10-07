@@ -37,7 +37,7 @@ export class DetallesTorneoPage implements OnInit {
           this.torneo = JSON.parse(params['torneo']);
         } catch (error) {
           console.error('Error al parsear el torneo:', error);
-          this.router.navigate(['/admin']);
+          this.router.navigate(['/cuenta-admin']);
         }
       }
     });
@@ -77,7 +77,7 @@ export class DetallesTorneoPage implements OnInit {
                   buttons: ['OK']
                 });
                 await successAlert.present();
-                this.router.navigate(['/admin']);
+                this.router.navigate(['/cuenta-admin']);
               } catch (error) {
                 console.error('Error al eliminar el torneo:', error);
                 const errorAlert = await this.alertController.create({

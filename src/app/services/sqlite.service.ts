@@ -61,6 +61,7 @@ export class SqliteService {
     if (this.dbInstance) {
       const sql = `UPDATE torneos SET nombre = ?, juego = ?, estado = ?, numEquipos = ?, fechaInicio = ?, imagen = ? WHERE id = ?`;
       const values = [torneo.nombre, torneo.juego, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, torneo.id];
+      this.torneoService.notificarTorneoActualizado();
       await this.dbInstance.executeSql(sql, values);
     } else {
       throw new Error('Database is not initialized');

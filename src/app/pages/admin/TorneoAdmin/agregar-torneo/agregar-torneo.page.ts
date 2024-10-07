@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { SqliteService } from 'src/app/services/sqlite.service';
 
 interface Torneo {
@@ -29,14 +30,16 @@ export class AgregarTorneoPage {
 
   constructor(private sqliteService: SqliteService, private navCtrl: NavController) {}
 
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.nuevoTorneo.imagen = reader.result as string;
-      };
-      reader.readAsDataURL(file);
+  async onFileSelected() {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.DataUrl,
+      source: CameraSource.Photos // Esto abre la galería del móvil
+    });
+
+    if (image && image.dataUrl) {
+      this.nuevoTorneo.imagen = image.dataUrl;
     }
   }
 
@@ -48,7 +51,7 @@ export class AgregarTorneoPage {
   
     try {
       await this.sqliteService.addTorneo(this.nuevoTorneo);
-      this.navCtrl.navigateBack('/admin'); // Redirige al admin tras agregar el torneo
+      this.navCtrl.navigateBack('/cuenta-admin'); // Redirige al admin tras agregar el torneo
     } catch (error) {
       console.error('Error al agregar el torneo:', error);
       // Puedes mostrar un mensaje de error al usuario aquí

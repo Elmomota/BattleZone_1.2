@@ -24,7 +24,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/admin/TorneoAdmin/modificar-torneo/modificar-torneo.module').then( m => m.ModificarTorneoPageModule)
   },
   {
-    path: 'detalles-torneo',
+    path: 'detalles-torneo/:id',
     loadChildren: () => import('./pages/admin/TorneoAdmin/detalles-torneo/detalles-torneo.module').then( m => m.DetallesTorneoPageModule)
   },
   {
