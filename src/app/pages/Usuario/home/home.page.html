@@ -1,0 +1,100 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+   
+    
+    <ion-avatar slot="end" (click)="Ircuenta()">
+      <img src="assets/icon/user-circle-svgrepo-com.png" alt="Avatar">
+    </ion-avatar>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <br>
+  <ion-title class="titulo-bienvenida">Bienvenido de vuelta</ion-title>
+  <div class="usuario-nombre">{{user}}</div>
+
+  <section class="categories-section">
+    <ion-list-header>
+      <ion-label><h6>Categorias</h6></ion-label>
+    </ion-list-header>
+    <ion-chip color="purpuraclaro">Accion</ion-chip>
+    <ion-chip color="purpuraclaro">Shooter</ion-chip>
+    <ion-chip color="purpuraclaro">MOBA</ion-chip>
+  </section>
+
+
+  <section class="trending-games-section">
+    <ion-list-header>
+      <ion-label><h5>Torneos</h5></ion-label>
+      <ion-button fill="clear" size="small" (click)="torneos()">Ver más</ion-button>
+    </ion-list-header>
+
+    <div class="horizontal-scroll">
+      <div class="game-item" (click)="Valorant()">
+        <img src="assets/img/valorant.jpg" alt="valorant" />
+      </div>
+
+      <div class="game-item" (click)="Fortnite()">
+        <img src="assets/img/fornite.jpg" alt="Fortnite" />
+      </div>
+
+      <div class="game-item" (click)="LOL()">
+        <img src="assets/img/lol2.jpg" alt="lol" />
+      </div>
+
+      <div class="game-item" (click)="Sf()">
+        <img src="assets/img/Street-Fighter-6.jpg" alt="Street-Fighter-6" />
+      </div>
+
+    </div>
+  </section>
+
+  <section class="news-section">
+    <ion-list-header>
+      <ion-label><h5>Noticias Gamers</h5></ion-label>
+      <ion-button fill="clear" size="small" (click)="newGames()">Ver más</ion-button>
+    </ion-list-header>
+  
+    <div class="news-item" (click)="newGamesinfo()">
+      <img src="assets/img/noticias/Black_Myth_Wukong.jpg" alt="Black Myth Wukong" />
+      <div class="news-content">
+        <h6>Black Myth Wukong: Nuevo avance muestra gameplay impresionante</h6>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel elit ac lorem pulvinar sagittis.</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <img src="assets/img/noticias/gta6.jpg" alt="GTA 6" />
+      <div class="news-content">
+        <h6>GTA 6: Filtraciones revelan detalles del próximo título de Rockstar</h6>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel elit ac lorem pulvinar sagittis.</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <img src="assets/img/noticias/liesOfP.jpg" alt="Lies of P" />
+      <div class="news-content">
+        <h6>Lies of P: Nuevo tráiler revela más sobre la historia del juego</h6>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel elit ac lorem pulvinar sagittis.</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <img src="assets/img/noticias/another_game.jpg" alt="Another Game" />
+      <div class="news-content">
+        <h6>Another Game: Primeras impresiones y detalles revelados</h6>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel elit ac lorem pulvinar sagittis.</p>
+      </div>
+    </div>
+    <div class="news-item">
+      <img src="assets/img/noticias/yet_another_game.jpg" alt="Yet Another Game" />
+      <div class="news-content">
+        <h6>Yet Another Game: Todo lo que necesitas saber sobre el nuevo lanzamiento</h6>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vel elit ac lorem pulvinar sagittis.</p>
+      </div>
+    </div>
+  </section>
+  
+
+<ion-footer>
+
+</ion-footer>

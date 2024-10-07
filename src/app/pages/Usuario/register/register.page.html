@@ -1,0 +1,27 @@
+
+
+<ion-content [fullscreen]="true">
+  <br>
+  <ion-title><h3>Registrate</h3></ion-title>
+  <br>
+  <ion-item>
+    <ion-input type="email" label="Correo electonico" labelPlacement="floating" placeholder="Ingresa tu Correo electronico" [(ngModel)]="correoEle"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input label="Nombre de Usuario"  labelPlacement="floating" placeholder="Ingresa un nombre de usuario" [(ngModel)]="newNameUser"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input type="password" label="Contraseña" value="NeverGonnaGiveYouUp" labelPlacement="floating" placeholder="Ingresa una contraseña" [(ngModel)]="newPassword"><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-input type="password" label=" Confirma la Contraseña" value="NeverGonnaGiveYouUp" labelPlacement="floating" placeholder="Confirma la contraseña" [(ngModel)]="confiPassword"><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
+  </ion-item>
+  <ion-button color="azulelectrico" (click)="validarRegistro()">Registrarse</ion-button>
+  <div class="separator"></div> <!-- Línea de separación -->
+  <p color="blancohielo">¿Ya tienes una cuenta? 
+    <a href="/login">Inicia sesión</a>
+  </p>
+
+ 
+
+</ion-content>
