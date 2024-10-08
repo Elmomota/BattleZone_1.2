@@ -1,3 +1,4 @@
+
 export class Administracion {
     id?: number;  // El id puede ser opcional
     nombre!: string;

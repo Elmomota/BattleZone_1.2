@@ -21,6 +21,7 @@ interface Torneo {
   styleUrls: ['./modificar-torneo.page.scss'],
 })
 export class ModificarTorneoPage implements OnInit {
+  nuevoTorneo: any = {};
   torneo?: Torneo;
   selectedFile?: File;
   previewImage?: string;

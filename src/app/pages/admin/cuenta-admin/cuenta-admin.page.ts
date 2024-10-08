@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service';
 import { TorneoService } from 'src/app/services/torneo-service.service';
-import { Torneo } from 'src/app/services/torneo'; // Ruta correcta hacia la clase Torneo
+import { Torneo } from 'src/app/services/torneo';
 
 @Component({
   selector: 'app-cuenta-admin',
@@ -47,7 +47,6 @@ export class CuentaAdminPage implements OnInit {
       this.torneos = await this.sqliteService.getTorneos();
     } catch (error) {
       console.error('Error loading torneos', error);
-      // Opcional: mostrar un mensaje de error al usuario
     } finally {
       this.loading = false; // Finalizar el estado de carga
     }
@@ -62,7 +61,6 @@ export class CuentaAdminPage implements OnInit {
       });
     } else {
       console.warn('Torneo no válido', torneo);
-      // Opcional: Notificar al usuario que el torneo no es válido
     }
   }
 

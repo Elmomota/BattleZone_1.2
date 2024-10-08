@@ -10,7 +10,7 @@ import * as bcrypt from 'bcryptjs';  // Para comparar las contraseñas encriptad
   styleUrls: ['./login-admin.page.scss'],
 })
 export class LoginAdminPage implements OnInit {
-  
+  newNameUser: string = '';
   correo: string = "";
   password: string = "";
 

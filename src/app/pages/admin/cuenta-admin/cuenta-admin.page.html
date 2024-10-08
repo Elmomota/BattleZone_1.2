@@ -10,6 +10,7 @@
     </ion-avatar>
   </ion-toolbar>
 </ion-header>
+<h2>Bienvenido, {{ adminUser }}</h2>
 
 <ion-content [fullscreen]="true">
   <ion-spinner *ngIf="loading" class="loading-spinner"></ion-spinner> <!-- Indicador de carga -->
@@ -20,6 +21,7 @@
         <ion-card *ngFor="let torneo of torneos" (click)="verDetallesTorneo(torneo)" class="torneo-card">
           <ion-card-header>
             <ion-card-title>{{torneo.nombre}}</ion-card-title>
+            <ion-card-subtitle><strong>Creado por:</strong> {{torneo.creadorNombre}}</ion-card-subtitle> <!-- Mostrar el creador aquí -->
           </ion-card-header>
           <ion-card-content>
             <ion-item>
@@ -36,6 +38,7 @@
           </ion-card-content>
         </ion-card>
       </ion-list>
+      
       
       <ng-template #noTorneos>
         <ion-item>

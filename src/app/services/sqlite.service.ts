@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { Torneo } from './torneo';
@@ -13,7 +14,7 @@ export class SqliteService {
   private dbInstance: SQLiteObject | null = null;
 
   constructor(private sqlite: SQLite, private torneoService: TorneoService) {}
-
+//====================================================CREACION DE TABLAS====================================================
   async initDB() {
     try {
       this.dbInstance = await this.sqlite.create({
@@ -50,6 +51,11 @@ export class SqliteService {
       console.error('Error creating database', error);
     }
   }
+  //====================================================FIN DE CERACION DE TABLAS====================================================
+
+
+
+  //====================================================INICIO DE ADMINISTRACION====================================================
 
   async addAdministrador(admin: Administracion): Promise<number> {
     const salt = await bcrypt.genSalt(10);
@@ -96,16 +102,25 @@ export class SqliteService {
 
   async getTorneos(): Promise<Torneo[]> {
     if (this.dbInstance) {
-      const res = await this.dbInstance.executeSql(`SELECT * FROM torneos`, []);
+      const res = await this.dbInstance.executeSql(`
+        SELECT t.*, a.nombre AS creadorNombre 
+        FROM torneos t 
+        JOIN administradores a ON t.creadorId = a.id
+      `, []);
       const torneos: Torneo[] = [];
       for (let i = 0; i < res.rows.length; i++) {
-        torneos.push(res.rows.item(i));
+        const torneo = res.rows.item(i);
+        torneos.push({
+          ...torneo,
+          creadorNombre: torneo.creadorNombre, // Asignar el nombre del creador
+        });
       }
       return torneos;
     } else {
       throw new Error('Database is not initialized');
     }
   }
+  
 
   async actualizarTorneo(torneo: Torneo): Promise<void> {
     if (this.dbInstance) {
@@ -128,3 +143,4 @@ export class SqliteService {
     }
   }
 }
+//====================================================FIN DE ADMINISTRACION====================================================

@@ -1,3 +1,4 @@
+
 export class Torneo {
     id?: number;  // El id puede ser opcional, ya que al crear un nuevo torneo no tendrá un id
     nombre!: string;
@@ -6,6 +7,7 @@ export class Torneo {
     numEquipos!: number;
     fechaInicio!: string;
     imagen!: string;
+    creadorNombre?: string;
     
   }
   
