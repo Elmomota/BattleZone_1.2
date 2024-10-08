@@ -1,7 +1,8 @@
 
-export class Administracion {
-    id?: number;  // El id puede ser opcional
+  export class Administracion {
+    id?: number;
     nombre!: string;
     correo!: string;
-    contraseña!: string;  // Asegúrate de encriptar la contraseña
+    contrasena!: string;  // Sin tilde
   }
+  

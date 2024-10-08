@@ -40,9 +40,11 @@ export class SqliteService {
           id INTEGER PRIMARY KEY,
           nombre TEXT,
           correo TEXT,
-          contraseña TEXT
+          contrasena TEXT  
         )
       `, []);
+      
+      // Inserción de administrador predeterminado con nombre de columna corregido
       await this.dbInstance.executeSql(`
         INSERT OR IGNORE INTO administradores (nombre, correo, contrasena)
         VALUES ('elmomota', 'elmoadicto770@gmail.com', 'elmo2003*')
@@ -57,11 +59,16 @@ export class SqliteService {
 
   async addAdministrador(admin: Administracion): Promise<number> {
     if (this.dbInstance) {
-      const sql = `INSERT INTO administradores (nombre, correo, contraseña) VALUES (?, ?, ?)`;
-      const values = [admin.nombre, admin.correo, admin.contraseña];
-      const res = await this.dbInstance.executeSql(sql, values);
-      console.log('Administrador añadido con ID:', res.insertId);
-      return res.insertId;
+      const sql = `INSERT INTO administradores (nombre, correo, contrasena) VALUES (?, ?, ?)`; // Corregido "contraseña" a "contrasena"
+      const values = [admin.nombre, admin.correo, admin.contrasena];
+      try {
+        const res = await this.dbInstance.executeSql(sql, values);
+        console.log('Administrador añadido con ID:', res.insertId);
+        return res.insertId;
+      } catch (error) {
+        console.error('Error añadiendo administrador:', error);
+        throw error;
+      }
     } else {
       throw new Error('Database is not initialized');
     }
@@ -70,62 +77,72 @@ export class SqliteService {
   async getAdminByEmail(correo: string): Promise<Administracion | null> {
     if (this.dbInstance) {
       console.log('Buscando administrador con correo:', correo);
-      
-      const res = await this.dbInstance.executeSql(`SELECT * FROM administradores WHERE correo = ?`, [correo]);
-      console.log('Resultados obtenidos:', res.rows.length);  // Verificar cuántos resultados devuelve la consulta
-      
-      if (res.rows.length > 0) {
-        const admin = res.rows.item(0);
-        console.log('Administrador encontrado:', admin);  // Imprimir los datos del administrador encontrado
-        return {
-          id: admin.id,
-          nombre: admin.nombre,
-          correo: admin.correo,
-          contraseña: admin.contraseña
-        };
-      } else {
-        console.log('No se encontró un administrador con ese correo');
-        return null;
+      try {
+        const res = await this.dbInstance.executeSql(`SELECT * FROM administradores WHERE correo = ?`, [correo]);
+        console.log('Resultados obtenidos:', res.rows.length);
+        
+        if (res.rows.length > 0) {
+          const admin = res.rows.item(0);
+          console.log('Administrador encontrado:', admin);
+          return {
+            id: admin.id,
+            nombre: admin.nombre,
+            correo: admin.correo,
+            contrasena: admin.contrasena  // Sin tilde
+          };
+        } else {
+          console.log('No se encontró un administrador con ese correo');
+          return null;
+        }
+      } catch (error) {
+        console.error('Error al buscar administrador por correo:', error);
+        throw error;
       }
     } else {
       throw new Error('Database is not initialized');
     }
   }
-  
-  
+
   async getAdminByName(nombre: string): Promise<Administracion | null> {
     if (this.dbInstance) {
       console.log('Buscando administrador con nombre:', nombre);
-      
-      const res = await this.dbInstance.executeSql(`SELECT * FROM administradores WHERE nombre = ?`, [nombre]);
-      console.log('Resultados obtenidos:', res.rows.length);  // Verificar cuántos resultados devuelve la consulta
-      
-      if (res.rows.length > 0) {
-        const admin = res.rows.item(0);
-        console.log('Administrador encontrado:', admin);  // Imprimir los datos del administrador encontrado
-        return {
-          id: admin.id,
-          nombre: admin.nombre,
-          correo: admin.correo,
-          contraseña: admin.contraseña
-        };
-      } else {
-        console.log('No se encontró un administrador con ese nombre');
-        return null;
+      try {
+        const res = await this.dbInstance.executeSql(`SELECT * FROM administradores WHERE nombre = ?`, [nombre]);
+        console.log('Resultados obtenidos:', res.rows.length);
+        
+        if (res.rows.length > 0) {
+          const admin = res.rows.item(0);
+          console.log('Administrador encontrado:', admin);
+          return {
+            id: admin.id,
+            nombre: admin.nombre,
+            correo: admin.correo,
+            contrasena: admin.contrasena  // Sin tilde
+          };
+        } else {
+          console.log('No se encontró un administrador con ese nombre');
+          return null;
+        }
+      } catch (error) {
+        console.error('Error al buscar administrador por nombre:', error);
+        throw error;
       }
     } else {
       throw new Error('Database is not initialized');
     }
   }
-  
-  
 
   async addTorneo(torneo: Torneo, adminId: number) {
     if (this.dbInstance) {
       const sql = `INSERT INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
       const values = [torneo.nombre, torneo.juego, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, adminId];
-      await this.dbInstance.executeSql(sql, values);
-      await this.torneoService.notificarTorneoAgregado();
+      try {
+        await this.dbInstance.executeSql(sql, values);
+        await this.torneoService.notificarTorneoAgregado();
+      } catch (error) {
+        console.error('Error al añadir torneo:', error);
+        throw error;
+      }
     } else {
       throw new Error('Database is not initialized');
     }
@@ -133,20 +150,25 @@ export class SqliteService {
 
   async getTorneos(): Promise<Torneo[]> {
     if (this.dbInstance) {
-      const res = await this.dbInstance.executeSql(`
-        SELECT t.*, a.nombre AS creadorNombre 
-        FROM torneos t 
-        JOIN administradores a ON t.creadorId = a.id
-      `, []);
-      const torneos: Torneo[] = [];
-      for (let i = 0; i < res.rows.length; i++) {
-        const torneo = res.rows.item(i);
-        torneos.push({
-          ...torneo,
-          creadorNombre: torneo.creadorNombre,
-        });
+      try {
+        const res = await this.dbInstance.executeSql(`
+          SELECT t.*, a.nombre AS creadorNombre 
+          FROM torneos t 
+          JOIN administradores a ON t.creadorId = a.id
+        `, []);
+        const torneos: Torneo[] = [];
+        for (let i = 0; i < res.rows.length; i++) {
+          const torneo = res.rows.item(i);
+          torneos.push({
+            ...torneo,
+            creadorNombre: torneo.creadorNombre,
+          });
+        }
+        return torneos;
+      } catch (error) {
+        console.error('Error al obtener torneos:', error);
+        throw error;
       }
-      return torneos;
     } else {
       throw new Error('Database is not initialized');
     }
@@ -156,8 +178,13 @@ export class SqliteService {
     if (this.dbInstance) {
       const sql = `UPDATE torneos SET nombre = ?, juego = ?, estado = ?, numEquipos = ?, fechaInicio = ?, imagen = ? WHERE id = ?`;
       const values = [torneo.nombre, torneo.juego, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, torneo.id];
-      await this.dbInstance.executeSql(sql, values);
-      await this.torneoService.notificarTorneoActualizado();
+      try {
+        await this.dbInstance.executeSql(sql, values);
+        await this.torneoService.notificarTorneoActualizado();
+      } catch (error) {
+        console.error('Error al actualizar torneo:', error);
+        throw error;
+      }
     } else {
       throw new Error('Database is not initialized');
     }
@@ -166,8 +193,13 @@ export class SqliteService {
   async eliminarTorneo(id: number): Promise<void> {
     if (this.dbInstance) {
       const sql = `DELETE FROM torneos WHERE id = ?`;
-      await this.dbInstance.executeSql(sql, [id]);
-      await this.torneoService.notificarTorneoEliminado();
+      try {
+        await this.dbInstance.executeSql(sql, [id]);
+        await this.torneoService.notificarTorneoEliminado();
+      } catch (error) {
+        console.error('Error al eliminar torneo:', error);
+        throw error;
+      }
     } else {
       throw new Error('Database is not initialized');
     }
