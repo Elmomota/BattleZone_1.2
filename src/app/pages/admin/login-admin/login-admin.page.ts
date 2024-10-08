@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationExtras, Router } from '@angular/router';
 import { AlertController, MenuController, ToastController } from '@ionic/angular';
-import { SqliteService } from 'src/app/services/sqlite.service';  // Asegúrate de importar tu servicio de SQLite
-import * as bcrypt from 'bcryptjs';  // Para comparar las contraseñas encriptadas
+import { SqliteService } from 'src/app/services/sqlite.service';
 
 @Component({
   selector: 'app-login-admin',
@@ -10,8 +9,7 @@ import * as bcrypt from 'bcryptjs';  // Para comparar las contraseñas encriptad
   styleUrls: ['./login-admin.page.scss'],
 })
 export class LoginAdminPage implements OnInit {
-  newNameUser: string = '';
-  correo: string = "";
+  correoONombre: string = "";  
   password: string = "";
 
   constructor(
@@ -19,12 +17,12 @@ export class LoginAdminPage implements OnInit {
     private alertController: AlertController,
     private toastController: ToastController,
     private menuCtrl: MenuController,
-    private sqliteService: SqliteService  // Inyectamos el servicio
+    private sqliteService: SqliteService
   ) { }
 
   ngOnInit() {
     this.menuCtrl.enable(false);
-    this.predefinirAdmin();  // Crear el admin predefinido al iniciar la página
+    this.sqliteService.initDB();
   }
 
   ionViewWillLeave() {
@@ -37,51 +35,42 @@ export class LoginAdminPage implements OnInit {
       message: msj,
       buttons: ['OK'],
     });
-
     await alert.present();
   }
 
-  // Función para crear un admin predefinido
-  async predefinirAdmin() {
-    try {
-      const adminExistente = await this.sqliteService.getAdminByEmail('elmoadicto770@gmail.com');
-      if (!adminExistente) {
-        await this.sqliteService.addAdministrador({
-          nombre: 'elmomota',
-          correo: 'elmoadicto770@gmail.com',
-          contraseña: 'elmo2003*'  // La contraseña será encriptada en el servicio
-        });
-        console.log('Administrador predefinido creado');
-      } else {
-        console.log('Administrador predefinido ya existe');
-      }
-    } catch (error) {
-      console.error('Error al crear el administrador predefinido', error);
-    }
-  }
-
-  // Función para validar el login
-  async validarRegistro() {
-    if (this.correo === "" || this.password === "") {
-      await this.presentAlert('Campos incompletos', 'Por favor, rellena todos los campos obligatorios.');
+  // Cambio de nombre de la función de validación
+  async validacionLogin() {
+    console.log('Datos ingresados:', this.correoONombre, this.password);
+    if (this.correoONombre === "" || this.password === "") {
+      await this.presentAlert('Error', 'Por favor, completa todos los campos');
       return;
     }
 
     try {
-      const admin = await this.sqliteService.getAdminByEmail(this.correo);
+      let admin = null;
+      // Verificar si es un correo o nombre
+      if (this.correoONombre.includes('@')) {
+        admin = await this.sqliteService.getAdminByEmail(this.correoONombre);
+      } else {
+        admin = await this.sqliteService.getAdminByName(this.correoONombre);
+      }
+
+      // Si se encontró un administrador, procedemos a comparar las contraseñas
       if (admin) {
-        const passwordCorrecta = await bcrypt.compare(this.password, admin.contraseña);
-        if (passwordCorrecta) {
-          this.irPagina(admin.nombre);
+        console.log('Contraseña almacenada:', admin.contraseña);
+        console.log('Contraseña ingresada:', this.password);
+
+        if (admin.contraseña === this.password) {
+          this.irPagina(admin.nombre); // Navegamos a la siguiente página si coincide
         } else {
-          await this.presentAlert('Datos incorrectos', 'La contraseña es incorrecta.');
+          await this.presentAlert('Error', 'Nombre de usuario/correo o contraseña incorrectos');
         }
       } else {
-        await this.presentAlert('Datos incorrectos', 'No se encontró una cuenta con este correo.');
+        await this.presentAlert('Error', 'Nombre de usuario/correo o contraseña incorrectos');
       }
     } catch (error) {
-      console.error('Error en el login', error);
-      await this.presentAlert('Error', 'Ocurrió un error al intentar iniciar sesión.');
+      console.error('Error al validar el login', error);
+      await this.presentAlert('Error', 'Ocurrió un error al validar el login');
     }
   }
 

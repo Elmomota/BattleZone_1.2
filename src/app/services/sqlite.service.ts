@@ -1,11 +1,8 @@
-
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { Torneo } from './torneo';
 import { Administracion } from './administracion';
 import { TorneoService } from './torneo-service.service';
-import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +11,7 @@ export class SqliteService {
   private dbInstance: SQLiteObject | null = null;
 
   constructor(private sqlite: SQLite, private torneoService: TorneoService) {}
-//====================================================CREACION DE TABLAS====================================================
+
   async initDB() {
     try {
       this.dbInstance = await this.sqlite.create({
@@ -22,7 +19,6 @@ export class SqliteService {
         location: 'default'
       });
 
-      // Habilitar claves foráneas
       await this.dbInstance.executeSql('PRAGMA foreign_keys = ON;', []);
 
       await this.dbInstance.executeSql(`
@@ -47,34 +43,40 @@ export class SqliteService {
           contraseña TEXT
         )
       `, []);
+      await this.dbInstance.executeSql(`
+        INSERT OR IGNORE INTO administradores (nombre, correo, contrasena)
+        VALUES ('elmomota', 'elmoadicto770@gmail.com', 'elmo2003*')
+      `, []);
+    
+      console.log('Base de datos y tablas creadas correctamente');
+
     } catch (error) {
-      console.error('Error creating database', error);
+      console.error('Error creando la base de datos:', error);
     }
   }
-  //====================================================FIN DE CERACION DE TABLAS====================================================
-
-
-
-  //====================================================INICIO DE ADMINISTRACION====================================================
 
   async addAdministrador(admin: Administracion): Promise<number> {
-    const salt = await bcrypt.genSalt(10);
-    admin.contraseña = await bcrypt.hash(admin.contraseña, salt);
-    
     if (this.dbInstance) {
       const sql = `INSERT INTO administradores (nombre, correo, contraseña) VALUES (?, ?, ?)`;
       const values = [admin.nombre, admin.correo, admin.contraseña];
       const res = await this.dbInstance.executeSql(sql, values);
-      return res.insertId;  // Retorna el id del administrador recién creado
+      console.log('Administrador añadido con ID:', res.insertId);
+      return res.insertId;
     } else {
       throw new Error('Database is not initialized');
     }
   }
+
   async getAdminByEmail(correo: string): Promise<Administracion | null> {
     if (this.dbInstance) {
+      console.log('Buscando administrador con correo:', correo);
+      
       const res = await this.dbInstance.executeSql(`SELECT * FROM administradores WHERE correo = ?`, [correo]);
+      console.log('Resultados obtenidos:', res.rows.length);  // Verificar cuántos resultados devuelve la consulta
+      
       if (res.rows.length > 0) {
         const admin = res.rows.item(0);
+        console.log('Administrador encontrado:', admin);  // Imprimir los datos del administrador encontrado
         return {
           id: admin.id,
           nombre: admin.nombre,
@@ -82,19 +84,48 @@ export class SqliteService {
           contraseña: admin.contraseña
         };
       } else {
-        return null;  // No se encontró un administrador con ese correo
+        console.log('No se encontró un administrador con ese correo');
+        return null;
       }
     } else {
       throw new Error('Database is not initialized');
     }
   }
+  
+  
+  async getAdminByName(nombre: string): Promise<Administracion | null> {
+    if (this.dbInstance) {
+      console.log('Buscando administrador con nombre:', nombre);
+      
+      const res = await this.dbInstance.executeSql(`SELECT * FROM administradores WHERE nombre = ?`, [nombre]);
+      console.log('Resultados obtenidos:', res.rows.length);  // Verificar cuántos resultados devuelve la consulta
+      
+      if (res.rows.length > 0) {
+        const admin = res.rows.item(0);
+        console.log('Administrador encontrado:', admin);  // Imprimir los datos del administrador encontrado
+        return {
+          id: admin.id,
+          nombre: admin.nombre,
+          correo: admin.correo,
+          contraseña: admin.contraseña
+        };
+      } else {
+        console.log('No se encontró un administrador con ese nombre');
+        return null;
+      }
+    } else {
+      throw new Error('Database is not initialized');
+    }
+  }
+  
+  
 
   async addTorneo(torneo: Torneo, adminId: number) {
     if (this.dbInstance) {
       const sql = `INSERT INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
       const values = [torneo.nombre, torneo.juego, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, adminId];
       await this.dbInstance.executeSql(sql, values);
-      await this.torneoService.notificarTorneoAgregado();  // Esperar la notificación
+      await this.torneoService.notificarTorneoAgregado();
     } else {
       throw new Error('Database is not initialized');
     }
@@ -112,7 +143,7 @@ export class SqliteService {
         const torneo = res.rows.item(i);
         torneos.push({
           ...torneo,
-          creadorNombre: torneo.creadorNombre, // Asignar el nombre del creador
+          creadorNombre: torneo.creadorNombre,
         });
       }
       return torneos;
@@ -120,7 +151,6 @@ export class SqliteService {
       throw new Error('Database is not initialized');
     }
   }
-  
 
   async actualizarTorneo(torneo: Torneo): Promise<void> {
     if (this.dbInstance) {
@@ -143,4 +173,3 @@ export class SqliteService {
     }
   }
 }
-//====================================================FIN DE ADMINISTRACION====================================================
