@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from '@ionic/angular';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { SqliteService } from 'src/app/services/sqlite.service';
-import { Storage } from '@ionic/storage-angular';  // Importar correctamente el módulo de almacenamiento
+import { Storage } from '@ionic/storage-angular';
 
 interface Torneo {
   id?: number;
@@ -34,12 +34,13 @@ export class AgregarTorneoPage {
   constructor(
     private sqliteService: SqliteService, 
     private navCtrl: NavController, 
-    private storage: Storage  // Inyectar el almacenamiento
+    private storage: Storage
   ) {}
 
   async ngOnInit() {
     await this.storage.create();  // Inicializar el almacenamiento
     this.adminId = await this.storage.get('adminId');  // Obtener el adminId
+    console.log('Admin ID obtenido:', this.adminId);  // Comprobar si el adminId se está obteniendo
   }
 
   async onFileSelected() {
@@ -52,6 +53,7 @@ export class AgregarTorneoPage {
 
     if (image && image.dataUrl) {
       this.nuevoTorneo.imagen = image.dataUrl;
+      console.log('Imagen seleccionada:', this.nuevoTorneo.imagen);  // Verificar la imagen seleccionada
     }
   }
 
@@ -67,6 +69,7 @@ export class AgregarTorneoPage {
     }
 
     try {
+      console.log('Datos del torneo a agregar:', this.nuevoTorneo);  // Comprobar los datos del torneo antes de enviarlos
       await this.sqliteService.addTorneo(this.nuevoTorneo, this.adminId);
       this.navCtrl.navigateBack('/cuenta-admin');
     } catch (error) {

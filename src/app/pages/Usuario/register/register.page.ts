@@ -77,6 +77,9 @@ export class RegisterPage implements OnInit {
     this.router.navigate(['/home'],contex);
 
   }
+  irLogin(){
+    this.router.navigate(['/login'])
+  }
 
 
 }

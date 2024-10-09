@@ -74,7 +74,10 @@ export class LoginPage implements OnInit {
     this.presentToast('bottom');
     this.router.navigate(['/home'],navigationextras);
   }
-
+  irRegister(){
+    this.router.navigate(['/register']);
+  }
 
 }
+
 

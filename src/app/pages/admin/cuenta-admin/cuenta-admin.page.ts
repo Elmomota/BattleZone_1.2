@@ -13,6 +13,8 @@ import { Torneo } from 'src/app/services/torneo';
 export class CuentaAdminPage implements OnInit {
   adminUser: string = '';
   torneos: Torneo[] = [];
+  filteredTorneos: Torneo[] = [];  // Lista filtrada
+  searchTerm: string = '';  // Valor del término de búsqueda
   loading: boolean = true;
 
   constructor(
@@ -32,6 +34,7 @@ export class CuentaAdminPage implements OnInit {
   async ngOnInit() {
     await this.loadTorneos();
 
+    // Suscribirse a eventos de torneos añadidos o eliminados
     this.torneoService.torneoAgregado$.subscribe(() => {
       this.loadTorneos();
     });
@@ -45,6 +48,7 @@ export class CuentaAdminPage implements OnInit {
     try {
       this.sqliteService.fetchTorneos().subscribe(torneos => {
         this.torneos = torneos;
+        this.filteredTorneos = torneos;  // Inicialmente mostrar todos los torneos
         this.loading = false;
       });
     } catch (error) {
@@ -66,6 +70,14 @@ export class CuentaAdminPage implements OnInit {
   }
 
   addTorneo() {
-    this.router.navigate(['/agregar-torneo']);
+    this.router.navigate(['/nuevo-torneo']);
+  }
+
+  // Función de búsqueda
+  buscarTorneos() {
+    const term = this.searchTerm.toLowerCase();
+    this.filteredTorneos = this.torneos.filter(torneo => 
+      torneo.nombre.toLowerCase().includes(term)
+    );
   }
 }

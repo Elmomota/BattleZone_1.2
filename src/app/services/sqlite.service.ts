@@ -68,7 +68,6 @@ export class SqliteService {
       }
     });
   }
-
   async crearTablas() {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos no está lista.');
@@ -77,20 +76,28 @@ export class SqliteService {
   
     try {
       // Eliminar tablas si existen (para evitar errores de estructura)
-     
-      await this.dbInstance.executeSql(`DROP TABLE IF EXISTS administradores`, []);
-      
-      await this.dbInstance.executeSql(`
-        CREATE TABLE IF NOT EXISTS administradores (
+      await this.dbInstance.executeSql('DROP TABLE IF EXISTS torneos', []);
+      await this.dbInstance.executeSql('DROP TABLE IF EXISTS administradores', []);
+  
+      // Crear tabla administradores
+      await this.dbInstance.executeSql(
+        `CREATE TABLE IF NOT EXISTS administradores (
           id INTEGER PRIMARY KEY,
           nombre TEXT,
           correo TEXT,
           contrasena TEXT
-        )
-      `, []);
+        )`, []
+      );
   
-      await this.dbInstance.executeSql(`
-        CREATE TABLE IF NOT EXISTS torneos (
+      // Insertar un administrador por defecto
+      await this.dbInstance.executeSql(
+        `INSERT OR IGNORE INTO administradores (nombre, correo, contrasena)
+         VALUES ('Admin1', 'al.barreras@gmail.com', 'Admin123')`, []
+      );
+  
+      // Crear tabla torneos
+      await this.dbInstance.executeSql(
+        `CREATE TABLE IF NOT EXISTS torneos (
           id INTEGER PRIMARY KEY,
           nombre TEXT,
           juego TEXT,
@@ -100,27 +107,24 @@ export class SqliteService {
           imagen TEXT,
           creadorId INTEGER,
           FOREIGN KEY(creadorId) REFERENCES administradores(id)
-        )
-      `, []);
+        )`, []
+      );
   
-      // Insertar un administrador por defecto
-      await this.dbInstance.executeSql(`
-        INSERT OR IGNORE INTO administradores (nombre, correo, contrasena)
-        VALUES ('Admin1', 'al.barreras@gmail.com', 'Admin123')
-      `, []); 
-      await this.dbInstance.executeSql(`
-        INSERT OR IGNORE INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId)
-        VALUES ('Valorant Championship', 'Valorant', 'Abierto', 16, '2024-10-10', 'valorant.jpg', 
-        (SELECT id FROM administradores WHERE nombre = 'Admin1'))
-      `, []);
+      // Insertar un torneo por defecto
+      await this.dbInstance.executeSql(
+        `INSERT OR IGNORE INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId)
+         VALUES ('Valorant Championship', 'Valorant', 'Abierto', 16, '2024-10-10', 'valorant.jpg', 
+         (SELECT id FROM administradores WHERE nombre = 'Admin1'))`, []
+      );
   
-      this.presentAlert('Bienvenido', 'Apartado de administacion');
+      this.presentAlert('Bienvenido', 'Apartado de administración');
       this.selectTorneos();
-      this.selectAdministradores(); // Asegúrate de llamar a este método aquí
+      this.selectAdministradores();
     } catch (error) {
       this.presentAlert('Creación de Tablas', 'Error: ' + JSON.stringify(error));
     }
   }
+  
   
 
   selectTorneos() {
@@ -142,7 +146,7 @@ export class SqliteService {
           creadorNombre: torneo.creadorNombre
         });
       }
-      this.listaTorneos.next(items); // Actualizar el observable de torneos
+      this.listaTorneos.next(items);
     }).catch(e => {
       this.presentAlert('Error al seleccionar torneos', JSON.stringify(e));
     });
@@ -174,10 +178,11 @@ export class SqliteService {
 
     const sql = `INSERT INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
     const values = [torneo.nombre, torneo.juego, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, adminId];
+    
     try {
+      console.log('Insertando torneo con valores:', values);
       await this.dbInstance.executeSql(sql, values);
-      await this.torneoService.notificarTorneoAgregado();
-      this.selectTorneos(); // Actualizar datos
+      this.selectTorneos();
     } catch (error) {
       this.presentAlert('Error al añadir torneo', JSON.stringify(error));
     }

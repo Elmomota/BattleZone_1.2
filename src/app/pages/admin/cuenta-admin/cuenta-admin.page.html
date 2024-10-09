@@ -4,21 +4,24 @@
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
    
-    
-    <ion-avatar slot="end" >
+    <ion-avatar slot="end">
       <img src="assets/icon/user-circle-svgrepo-com.png" alt="Avatar">
     </ion-avatar>
   </ion-toolbar>
 </ion-header>
+
 <h2>Bienvenido, {{ adminUser }}</h2>
+
+<!-- Barra de búsqueda -->
+<ion-searchbar [(ngModel)]="searchTerm" placeholder="Buscar torneos" (ionInput)="buscarTorneos()"></ion-searchbar>
 
 <ion-content [fullscreen]="true">
   <ion-spinner *ngIf="loading" class="loading-spinner"></ion-spinner> <!-- Indicador de carga -->
 
   <div *ngIf="!loading">
     <div class="content-container">
-      <ion-list *ngIf="torneos.length > 0; else noTorneos">
-        <ion-card *ngFor="let torneo of torneos" (click)="verDetallesTorneo(torneo)" class="torneo-card">
+      <ion-list *ngIf="filteredTorneos.length > 0; else noTorneos">
+        <ion-card *ngFor="let torneo of filteredTorneos" (click)="verDetallesTorneo(torneo)" class="torneo-card">
           <ion-card-header>
             <ion-card-title>{{torneo.nombre}}</ion-card-title>
             <ion-card-subtitle><strong>Creado por:</strong> {{torneo.creadorNombre}}</ion-card-subtitle> <!-- Mostrar el creador aquí -->
@@ -28,7 +31,6 @@
               <ion-label>
                 <p><strong>Juego:</strong> {{torneo.juego}}</p>
                 <p><strong>Estado:</strong> {{torneo.estado}}</p>
-
               </ion-label>
               <ion-thumbnail slot="end">
                 <img [src]="torneo.imagen" alt="{{torneo.nombre}}">
@@ -37,8 +39,7 @@
           </ion-card-content>
         </ion-card>
       </ion-list>
-      
-      
+
       <ng-template #noTorneos>
         <ion-item>
           <ion-label>
