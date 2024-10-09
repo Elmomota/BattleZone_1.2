@@ -1,17 +1,37 @@
-<ion-content [fullscreen]="true">
-  <br>
-  <ion-title><h3>Inicio de Sesión de Admin</h3></ion-title>
-  <br>
-  <ion-item>
-    <ion-input label="Correo o Nombre de Usuario" labelPlacement="floating" placeholder="Ingresa tu correo o nombre de usuario" [(ngModel)]="correoONombre"></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-input type="password" label="Contraseña" labelPlacement="floating" placeholder="Ingresa tu contraseña" [(ngModel)]="password">
-      <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-    </ion-input>
-  </ion-item>
-  <ion-button color="purpuranegro" (click)="validacionLogin()">Iniciar sesión</ion-button>
-  <p color="blancohielo">
-    <a href="/forgot-password">¿Problemas con tu cuenta?</a>
-  </p>
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="login-container">
+    <ion-title>
+      <h3>Inicio de Sesión de Admin</h3>
+    </ion-title>
+
+    <ion-item>
+      <ion-label position="floating">Nombre de Admin</ion-label>
+      <ion-input 
+        placeholder="Ingresa tu nombre de Admin"
+        [(ngModel)]="newNameUser"
+        aria-label="Nombre de Admin"
+      ></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input 
+        type="password" 
+        placeholder="Ingresa tu contraseña"
+        [(ngModel)]="password"
+        aria-label="Contraseña"
+      >
+        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+      </ion-input>
+    </ion-item>
+
+    <ion-button expand="block" color="purpuranegro" (click)="validarRegistro()">
+      Iniciar sesión
+    </ion-button>
+
+    <p class="forgot-password" color="blancohielo">
+      <a href="/forgot-password">¿Problemas con tu cuenta?</a>
+    </p>
+  </div>
 </ion-content>
+

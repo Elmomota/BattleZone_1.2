@@ -13,7 +13,7 @@ import { Torneo } from 'src/app/services/torneo';
 export class CuentaAdminPage implements OnInit {
   adminUser: string = '';
   torneos: Torneo[] = [];
-  loading: boolean = true; // Estado de carga
+  loading: boolean = true;
 
   constructor(
     private router: Router,
@@ -30,7 +30,6 @@ export class CuentaAdminPage implements OnInit {
   }
 
   async ngOnInit() {
-    await this.sqliteService.initDB();
     await this.loadTorneos();
 
     this.torneoService.torneoAgregado$.subscribe(() => {
@@ -42,13 +41,15 @@ export class CuentaAdminPage implements OnInit {
   }
 
   async loadTorneos() {
-    this.loading = true; // Iniciar el estado de carga
+    this.loading = true;
     try {
-      this.torneos = await this.sqliteService.getTorneos();
+      this.sqliteService.fetchTorneos().subscribe(torneos => {
+        this.torneos = torneos;
+        this.loading = false;
+      });
     } catch (error) {
       console.error('Error loading torneos', error);
-    } finally {
-      this.loading = false; // Finalizar el estado de carga
+      this.loading = false;
     }
   }
 
@@ -64,7 +65,7 @@ export class CuentaAdminPage implements OnInit {
     }
   }
 
-  agregarTorneo() {
+  addTorneo() {
     this.router.navigate(['/agregar-torneo']);
   }
 }

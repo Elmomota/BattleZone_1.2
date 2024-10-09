@@ -28,8 +28,7 @@
               <ion-label>
                 <p><strong>Juego:</strong> {{torneo.juego}}</p>
                 <p><strong>Estado:</strong> {{torneo.estado}}</p>
-                <p><strong>Equipos Inscritos:</strong> {{torneo.numEquipos}}</p>
-                <p><strong>Fecha de Inicio:</strong> {{torneo.fechaInicio | date}}</p>
+
               </ion-label>
               <ion-thumbnail slot="end">
                 <img [src]="torneo.imagen" alt="{{torneo.nombre}}">
@@ -52,8 +51,8 @@
 
   <!-- Botón flotante -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="agregarTorneo()">
-      <ion-icon name="add"></ion-icon> <!-- Ícono de agregar (signo de más) -->
+    <ion-fab-button (click)="addTorneo()">
+      <ion-icon name="add"></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>
