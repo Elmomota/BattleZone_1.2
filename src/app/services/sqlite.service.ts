@@ -3,6 +3,7 @@ import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Torneo } from './torneo';
 import { Administracion } from './administracion';
+import { Juego } from './juego'
 import { TorneoService } from './torneo-service.service';
 import { Platform, AlertController } from '@ionic/angular';
 
@@ -18,6 +19,7 @@ export class SqliteService {
   // Observables para los datos
   private listaTorneos = new BehaviorSubject<Torneo[]>([]);
   private listaAdministradores = new BehaviorSubject<Administracion[]>([]);
+  private listaJuegos = new BehaviorSubject<Juego[]>([]);
 
   constructor(
     private sqlite: SQLite, 
@@ -41,6 +43,11 @@ export class SqliteService {
   // Obtener los administradores desde la base de datos
   fetchAdministradores(): Observable<Administracion[]> {
     return this.listaAdministradores.asObservable();
+  }
+
+  // Obtener los juegos desde la base de datos
+  fetchJuegos(): Observable<Juego[]> {
+    return this.listaJuegos.asObservable();
   }
 
   async presentAlert(titulo: string, msj: string) {
@@ -115,17 +122,63 @@ export class SqliteService {
         `INSERT OR IGNORE INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId)
          VALUES ('Valorant Championship', 'Valorant', 'Abierto', 16, '2024-10-10', 'valorant.jpg', 
          (SELECT id FROM administradores WHERE nombre = 'Admin1'))`, []
+      );    // Crear tabla juegos
+      await this.dbInstance.executeSql(
+        `CREATE TABLE IF NOT EXISTS juegos (
+          id INTEGER PRIMARY KEY,
+          nombre TEXT,
+          tipo TEXT,
+          descripcion TEXT,
+          logo TEXT,
+          cabecera TEXT
+        )`, []
       );
   
-      this.presentAlert('Bienvenido', 'Apartado de administración');
+      // Insertar juegos por defecto
+      await this.dbInstance.executeSql(
+        `INSERT OR IGNORE INTO juegos (nombre, tipo, descripcion, logo, cabecera) VALUES 
+          ('Valorant', 'Shooter', 'Juego de disparos táctico en primera persona.', 'assets/logos/logo-valorant.png', 'assets/img/imagen-valorant.jpg'),
+          ('LoL', 'MOBA', 'Juego de estrategia y combate por equipos.', 'assets/logos/logo-leagu-of-legends.png', 'assets/img/imagen-league-of-legends.jpg'),
+          ('Fortnite', 'Battle Royale', 'Juego de supervivencia en un entorno de batalla masiva.', 'assets/logos/logo-fortnite.png', 'assets/img/imagen-fortnite.jpg'),
+          ('Street Fighter', 'Pelea', 'Juego de lucha con personajes emblemáticos.', 'assets/logos/logo-street-fighter.png', 'assets/img/imagen-street-fighter.jpg');
+
+        `, []
+      );
+  
+      this.presentAlert('Bienvenido a', 'BATTLE ZONE');
       this.selectTorneos();
       this.selectAdministradores();
+      this.selectJuegos(); // Llamar a la selección de juegos
     } catch (error) {
       this.presentAlert('Creación de Tablas', 'Error: ' + JSON.stringify(error));
     }
   }
   
   
+  selectJuegos() {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+  
+    return this.dbInstance.executeSql(`SELECT * FROM juegos`, []).then(res => {
+      let items: Juego[] = [];
+      for (let i = 0; i < res.rows.length; i++) {
+        let juego = res.rows.item(i);
+        items.push({
+          ...juego,
+          logo: juego.logo,        // Rutas del logo
+          cabecera: juego.cabecera // Rutas de la cabecera
+        });
+      }
+      this.listaJuegos.next(items); // Actualizar el observable de juegos
+    }).catch(e => {
+      this.presentAlert('Error al seleccionar juegos', JSON.stringify(e));
+    });
+  }
+  
+  
+
 
   selectTorneos() {
     if (!this.dbInstance) {

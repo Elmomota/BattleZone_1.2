@@ -12,6 +12,7 @@ interface Torneo {
   numEquipos: number;
   fechaInicio: string;
   imagen: string;
+
 }
 
 @Component({

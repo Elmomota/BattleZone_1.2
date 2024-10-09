@@ -55,12 +55,16 @@ const routes: Routes = [
     path: 'nuevo-torneo',
     loadChildren: () => import('./pages/admin/TorneoAdmin/nuevo-torneo/nuevo-torneo.module').then( m => m.NuevoTorneoPageModule)
   },
-
-
+  {
+    path: 'detalle-juego',
+    loadChildren: () => import('./pages/Usuario/detalle-juego/detalle-juego.module').then( m => m.DetalleJuegoPageModule)
+  },
   {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
+
+
 
 
  
