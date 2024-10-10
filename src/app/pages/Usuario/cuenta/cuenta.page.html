@@ -1,222 +1,224 @@
-<ion-content class="general" [fullscreen]="true" >
- 
-  <!------Imagen atras------------------------------------------------------------------------------------------------>
+<ion-content class="general" [fullscreen]="true">
+
+    <!------Imagen atras------------------------------------------------------------------------------------------------>
 
 
-  <div class="imagen-container">
-    <img src="assets/img/Street-Fighter-6.jpg" alt="Street Fighter" />
-  </div>
+    <div class="imagen-container">
+        <img src="assets/img/Street-Fighter-6.jpg" alt="Street Fighter" />
+    </div>
 
-  <!------------------------------------------------------------------------------------------------------>
-  <!------------bloque grande----------------------------------------------------------------------------->
-  <!------------------------------------------------------------------------------------------------------>
-
-
-  <div class="div-grande">
-
-<!------------------botones------------------------------------------------------------------------------------>
-   
-    <ion-button fill="clear" class="icono-atras" (click)="home()">
-        <ion-icon name="arrow-back-circle-outline"></ion-icon>
-    </ion-button>
-<!------------------------------------------------------------------------------------------------------>
-
-      <div class="div-foto-perfil" >
+    <!------------------------------------------------------------------------------------------------------>
+    <!------------bloque grande----------------------------------------------------------------------------->
+    <!------------------------------------------------------------------------------------------------------>
 
 
-          <ion-button fill="clear" class="icono-config">
-              <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
-          </ion-button>
+    <div class="div-grande">
 
-  <!-----icono y nombre--------------------------------->
+        <!------------------botones------------------------------------------------------------------------------------>
 
-          <ion-avatar class="avatar">
-            <ion-icon id="icono-user" name="person-circle-outline" ></ion-icon>
-          </ion-avatar>
+        <ion-button fill="clear" class="icono-atras" (click)="home()">
+            <ion-icon name="arrow-back-circle-outline"></ion-icon>
+        </ion-button>
+        <!------------------------------------------------------------------------------------------------------>
 
-          <div class="info-perfil">
-            <h4>{{user}}</h4>
-          </div>
+        <div class="div-foto-perfil">
 
 
-  <!---chips juegos main--------------->
+            <ion-button fill="clear" class="icono-config">
+                <ion-icon class="icon-foto" name="ellipsis-horizontal-outline"></ion-icon>
+            </ion-button>
 
-          <div class="juegos-per">
-            <ion-chip color="primary">Valorant</ion-chip>
-            <ion-chip color="secondary">LoL</ion-chip>
-            <ion-chip color="tertiary">Street figter</ion-chip>
-          </div>
+            <!-----icono y nombre--------------------------------->
+
+            <ion-avatar class="avatar">
+                <ion-icon id="icono-user" name="person-circle-outline"></ion-icon>
+            </ion-avatar>
+
+            <div class="info-perfil">
+                <h4>{{user}}</h4>
+            </div>
 
 
+            <!---chips juegos main--------------->
+
+            <div class="juegos-per">
+                <ion-chip color="primary">Valorant</ion-chip>
+                <ion-chip color="secondary">LoL</ion-chip>
+                <ion-chip color="tertiary">Street figter</ion-chip>
+            </div>
 
 
 
-<!------------------------------------------------------------------------------------------------------>
+
+
+            <!------------------------------------------------------------------------------------------------------>
             <hr />
-<!------------------------------------------------------------------------------------------------------>
+            <!------------------------------------------------------------------------------------------------------>
 
-<!---------------------stats--------------------------------------------------------------------------------->
-
-
-          <ion-row class="profile-stats">
-
-            <ion-col>
-              <h3>12</h3>
-              <ion-icon class="iconos-stats" name="trophy"></ion-icon></ion-col >
-
-            <ion-col>
-              <h3>420K</h3>
-              <p>Followers</p>
-            </ion-col>
-
-            <ion-col>
-              <h3>95</h3>
-              <p>Jugados</p>
-            </ion-col>
-        </ion-row>
-      </div>
- <!----------------------------segmentos cambiantes-------------------------------------------------------------------------->
-
- <!----------------------------1-------------------------------------------------------------------------->
-
-          <ion-segment [(ngModel)]="seleccion">
+            <!---------------------stats--------------------------------------------------------------------------------->
 
 
-            <ion-segment-button value='Torneos jugados'>
-              <ion-label style="white-space: pre-line">Torneos jugados</ion-label >
+            <ion-row class="profile-stats">
+
+                <ion-col>
+                    <h3>12</h3>
+                    <ion-icon class="iconos-stats" name="trophy"></ion-icon>
+                </ion-col>
+
+                <ion-col>
+                    <h3>420K</h3>
+                    <p>Followers</p>
+                </ion-col>
+
+                <ion-col>
+                    <h3>95</h3>
+                    <p>Jugados</p>
+                </ion-col>
+            </ion-row>
+        </div>
+        <!----------------------------segmentos cambiantes-------------------------------------------------------------------------->
+        <hr />
+
+        <!----------------------------1-------------------------------------------------------------------------->
+
+        <ion-segment [(ngModel)]="seleccion">
+
+
+            <ion-segment-button value='Torneos jugados' class="segmento-stats">
+                <ion-label style="white-space: pre-line">Torneos jugados</ion-label>
             </ion-segment-button>
 
 
-            <ion-segment-button value='Historial'>
+            <ion-segment-button value='Historial' class="segmento-stats">
                 <ion-label>Historial</ion-label>
             </ion-segment-button>
 
 
-            <ion-segment-button value='Logros'>
+            <ion-segment-button value='Logros' class="segmento-stats">
                 <ion-label>Logros</ion-label>
             </ion-segment-button>
 
-          </ion-segment>
+        </ion-segment>
 
-<!------------------------------------------------------------------------------------------------------>
-
-
-
-<!------------------------lo que cambia-------------------titulos----------------------------------------------------------->
-
-
-<div *ngIf="seleccion == 'Torneos jugados'">
-
-            <ion-card-title class="titulo-torneos">Torneos jugados</ion-card-title >
-</div>
-
-
-<div *ngIf="seleccion == 'Historial'">
-
-            <ion-card-title class="titulo-torneos">Historial</ion-card-title >
-</div>
-
-
-<div *ngIf="seleccion == 'Logros'">
-
-            <ion-card-title class="titulo-torneos">Logros</ion-card-title >
-</div>
-
-<!------------------------------------------------------------------------------------------------------>
+        <!------------------------------------------------------------------------------------------------------>
 
 
 
-<!------------------------------------------------------------------------------------------------------>
-<!-----------------------------parte torneos------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------------>
-<ion-card id="torneos">
-  <ion-card-content class="torneos" *ngIf="seleccion == 'Torneos jugados'">
-
-          <div>
-
-<!------items------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-              <div class="game-item">
-                <div class="distribucion">
-
-                  <img class="imagen-torneos-jugados" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                  <div class="texto">
-                    <h6>Copa Soprole</h6>
-                    <p>Eliminacion directa</p>
-                    <p>Puesto:5°</p>
-                    <P>Fecha: 14/04/202</P>
-
-                  </div>
-
-                    
-                  </div>
-              </div>
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
-
-              <div class="game-item">
-                <div class="distribucion">
-
-                  <img class="imagen-torneos-jugados" src="assets/img/lol2.jpg" alt="Valorant" />
-
-                  <div class="texto">
-                    <h6>Copa Soprole</h6>
-                    <p>Eliminacion directa</p>
-                    <p>Puesto:5°</p>
-                    <P>Fecha: 14/04/202</P>
-
-                  </div>
-
-                  </div>
+        <!------------------------lo que cambia-------------------titulos----------------------------------------------------------->
 
 
-              </div>
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
-              <div class="game-item">
-                <div class="distribucion">
-                  
-                  <img class="imagen-torneos-jugados" src="assets/img/fornite.jpg" alt="Valorant" />
+        <div *ngIf="seleccion == 'Torneos jugados'">
 
-                  <div class="texto">
-                    <h6>Copa Soprole</h6>
-                    <p>Eliminacion directa</p>
-                    <p>Puesto:5°</p>
-                    <P>Fecha: 14/04/202</P>
+            <ion-card-title class="titulo-torneos">Torneos jugados</ion-card-title>
+        </div>
 
-                  </div>
+
+        <div *ngIf="seleccion == 'Historial'">
+
+            <ion-card-title class="titulo-torneos">Historial</ion-card-title>
+        </div>
+
+
+        <div *ngIf="seleccion == 'Logros'">
+
+            <ion-card-title class="titulo-torneos">Logros</ion-card-title>
+        </div>
+
+        <!------------------------------------------------------------------------------------------------------>
+
+
+
+        <!------------------------------------------------------------------------------------------------------>
+        <!-----------------------------parte torneos------------------------------------------------------------------------->
+        <!------------------------------------------------------------------------------------------------------>
+        <ion-card id="torneos">
+            <ion-card-content class="torneos" *ngIf="seleccion == 'Torneos jugados'">
+
+                <div>
+
+                    <!------items------------------------------------------------------------------------------------------------>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <div class="game-item">
+                        <div class="distribucion">
+
+                            <img class="imagen-torneos-jugados" src="assets/img/valorant.jpg" alt="Valorant" />
+
+                            <div class="texto">
+                                <h6>Copa Soprole</h6>
+                                <p>Eliminacion directa</p>
+                                <p>Puesto:5°</p>
+                                <P>Fecha: 14/04/202</P>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+
+                    <div class="game-item">
+                        <div class="distribucion">
+
+                            <img class="imagen-torneos-jugados" src="assets/img/lol2.jpg" alt="Valorant" />
+
+                            <div class="texto">
+                                <h6>Copa Soprole</h6>
+                                <p>Eliminacion directa</p>
+                                <p>Puesto:5°</p>
+                                <P>Fecha: 14/04/202</P>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <div class="game-item">
+                        <div class="distribucion">
+
+                            <img class="imagen-torneos-jugados" src="assets/img/fornite.jpg" alt="Valorant" />
+
+                            <div class="texto">
+                                <h6>Copa Soprole</h6>
+                                <p>Eliminacion directa</p>
+                                <p>Puesto:5°</p>
+                                <P>Fecha: 14/04/202</P>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+
+                    <div class="game-item">
+                        <div class="distribucion">
+
+                            <img class="imagen-torneos-jugados" src="assets/img/lol2.jpg" alt="Valorant" />
+
+                            <div class="texto">
+                                <h6>Copa Soprole</h6>
+                                <p>Eliminacion directa</p>
+                                <p>Puesto:5°</p>
+                                <P>Fecha: 14/04/202</P>
+
+                            </div>
+                        </div>
+
+
                     </div>
 
 
-              </div>
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
-
-              <div class="game-item">
-                <div class="distribucion">
-
-                  <img class="imagen-torneos-jugados" src="assets/img/lol2.jpg" alt="Valorant" />
-
-                  <div class="texto">
-                    <h6>Copa Soprole</h6>
-                    <p>Eliminacion directa</p>
-                    <p>Puesto:5°</p>
-                    <P>Fecha: 14/04/202</P>
-
-                  </div>
-                  </div>
-
-
-              </div>
-
-
-          </div>
-  </ion-card-content>
-</ion-card>
+                </div>
+            </ion-card-content>
+        </ion-card>
 
 
 
@@ -225,303 +227,301 @@
 
 
 
-<!------------------------------------------------------------------------------------------------------>
-<!-----------------------------parte historial------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------------>
-<ion-card id="torneos-h">
-  <ion-card-content class="historial" *ngIf="seleccion == 'Historial'">
+        <!------------------------------------------------------------------------------------------------------>
+        <!-----------------------------parte historial------------------------------------------------------------------------->
+        <!------------------------------------------------------------------------------------------------------>
+        <ion-card id="torneos-h">
+            <ion-card-content class="historial" *ngIf="seleccion == 'Historial'">
 
-          <div>
+                <div>
 
-<!------items------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-              <div class="game-item-historial">
-                <div class="distribucion-historial">
+                    <!------items------------------------------------------------------------------------------------------------>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <div class="game-item-historial">
+                        <div class="distribucion-historial">
 
-                  <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
+                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
 
-                  <div class="texto-h">
-                    <h6>Valorant</h6>
-                    <p >Victoria</p>
+                            <div class="texto-h">
+                                <h6>Valorant</h6>
+                                <p>Victoria</p>
 
 
 
-                  </div>
+                            </div>
 
-                    
-                  </div>
-              </div>
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
-            <div class="game-item-historial">
-              <div class="distribucion-historial">
 
-                <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
+                        </div>
+                    </div>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <div class="game-item-historial">
+                        <div class="distribucion-historial">
 
-                <div class="texto-h">
-                  <h6>Valorant</h6>
-                  <p >Victoria</p>
+                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
 
+                            <div class="texto-h">
+                                <h6>Valorant</h6>
+                                <p>Victoria</p>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <div class="game-item-historial">
+                        <div class="distribucion-historial">
+
+                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
+
+                            <div class="texto-h">
+                                <h6>Valorant</h6>
+                                <p>Victoria</p>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+
+                    <div class="game-item-historial">
+                        <div class="distribucion-historial">
+
+                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
+
+                            <div class="texto-h">
+                                <h6>Valorant</h6>
+                                <p>Victoria</p>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+
+
+                    <div class="game-item-historial">
+                        <div class="distribucion-historial">
+
+                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
+
+                            <div class="texto-h">
+                                <h6>Valorant</h6>
+                                <p>Victoria</p>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <div class="game-item-historial">
+                        <div class="distribucion-historial">
+
+                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
+
+                            <div class="texto-h">
+                                <h6>Valorant</h6>
+                                <p>Victoria</p>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <div class="game-item-historial">
+                        <div class="distribucion-historial">
+
+                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
+
+                            <div class="texto-h">
+                                <h6>Valorant</h6>
+                                <p>Victoria</p>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                    <!------------------------------------------------------------------------------------------------------>
+                    <hr>
+                    <!------------------------------------------------------------------------------------------------------>
+
+                    <div class="game-item-historial">
+                        <div class="distribucion-historial">
+
+                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
+
+                            <div class="texto-h">
+                                <h6>Valorant</h6>
+                                <p>Victoria</p>
+
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </ion-card-content>
+        </ion-card>
+
+
+
+        <!------------------------------------------------------------------------------------------------------>
+        <!-----------------------------parte logros------------------------------------------------------------------------->
+        <!------------------------------------------------------------------------------------------------------>
+        <ion-card id="torneos-l">
+            <ion-card-content class="logros-orga" *ngIf="seleccion == 'Logros'">
+
+
+                <!------items------------------------------------------------------------------------------------------------>
+                <!------------------------------------------------------------------------------------------------------>
+                <div class="item-logro">
+                    <ion-icon class="logro" name="barbell-outline"></ion-icon>
+
+                </div>
+                <hr>
+
+                <div class="item-logro">
+                    <ion-icon class="logro" name="skull-outline"></ion-icon>
+                </div>
+                <!------------------------------------------------------------------------------------------------------>
+                <!------------------------------------------------------------------------------------------------------>
+
+                <div class="item-logro">
+
+                    <ion-icon class="logro" name="beer-outline"></ion-icon>
 
 
                 </div>
 
-                  
-                </div>
-              </div>
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
-            <div class="game-item-historial">
-              <div class="distribucion-historial">
 
-                <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                <div class="texto-h">
-                  <h6>Valorant</h6>
-                  <p >Victoria</p>
+                <!------------------------------------------------------------------------------------------------------>
+                <!------------------------------------------------------------------------------------------------------>
 
 
 
+                <div class="item-logro">
+
+                    <ion-icon class="logro" name="construct-outline"></ion-icon>
                 </div>
 
-                  
+
+                <!------------------------------------------------------------------------------------------------------>
+                <!------------------------------------------------------------------------------------------------------>
+
+                <div class="item-logro">
+                    <ion-icon class="logro" name="color-palette-outline"></ion-icon>
+
+                    <!------------------------------------------------------------------------------------------------------>
+                    <!------------------------------------------------------------------------------------------------------>
+
+
+
+
+                    <div class="item-logro">
+                        <ion-icon class="logro" name="magnet-outline"></ion-icon>
+                    </div>
+
+
+
+
+
+                    <!------------------------------------------------------------------------------------------------------>
+                    <!------------------------------------------------------------------------------------------------------>
+
+
+
+
+
+                    <div class="item-logro">
+                        <ion-icon class="logro" name="beer-outline"></ion-icon>
+                    </div>
+
+
+
+
+
+                    <!------------------------------------------------------------------------------------------------------>
+                    <!------------------------------------------------------------------------------------------------------>
+
+
+
+
+
+                    <div class="item-logro">
+                        <ion-icon class="logro" name="bug-outline"></ion-icon>
+                    </div>
+
+
+
+                    <!------------------------------------------------------------------------------------------------------>
+
+                    <!------------------------------------------------------------------------------------------------------>
                 </div>
+            </ion-card-content>
+        </ion-card>
+
+
+
+        <!------------------------------------------------------------------------------------------------------>
+        <!------------------------------------------------------------------------------------------------------>
+        <!------------------------------------------------------------------------------------------------------>
+        <hr/>
+        <!------------------------------------------------------------------------------------------------------>
+        <!------------------------------------------------------------------------------------------------------>
+        <!------------------------------------------------------------------------------------------------------>
+
+
+
+
+
+
+        <ion-card-title class="titulo-torneos">Descripcion Jugador:</ion-card-title>
+
+        <ion-card class="texto2">
+
+            <div>
+                <p>Jugador con experiencia en videojuegos desde los 5 años de edad , participante de varios de los torneos mas importantes de battle zone, soy un activo tengo un estilo de juego agresivo y odio pararme a pensar las cosas mi forma de jugar
+                    siempre ha sido apisonar a los demas llendo hacia adelante
+                </p>
             </div>
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
 
-              <div class="game-item-historial">
-                <div class="distribucion-historial">
+        </ion-card>
 
-                  <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                  <div class="texto-h">
-                    <h6>Valorant</h6>
-                    <p >Victoria</p>
-
-
-
-                  </div>
-
-                    
-                  </div>
-              </div>
-
-
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
-
-
-<div class="game-item-historial">
-  <div class="distribucion-historial">
-
-    <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-    <div class="texto-h">
-      <h6>Valorant</h6>
-      <p >Victoria</p>
 
 
 
     </div>
-
-      
-    </div>
-</div>
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
-<div class="game-item-historial">
-<div class="distribucion-historial">
-
-  <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-  <div class="texto-h">
-    <h6>Valorant</h6>
-    <p >Victoria</p>
-
-
-
-  </div>
-
-    
-  </div>
-</div>
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
-<div class="game-item-historial">
-<div class="distribucion-historial">
-
-  <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-  <div class="texto-h">
-    <h6>Valorant</h6>
-    <p >Victoria</p>
-
-
-
-  </div>
-
-    
-  </div>
-</div>
-<!------------------------------------------------------------------------------------------------------>
-<hr>
-<!------------------------------------------------------------------------------------------------------>
-
-<div class="game-item-historial">
-  <div class="distribucion-historial">
-
-    <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-    <div class="texto-h">
-      <h6>Valorant</h6>
-      <p >Victoria</p>
-
-
-
-    </div>
-
-      
-    </div>
-</div>
-          </div>
-  </ion-card-content>
-</ion-card>
-
-
-
-<!------------------------------------------------------------------------------------------------------>
-<!-----------------------------parte logros------------------------------------------------------------------------->
-<!------------------------------------------------------------------------------------------------------>
-<ion-card id="torneos-l">
-  <ion-card-content class="logros-orga" *ngIf="seleccion == 'Logros'">
-
-
-<!------items------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-              <div class="item-logro">
-                <ion-icon class="logro" name="barbell-outline"></ion-icon>       
-                         
-              </div>
-              <hr>
-
-              <div class="item-logro">
-                <ion-icon class="logro" name="skull-outline"></ion-icon>           
-              </div>
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-           
-<div class="item-logro">
-
-  <ion-icon class="logro" name="beer-outline"></ion-icon>
-
-             
-</div>
-
-
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-
-
-
-<div class="item-logro">
-
-  <ion-icon class="logro" name="construct-outline"></ion-icon>        
-</div>
-
-
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-
-<div class="item-logro">
-  <ion-icon class="logro" name="color-palette-outline"></ion-icon>
-
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-
-
-
-
-<div class="item-logro">
-  <ion-icon class="logro" name="magnet-outline"></ion-icon>
-</div>
-
-
-
-
-
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-
-
-
-
-
-<div class="item-logro">
-  <ion-icon class="logro" name="beer-outline"></ion-icon>           
-</div>
-
-
-
-
-
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-
-
-
-
-
-<div class="item-logro">
-  <ion-icon class="logro" name="bug-outline"></ion-icon>                
-</div>
-
-
-
-<!------------------------------------------------------------------------------------------------------>
-
-<!------------------------------------------------------------------------------------------------------>
-</div>
-  </ion-card-content>
-</ion-card>
-
-
-
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-<hr/>
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-<!------------------------------------------------------------------------------------------------------>
-
-
-
-
-
-
-<ion-card-title class="titulo-torneos">Descripcion Jugador:</ion-card-title >
-
-<ion-card class="texto2">
-
-<div>
-<p >Jugador con experiencia en videojuegos desde los 5 años de edad
-  , participante de varios de los torneos mas importantes de battle zone,
-  soy un activo tengo un estilo de juego agresivo y odio pararme a pensar las cosas mi
-  forma de jugar siempre ha sido apisonar a los demas llendo hacia adelante
-</p>
-</div>
-
-</ion-card>
-
-
-
-
-  </div>
 </ion-content>

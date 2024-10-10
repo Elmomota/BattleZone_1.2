@@ -20,6 +20,8 @@ interface Torneo {
   templateUrl: './nuevo-torneo.page.html',
   styleUrls: ['./nuevo-torneo.page.scss'],
 })
+
+
 export class NuevoTorneoPage implements OnInit {
   nuevoTorneo: Torneo = {
     nombre: '',
@@ -102,5 +104,16 @@ export class NuevoTorneoPage implements OnInit {
     // En este ejemplo simulo que el adminId es 1
     return 1; // Reemplaza esto con la lógica adecuada para obtener el adminId real
   }
+
+
+
+  admin_c(){
+    this.router.navigate(['/cuenta-admin']);
+  }
+  
+
+
+
+  
   
 }

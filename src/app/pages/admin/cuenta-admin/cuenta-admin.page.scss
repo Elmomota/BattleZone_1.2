@@ -1,22 +1,64 @@
+/////////////////////////disenio general
+ion-content {
+    --background: #4d55ad;
+    color: #fff;
+}
+
+/////////////////////////disenio toolbar
+ion-toolbar {
+    --background: #32345A;
+    color: #C9B1BD;
+}
+
+/////////////////////////titulo toolbar
+.tit-toolbar {
+    padding-left: 1rem;
+}
+
+/////////////////////////titulo bienvenido
+.titulo {
+    color: white;
+    margin-left: 15px;
+}
+
+.no-torneos {
+    border-radius: 10px;
+}
+
 .content-container {
     padding: 15px;
-    background-color: #32345A; /* Fondo del contenedor */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para profundidad */
-  }
-  
-  .torneo-card {
-    margin-bottom: 15px; /* Espaciado entre las tarjetas */
-    background-color: #5A556E; /* Fondo de la tarjeta */
-    color: #C9B1BD; /* Color del texto en la tarjeta */
-    border-radius: 10px; /* Bordes redondeados */
-  }
-  
-  .torneo-card ion-card-title {
-    font-size: 18px; /* Tamaño de fuente del título */
-  }
-  
-  .torneo-card ion-label p {
-    margin: 0; /* Quitar margen para mejor alineación */
-  }
-  
+    background-color: #32345A;
+    /* Fondo del contenedor */
+    border-radius: 10px;
+    /* Bordes redondeados */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    /* Sombra para profundidad */
+}
+
+.torneo-card {
+    margin-bottom: 15px;
+    /* Espaciado entre las tarjetas */
+    background-color: #5A556E;
+    /* Fondo de la tarjeta */
+    color: #C9B1BD;
+    /* Color del texto en la tarjeta */
+    border-radius: 10px;
+    /* Bordes redondeados */
+}
+
+.torneo-card ion-card-title {
+    font-size: 18px;
+    /* Tamaño de fuente del título */
+}
+
+.torneo-card ion-label p {
+    margin: 0;
+    /* Quitar margen para mejor alineación */
+}
+
+hr {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}

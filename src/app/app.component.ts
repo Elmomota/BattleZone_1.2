@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
+import { NavController } from '@ionic/angular';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -26,5 +27,6 @@ export class AppComponent {
     this.menuCtrl.close(); // Cierra el menú si está abierto
     this.router.navigate(['/inicio']); // Redirige a la página de inicio de sesión
   }
+
 
 }
