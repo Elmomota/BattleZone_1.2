@@ -39,7 +39,7 @@
 
     <div *ngIf="!loading">
         <div class="content-container">
-            <ion-list *ngIf="filteredTorneos.length > 0; else noTorneos" class="content-container">
+            <ion-list *ngIf="filteredTorneos.length > 0; else noTorneos">
                 <ion-card *ngFor="let torneo of filteredTorneos" (click)="verDetallesTorneo(torneo)" class="torneo-card">
                     <ion-card-header>
                         <ion-card-title>{{torneo.nombre}}</ion-card-title>

@@ -1,25 +1,57 @@
 .torneo-card {
-    background-color: #5A556E; /* Fondo de la tarjeta */
-    color: #C9B1BD; /* Color del texto */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para profundidad */
-    margin: 15px; /* Espaciado alrededor de la tarjeta */
-  }
-  
-  ion-card-header {
-    text-align: center; /* Centrar el texto del encabezado */
-  }
-  
-  ion-card-title {
-    font-size: 24px; /* Tamaño de fuente del título */
-    font-weight: bold; /* Negrita para el título */
-  }
-  
-  ion-button {
-    margin-top: 10px; /* Espaciado entre botones */
-  }
-  
-  ion-img {
-    max-width: 100%; /* Asegura que la imagen no exceda el ancho de la tarjeta */
-    border-radius: 10px; /* Bordes redondeados para la imagen */
-  }
+    background-color: #5A556E;
+    color: #C9B1BD;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    /* Ajusta este valor para agregar más o menos espacio */
+}
+
+////////////contenido general
+ion-content {
+    --background: #4d55ad;
+    color: #fff;
+    margin-top: 150px;
+}
+
+ion-card-header {
+    text-align: center;
+    /* Centrar el texto del encabezado */
+}
+
+ion-card-title {
+    font-size: 24px;
+    /* Tamaño de fuente del título */
+    font-weight: bold;
+    /* Negrita para el título */
+}
+
+ion-button {
+    margin-top: 10px;
+    /* Espaciado entre botones */
+}
+
+ion-img {
+    max-width: 100%;
+    /* Asegura que la imagen no exceda el ancho de la tarjeta */
+    border-radius: 10px;
+    /* Bordes redondeados para la imagen */
+}
+
+/////////////////////card grande
+/// 
+.content-container {
+    padding: 15px;
+    background-color: #32345A;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 50px;
+    /* Incrementa el padding superior para más espacio */
+}
+
+//////////////////toolbar
+ion-toolbar {
+    --background: #32345A;
+    color: #C9B1BD;
+}
