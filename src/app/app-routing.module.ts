@@ -56,7 +56,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/admin/TorneoAdmin/nuevo-torneo/nuevo-torneo.module').then( m => m.NuevoTorneoPageModule)
   },
   {
-    path: 'detalle-juego',
+    path: 'detalle-juego/:id',
     loadChildren: () => import('./pages/Usuario/detalle-juego/detalle-juego.module').then( m => m.DetalleJuegoPageModule)
   },
   {

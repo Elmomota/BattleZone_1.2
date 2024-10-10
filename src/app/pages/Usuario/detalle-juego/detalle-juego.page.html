@@ -1,61 +1,56 @@
-<ion-content class="general" [fullscreen]="true">
-  <!------------------------imagen detrás------------------------------>
-  <div class="imagen-container">
-    <img [src]="juego?.cabecera" [alt]="juego?.nombre" />
-  </div>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalles del Juego</ion-title>
+  </ion-toolbar>
+</ion-header>
 
-  <!--------------------------bloque grande----------------------------->
-  <div class="div-general">
-    <div class="div-cambiante">
-      <!--------------------------botones------------------------------->
-      <div>
-        <ion-button fill="clear" class="icono-config">
-          <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
-        </ion-button>
+<ion-content>
+  <ion-card *ngIf="juego">
+    <!-- Cabecera del juego -->
+    <ion-img [src]="juego.cabecera" alt="Imagen del juego"></ion-img>
 
-        <ion-button fill="clear" class="icono-atras" (click)="home()">
-          <ion-icon name="arrow-back-circle-outline"></ion-icon>
-        </ion-button>
+    <!-- Detalles del juego -->
+    <ion-card-header>
+      <ion-card-title>{{ juego.nombre }}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>{{ juego.descripcion }}</p>
+    </ion-card-content>
 
-        <div class="info-perfil">
-          <h1>{{ juego?.nombre }}</h1>
-        </div>
+    <!-- Logo del juego -->
+    <ion-card-content>
+      <ion-img [src]="juego.logo" alt="Logo del juego"></ion-img>
+    </ion-card-content>
+  </ion-card>
 
-        <div class="juegos-per">
-          <ion-chip [disabled]="true" color="primary">{{ juego?.tipo }}</ion-chip>
-        </div>
-      </div>
+  <ion-list *ngIf="torneos$ | async as torneos">
+    <ion-list-header>
+      <ion-label>Torneos asociados</ion-label>
+    </ion-list-header>
 
-      <hr />
-      <ion-card-title class="titulo-torneos">Descripción:</ion-card-title>
+    <!-- Lista de torneos -->
+    <ion-item *ngFor="let torneo of torneos">
+      <ion-label>
+        <h2>{{ torneo.nombre }}</h2>
+        <p>{{ torneo.estado }} - Equipos: {{ torneo.numEquipos }}</p>
+        <p>Fecha de inicio: {{ torneo.fechaInicio }}</p>
+      </ion-label>
+      <ion-button fill="outline" color="secondary" routerLink="/detalles-torneo/{{ torneo.id }}">
+        Ver Detalles
+      </ion-button>
+    </ion-item>
 
-      <p class="descripcion">
-        {{ juego?.descripcion }}
-      </p>
+    <!-- Mensaje si no hay torneos -->
+    <ion-item *ngIf="torneos.length === 0">
+      <ion-label>No hay torneos disponibles para este juego</ion-label>
+    </ion-item>
+  </ion-list>
 
-      <hr />
-
-      <div id="torneos">
-        <ion-card-content class="torneos">
-          <div class="scroll">
-            <!------torneos dinámicos------------------------------------->
-            <div *ngFor="let torneo of torneos$ | async" class="game-item" (click)="torneo()">
-              <div class="distribucion">
-                <img class="imagen-torneos-jugados" [src]="torneo.imagen" [alt]="torneo.nombre" />
-                <div class="texto">
-                  <h6>{{ torneo.nombre }}</h6>
-                  <p>{{ torneo.estado }}</p>
-                  <p>Entrada: {{ torneo.numEquipos > 0 ? 'gratis' : 'pagada' }}</p>
-                  <p>Fecha: {{ torneo.fechaInicio }}</p>
-                </div>
-              </div>
-            </div>
-            <hr />
-          </div>
-        </ion-card-content>
-      </div>
-
-      <hr />
-    </div>
-  </div>
+  <!-- Botón para volver a la página de inicio -->
+  <ion-footer>
+    <ion-button expand="full" color="primary" (click)="home()">Volver a Inicio</ion-button>
+  </ion-footer>
 </ion-content>

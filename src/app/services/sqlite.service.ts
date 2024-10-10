@@ -82,11 +82,7 @@ export class SqliteService {
     }
   
     try {
-      // Eliminar tablas si existen (para evitar errores de estructura)
-      await this.dbInstance.executeSql('DROP TABLE IF EXISTS torneos', []);
-      await this.dbInstance.executeSql('DROP TABLE IF EXISTS administradores', []);
-  
-      // Crear tabla administradores
+      // Crear tabla administradores si no existe
       await this.dbInstance.executeSql(
         `CREATE TABLE IF NOT EXISTS administradores (
           id INTEGER PRIMARY KEY,
@@ -96,13 +92,13 @@ export class SqliteService {
         )`, []
       );
   
-      // Insertar un administrador por defecto
+      // Insertar un administrador por defecto (si no existe)
       await this.dbInstance.executeSql(
         `INSERT OR IGNORE INTO administradores (nombre, correo, contrasena)
          VALUES ('Admin1', 'al.barreras@gmail.com', 'Admin123')`, []
       );
   
-      // Crear tabla torneos
+      // Crear tabla torneos si no existe
       await this.dbInstance.executeSql(
         `CREATE TABLE IF NOT EXISTS torneos (
           id INTEGER PRIMARY KEY,
@@ -113,16 +109,18 @@ export class SqliteService {
           fechaInicio TEXT,
           imagen TEXT,
           creadorId INTEGER,
-          FOREIGN KEY(creadorId) REFERENCES administradores(id)
+          FOREIGN KEY(creadorId) REFERENCES administradores(id) ON DELETE CASCADE
         )`, []
       );
   
-      // Insertar un torneo por defecto
+      // Insertar un torneo por defecto (solo si no existe un torneo con ese nombre)
       await this.dbInstance.executeSql(
         `INSERT OR IGNORE INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId)
          VALUES ('Valorant Championship', 'Valorant', 'Abierto', 16, '2024-10-10', 'valorant.jpg', 
          (SELECT id FROM administradores WHERE nombre = 'Admin1'))`, []
-      );    // Crear tabla juegos
+      );
+  
+      // Crear tabla juegos si no existe
       await this.dbInstance.executeSql(
         `CREATE TABLE IF NOT EXISTS juegos (
           id INTEGER PRIMARY KEY,
@@ -137,22 +135,26 @@ export class SqliteService {
       // Insertar juegos por defecto
       await this.dbInstance.executeSql(
         `INSERT OR IGNORE INTO juegos (nombre, tipo, descripcion, logo, cabecera) VALUES 
-          ('Valorant', 'Shooter', 'Juego de disparos táctico en primera persona.', 'assets/logos/logo-valorant.png', 'assets/img/imagen-valorant.jpg'),
-          ('LoL', 'MOBA', 'Juego de estrategia y combate por equipos.', 'assets/logos/logo-leagu-of-legends.png', 'assets/img/imagen-league-of-legends.jpg'),
-          ('Fortnite', 'Battle Royale', 'Juego de supervivencia en un entorno de batalla masiva.', 'assets/logos/logo-fortnite.png', 'assets/img/imagen-fortnite.jpg'),
-          ('Street Fighter', 'Pelea', 'Juego de lucha con personajes emblemáticos.', 'assets/logos/logo-street-fighter.png', 'assets/img/imagen-street-fighter.jpg');
-
-        `, []
+          ('Valorant', 'Shooter', 'Juego de disparos táctico en primera persona.', 'assets/logos/logo-valorant.jpg', 'assets/img/imagen-valorant.jpg'),
+          ('League of Legends', 'MOBA', 'Juego de estrategia y combate por equipos.', 'assets/logos/logo-leagu-of-legends.jpg', 'assets/img/imagen-league-of-legends.jpg'),
+          ('Fortnite', 'Battle Royale', 'Juego de supervivencia en un entorno de batalla masiva.', 'assets/logos/logo-fortnite.jpg', 'assets/img/imagen-fortnite.jpg'),
+          ('Street Fighter', 'Pelea', 'Juego de lucha con personajes emblemáticos.', 'assets/logos/logo-street-fighter.jpg', 'assets/img/imagen-street-fighter.jpg')`, []
       );
   
+      // Mostrar mensaje de bienvenida
       this.presentAlert('Bienvenido a', 'BATTLE ZONE');
+  
+      // Cargar datos
       this.selectTorneos();
       this.selectAdministradores();
-      this.selectJuegos(); // Llamar a la selección de juegos
+      this.selectJuegos();
+  
     } catch (error) {
+      // Mostrar alerta en caso de error
       this.presentAlert('Creación de Tablas', 'Error: ' + JSON.stringify(error));
     }
   }
+  
   
   
   selectJuegos() {

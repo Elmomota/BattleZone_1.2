@@ -3,36 +3,33 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-   
-    
     <ion-avatar slot="end" (click)="Ircuenta()">
       <img src="assets/icon/user-circle-svgrepo-com.png" alt="Avatar">
     </ion-avatar>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
   <br>
- 
-    <ion-toolbar>
-      <ion-title>Juegos Disponibles</ion-title>
-    </ion-toolbar>
-  
-  
-  <ion-content>
-    <section class="games-section">
-      <ion-list-header>
-        <ion-label><h5>Juegos</h5></ion-label>
-      </ion-list-header>
-  
-      <div class="horizontal-scroll" *ngIf="juegos$ | async as juegos">
-        <div *ngFor="let juego of juegos" class="game-item" (click)="verDetalleJuego(juego.id)">
-          <img [src]="'assets/logos/' + juego.nombre + '.jpg'" alt="{{juego.nombre}}" />
-        </div>
+  <ion-toolbar>
+    <ion-title>Juegos Disponibles</ion-title>
+  </ion-toolbar>
+
+  <section class="games-section">
+    <ion-list-header>
+      <ion-label><h5>Juegos</h5></ion-label>
+    </ion-list-header>
+
+    <div class="horizontal-scroll" *ngIf="juegos$ | async as juegos">
+      <div *ngFor="let juego of juegos" class="game-item" (click)="verDetalleJuego(juego.id)">
+        <img [src]="juego.logo" alt="{{ juego.nombre }}" />
       </div>
-    </section>
-  </ion-content>
-  
-  <ion-footer>
-    <!-- Footer opcional -->
-  </ion-footer>
+    </div>
+  </section>
+</ion-content>
+
+<ion-footer>
+  <!-- Footer opcional -->
+</ion-footer>
+
   

@@ -21,4 +21,7 @@ export class InicioPage implements OnInit {
     this.router.navigate(['/register']);
   }
 
+  adminLogin(){
+    this.router.navigate(['/login-admin']);
+  }
 }

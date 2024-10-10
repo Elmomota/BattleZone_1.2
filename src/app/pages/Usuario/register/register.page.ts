@@ -65,7 +65,7 @@ export class RegisterPage implements OnInit {
     
     this.irPagina();
   
-    await this.presentAlert('Bienvenido', 'Registro exitoso. Disfruta.');
+    
   }
   
   irPagina(){
