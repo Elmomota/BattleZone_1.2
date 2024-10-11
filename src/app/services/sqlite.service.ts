@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -75,6 +76,13 @@ export class SqliteService {
       }
     });
   }
+
+   async obtenerTorneoPorNombreYFecha(nombre: string, fecha: string): Promise<Torneo | null> {
+    const query = `SELECT * FROM torneos WHERE nombre = ? OR fechaInicio = ?`;
+    const result = await this.dbInstance!.executeSql(query, [nombre, fecha]); // Cambiado 'database' por 'dbInstance'
+    return result.rows.length > 0 ? result.rows.item(0) : null;
+  }
+
   async crearTablas() {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos no está lista.');
@@ -82,6 +90,7 @@ export class SqliteService {
     }
   
     try {
+
       // Crear tabla administradores si no existe
       await this.dbInstance.executeSql(
         `CREATE TABLE IF NOT EXISTS administradores (
@@ -94,8 +103,9 @@ export class SqliteService {
   
       // Insertar un administrador por defecto (si no existe)
       await this.dbInstance.executeSql(
-        `INSERT OR IGNORE INTO administradores (nombre, correo, contrasena)
-         VALUES ('Admin1', 'al.barreras@gmail.com', 'Admin123')`, []
+        `INSERT OR IGNORE INTO administradores (id, nombre, correo, contrasena)
+         VALUES (1,'ElmoAdmin', 'al.barreras@gmail.com', 'elmomota770'),
+                (2,'SrchitoAdmin', 'srchitita@gmail.com', 'Srchito123')`, []
       );
   
       // Crear tabla torneos si no existe
@@ -113,12 +123,8 @@ export class SqliteService {
         )`, []
       );
   
-      // Insertar un torneo por defecto (solo si no existe un torneo con ese nombre)
-      await this.dbInstance.executeSql(
-        `INSERT OR IGNORE INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId)
-         VALUES ('Valorant Championship', 'Valorant', 'Abierto', 16, '2024-10-10', 'valorant.jpg', 
-         (SELECT id FROM administradores WHERE nombre = 'Admin1'))`, []
-      );
+      
+ 
   
       // Crear tabla juegos si no existe
       await this.dbInstance.executeSql(
@@ -134,11 +140,11 @@ export class SqliteService {
   
       // Insertar juegos por defecto
       await this.dbInstance.executeSql(
-        `INSERT OR IGNORE INTO juegos (nombre, tipo, descripcion, logo, cabecera) VALUES 
-          ('Valorant', 'Shooter', 'Juego de disparos táctico en primera persona.', 'assets/logos/logo-valorant.jpg', 'assets/img/imagen-valorant.jpg'),
-          ('League of Legends', 'MOBA', 'Juego de estrategia y combate por equipos.', 'assets/logos/logo-leagu-of-legends.jpg', 'assets/img/imagen-league-of-legends.jpg'),
-          ('Fortnite', 'Battle Royale', 'Juego de supervivencia en un entorno de batalla masiva.', 'assets/logos/logo-fortnite.jpg', 'assets/img/imagen-fortnite.jpg'),
-          ('Street Fighter', 'Pelea', 'Juego de lucha con personajes emblemáticos.', 'assets/logos/logo-street-fighter.jpg', 'assets/img/imagen-street-fighter.jpg')`, []
+        `INSERT OR IGNORE INTO juegos (id, nombre, tipo, descripcion, logo, cabecera) VALUES 
+          (1,'Valorant', 'Shooter', 'Juego de disparos táctico en primera persona.', 'assets/logos/logo-valorant.jpg', 'assets/img/imagen-valorant.jpg'),
+          (2,'League of Legends', 'MOBA', 'Juego de estrategia y combate por equipos.', 'assets/logos/logo-leagu-of-legends.jpg', 'assets/img/imagen-league-of-legends.jpg'),
+          (3,'Fortnite', 'Battle Royale', 'Juego de supervivencia en un entorno de batalla masiva.', 'assets/logos/logo-fortnite.jpg', 'assets/img/imagen-fortnite.jpg'),
+          (4,'Street Fighter', 'Pelea', 'Juego de lucha con personajes emblemáticos.', 'assets/logos/logo-street-fighter.jpg', 'assets/img/imagen-street-fighter.jpg')`, []
       );
   
       // Mostrar mensaje de bienvenida
@@ -158,12 +164,7 @@ export class SqliteService {
   
   
   selectJuegos() {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-  
-    return this.dbInstance.executeSql(`SELECT * FROM juegos`, []).then(res => {
+    return this.dbInstance!.executeSql(`SELECT * FROM juegos`, []).then(res => {
       let items: Juego[] = [];
       for (let i = 0; i < res.rows.length; i++) {
         let juego = res.rows.item(i);
@@ -183,12 +184,7 @@ export class SqliteService {
 
 
   selectTorneos() {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-
-    return this.dbInstance.executeSql(`
+    return this.dbInstance!.executeSql(`
       SELECT t.*, a.nombre AS creadorNombre 
       FROM torneos t 
       JOIN administradores a ON t.creadorId = a.id
@@ -207,6 +203,9 @@ export class SqliteService {
     });
   }
 
+ 
+  
+  
   selectAdministradores() {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos no está lista.');

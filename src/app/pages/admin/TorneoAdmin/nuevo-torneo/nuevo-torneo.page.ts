@@ -20,8 +20,6 @@ interface Torneo {
   templateUrl: './nuevo-torneo.page.html',
   styleUrls: ['./nuevo-torneo.page.scss'],
 })
-
-
 export class NuevoTorneoPage implements OnInit {
   nuevoTorneo: Torneo = {
     nombre: '',
@@ -57,6 +55,17 @@ export class NuevoTorneoPage implements OnInit {
   }
 
   async guardarTorneo() {
+    // Verificación del número de equipos
+    if (this.nuevoTorneo.numEquipos < 0 || this.nuevoTorneo.numEquipos > 20) {
+      const alert = await this.alertController.create({
+        header: 'Error de validación',
+        message: 'El número de equipos debe estar entre 0 y 20.',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return; // Salir del método si hay un error
+    }
+
     const alert = await this.alertController.create({
       header: 'Confirmar Creación',
       message: '¿Estás seguro de que deseas crear este torneo?',
@@ -71,14 +80,14 @@ export class NuevoTorneoPage implements OnInit {
             try {
               // Simulación: Obtén el adminId actual (aquí puedes implementar una lógica para obtener el adminId real)
               const adminId = await this.obtenerAdminIdActual();
-  
+
               // Verificación antes de crear
               console.log('Nuevo torneo:', this.nuevoTorneo);
-  
+
               // Llama al servicio para crear el nuevo torneo, pasando el torneo y el adminId
               await this.sqliteService.addTorneo(this.nuevoTorneo, adminId);
               this.torneoService.notificarTorneoAgregado();
-  
+
               // Mensaje de éxito y redirección
               console.log('Torneo creado correctamente');
               await this.router.navigate(['/cuenta-admin']);
@@ -95,25 +104,17 @@ export class NuevoTorneoPage implements OnInit {
         }
       ]
     });
-  
+
     await alert.present();
   }
-  
+
   async obtenerAdminIdActual(): Promise<number> {
     // Aquí implementas la lógica para obtener el adminId, por ejemplo desde un servicio o del almacenamiento local
     // En este ejemplo simulo que el adminId es 1
     return 1; // Reemplaza esto con la lógica adecuada para obtener el adminId real
   }
 
-
-
   admin_c(){
     this.router.navigate(['/cuenta-admin']);
   }
-  
-
-
-
-  
-  
-}
+} 

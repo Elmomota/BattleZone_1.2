@@ -1,8 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { SqliteService } from 'src/app/services/sqlite.service';
-import { BehaviorSubject } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
+import { SqliteService } from 'src/app/services/sqlite.service'; // Importar el servicio
+import { Torneo } from 'src/app/services/torneo'; // Importa la interfaz Torneo
+
+interface Juego {
+  id: number; 
+  nombre: string;
+  tipo: string;
+  descripcion: string;
+  logo: string;
+  cabecera: string;
+}
 
 @Component({
   selector: 'app-detalle-juego',
@@ -10,47 +19,49 @@ import { Router } from '@angular/router';
   styleUrls: ['./detalle-juego.page.scss'],
 })
 export class DetalleJuegoPage implements OnInit {
-
-  juego: any = {};  // Detalles del juego seleccionado
-  torneos$ = new BehaviorSubject<any[]>([]); // Lista de torneos asociados al juego
+  juego?: Juego;
+  torneos: Torneo[] = []; // Lista de torneos asociados al juego
 
   constructor(
-    private sqliteService: SqliteService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private alertController: AlertController,
+    private sqliteService: SqliteService // Aquí se inyecta el servicio
   ) {}
 
   ngOnInit() {
-    const id = this.route.snapshot.params['id']; // Obtener ID del juego desde la URL
-    this.cargarJuego(id); // Cargar el juego al iniciar la página
-  }
-
-  // Método para cargar los detalles del juego
-  cargarJuego(id: number) {
-    this.sqliteService.fetchJuegos().subscribe(juegos => {
-      const juegoEncontrado = juegos.find((j: any) => j.id === id);
-      if (juegoEncontrado) {
-        this.juego = juegoEncontrado; // Cargar los detalles del juego
-        this.cargarTorneos(this.juego.nombre); // Cargar los torneos asociados al juego
+    this.route.queryParams.subscribe(params => {
+      if (params && params['juego']) {
+        try {
+          this.juego = JSON.parse(params['juego']);
+          if (this.juego) { // Asegurarse de que juego no sea undefined
+            this.loadTorneos(this.juego.nombre); // Cargar torneos relacionados al juego
+          }
+        } catch (error) {
+          console.error('Error al parsear el juego:', error);
+          this.router.navigate(['/cuenta-admin']);
+        }
       }
-    }, err => {
-      console.error('Error al cargar el juego:', err);
     });
   }
 
-  // Método para cargar los torneos asociados al juego
-  cargarTorneos(juegoNombre: string) {
+  loadTorneos(nombreJuego: string) {
     this.sqliteService.fetchTorneos().subscribe(torneos => {
-      const torneosAsociados = torneos.filter(t => t.juego === juegoNombre);
-      this.torneos$.next(torneosAsociados); // Actualizar el observable con la lista de torneos
-    }, err => {
-      console.error('Error al cargar los torneos:', err);
+      this.torneos = torneos.filter(torneo => torneo.juego === nombreJuego); // Filtrar torneos por nombre de juego
+    }, error => {
+      console.error('Error al cargar torneos:', error);
     });
   }
 
-
-  home(){
-    
-    this.router.navigate(['/home']);
+  modificarJuego() {
+    if (this.juego && this.juego.id) {
+      this.router.navigate(['/modificar-juego'], {
+        queryParams: {
+          juego: JSON.stringify(this.juego)
+        }
+      });
+    } else {
+      console.warn('No se puede modificar, juego no válido');
+    }
   }
 }

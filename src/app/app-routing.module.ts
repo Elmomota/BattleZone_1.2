@@ -16,10 +16,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/admin/cuenta-admin/cuenta-admin.module').then( m => m.CuentaAdminPageModule)
   },
   {
-    path: 'agregar-torneo',
-    loadChildren: () => import('./pages/admin/TorneoAdmin/agregar-torneo/agregar-torneo.module').then( m => m.AgregarTorneoPageModule)
-  },
-  {
     path: 'modificar-torneo',
     loadChildren: () => import('./pages/admin/TorneoAdmin/modificar-torneo/modificar-torneo.module').then( m => m.ModificarTorneoPageModule)
   },
