@@ -1,4 +1,5 @@
 .torneo-card {
+<<<<<<< HEAD
   background-color: #5A556E;
   color: #C9B1BD;
   border-radius: 10px;
@@ -6,10 +7,20 @@
   margin-top: 15px;
   margin-bottom: 15px;
   /* Ajusta este valor para agregar más o menos espacio */
+=======
+    background-color: #5A556E;
+    color: #C9B1BD;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    /* Ajusta este valor para agregar más o menos espacio */
+>>>>>>> 3434f8763cadb82dc992e1e1b4128133d8f4cf66
 }
 
 ////////////contenido general
 ion-content {
+<<<<<<< HEAD
   --background: #4d55ad;
   color: #fff;
   margin-top: 150px;
@@ -37,21 +48,64 @@ ion-img {
   /* Asegura que la imagen no exceda el ancho de la tarjeta */
   border-radius: 10px;
   /* Bordes redondeados para la imagen */
+=======
+    --background: #4d55ad;
+    color: #fff;
+    margin-top: 150px;
+}
+
+ion-card-header {
+    text-align: center;
+    /* Centrar el texto del encabezado */
+}
+
+ion-card-title {
+    font-size: 24px;
+    /* Tamaño de fuente del título */
+    font-weight: bold;
+    /* Negrita para el título */
+}
+
+ion-button {
+    margin-top: 10px;
+    /* Espaciado entre botones */
+}
+
+ion-img {
+    max-width: 100%;
+    /* Asegura que la imagen no exceda el ancho de la tarjeta */
+    border-radius: 10px;
+    /* Bordes redondeados para la imagen */
+>>>>>>> 3434f8763cadb82dc992e1e1b4128133d8f4cf66
 }
 
 /////////////////////card grande
 /// 
 .content-container {
+<<<<<<< HEAD
   padding: 15px;
   background-color: #32345A;
   border-radius: 10px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   margin-top: 50px;
   /* Incrementa el padding superior para más espacio */
+=======
+    padding: 15px;
+    background-color: #32345A;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    margin-top: 50px;
+    /* Incrementa el padding superior para más espacio */
+>>>>>>> 3434f8763cadb82dc992e1e1b4128133d8f4cf66
 }
 
 //////////////////toolbar
 ion-toolbar {
+<<<<<<< HEAD
   --background: #32345A;
   color: #C9B1BD;
+=======
+    --background: #32345A;
+    color: #C9B1BD;
+>>>>>>> 3434f8763cadb82dc992e1e1b4128133d8f4cf66
 }
