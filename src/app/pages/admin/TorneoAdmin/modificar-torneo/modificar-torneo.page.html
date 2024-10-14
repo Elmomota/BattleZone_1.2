@@ -1,80 +1,30 @@
 <ion-header>
-<<<<<<< HEAD
-  <ion-toolbar>
-      <ion-title>Modificar Torneo</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <div class="content-container">
-      <form *ngIf="torneo" (ngSubmit)="guardarCambios()">
-          <ion-item>
-              <ion-label position="floating">Nombre del Torneo</ion-label>
-              <ion-input [(ngModel)]="torneo.nombre" name="nombre" required></ion-input>
-          </ion-item>
-
-          <ion-item>
-              <ion-label position="floating">Juego</ion-label>
-              <ion-select [(ngModel)]="nuevoTorneo.juego" name="juego" required>
-                  <ion-select-option value="Valorant">Valorant</ion-select-option>
-                  <ion-select-option value="Fortnite">Fortnite</ion-select-option>
-                  <ion-select-option value="LoL">League of Legends</ion-select-option>
-                  <ion-select-option value="Street Fighter">Street Fighter</ion-select-option>
-              </ion-select>
-          </ion-item>
-
-          <ion-item>
-              <ion-label position="floating">Estado</ion-label>
-              <ion-select [(ngModel)]="torneo.estado" name="estado" required>
-                  <ion-select-option value="Próximo">Próximo</ion-select-option>
-                  <ion-select-option value="En curso">En curso</ion-select-option>
-                  <ion-select-option value="Finalizado">Finalizado</ion-select-option>
-              </ion-select>
-          </ion-item>
-
-          <ion-item>
-              <ion-label position="floating">Equipos Inscritos</ion-label>
-              <ion-input type="number" [(ngModel)]="torneo.numEquipos" name="numEquipos" required></ion-input>
-          </ion-item>
-
-          <ion-item>
-              <ion-label position="floating">Fecha de Inicio</ion-label>
-              <ion-datetime [(ngModel)]="torneo.fechaInicio" name="fechaInicio" display-format="YYYY-MM-DD" required></ion-datetime>
-          </ion-item>
-          <ion-item>
-              <ion-label position="floating">Imagen</ion-label>
-              <ion-button class="boton-imagen" (click)="onFileSelected()">Seleccionar Imagen</ion-button>
-          </ion-item>
-
-          <ion-button expand="full" type="submit">Guardar Cambios</ion-button>
-      </form>
-
-
-  </div>
-=======
     <ion-toolbar>
         <ion-title>Modificar Torneo</ion-title>
     </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
+  </ion-header>
+  
+  <ion-content [fullscreen]="true">
     <div class="content-container">
         <form *ngIf="torneo" (ngSubmit)="guardarCambios()">
+            <!-- Campo Nombre del Torneo -->
             <ion-item>
                 <ion-label position="floating">Nombre del Torneo</ion-label>
                 <ion-input [(ngModel)]="torneo.nombre" name="nombre" required></ion-input>
             </ion-item>
-
+  
+            <!-- Campo Juego -->
             <ion-item>
                 <ion-label position="floating">Juego</ion-label>
-                <ion-select [(ngModel)]="nuevoTorneo.juego" name="juego" required>
+                <ion-select [(ngModel)]="torneo.juego" name="juego" required>
                     <ion-select-option value="Valorant">Valorant</ion-select-option>
                     <ion-select-option value="Fortnite">Fortnite</ion-select-option>
                     <ion-select-option value="LoL">League of Legends</ion-select-option>
                     <ion-select-option value="Street Fighter">Street Fighter</ion-select-option>
                 </ion-select>
             </ion-item>
-
+  
+            <!-- Campo Estado -->
             <ion-item>
                 <ion-label position="floating">Estado</ion-label>
                 <ion-select [(ngModel)]="torneo.estado" name="estado" required>
@@ -83,25 +33,32 @@
                     <ion-select-option value="Finalizado">Finalizado</ion-select-option>
                 </ion-select>
             </ion-item>
-
+  
+            <!-- Campo Equipos Inscritos -->
             <ion-item>
                 <ion-label position="floating">Equipos Inscritos</ion-label>
                 <ion-input type="number" [(ngModel)]="torneo.numEquipos" name="numEquipos" required></ion-input>
             </ion-item>
-
+  
+            <!-- Campo Fecha de Inicio -->
             <ion-item>
                 <ion-label position="floating">Fecha de Inicio</ion-label>
                 <ion-datetime [(ngModel)]="torneo.fechaInicio" name="fechaInicio" display-format="YYYY-MM-DD" required></ion-datetime>
             </ion-item>
+  
+            <!-- Campo Imagen -->
             <ion-item>
                 <ion-label position="floating">Imagen</ion-label>
                 <ion-button class="boton-imagen" (click)="onFileSelected()">Seleccionar Imagen</ion-button>
             </ion-item>
-
+  
+            <!-- Vista previa de la imagen -->
+            <ion-item *ngIf="previewImage">
+                <img [src]="previewImage" alt="Vista previa de la imagen" />
+            </ion-item>
+  
             <ion-button expand="full" type="submit">Guardar Cambios</ion-button>
         </form>
-
-
     </div>
->>>>>>> 3434f8763cadb82dc992e1e1b4128133d8f4cf66
-</ion-content>
+  </ion-content>
+  

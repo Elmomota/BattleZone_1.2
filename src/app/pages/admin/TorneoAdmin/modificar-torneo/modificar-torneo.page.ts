@@ -40,16 +40,23 @@ export class ModificarTorneoPage implements OnInit {
       if (params && params['torneo']) {
         try {
           this.torneo = JSON.parse(params['torneo']);
-          console.log('Torneo recibido:', this.torneo); // Verificación de los datos del torneo
-          this.previewImage = this.torneo?.imagen; // Mostrar la imagen actual si existe
+          console.log('Torneo recibido:', this.torneo);
+  
+          // Asignar la imagen para la vista previa
+          this.previewImage = this.torneo?.imagen;
+  
+          // Si es necesario, aquí puedes inicializar "nuevoTorneo" con los valores de "torneo"
+          this.nuevoTorneo = { ...this.torneo }; 
+  
         } catch (error) {
           console.error('Error al parsear el torneo:', error);
           this.router.navigate(['/cuenta-admin']);
         }
       }
     });
-    
   }
+  
+  
 
   async onFileSelected() {
     const image = await Camera.getPhoto({
@@ -79,16 +86,15 @@ export class ModificarTorneoPage implements OnInit {
         {
           text: 'Guardar',
           handler: async () => {
-            // Verifica que 'torneo' no sea undefined antes de continuar
             if (this.torneo) {
               try {
                 // Verificación antes de actualizar
                 console.log('Torneo antes de guardar:', this.torneo);
-
+  
                 // Llama al servicio para actualizar el torneo
                 await this.sqliteService.actualizarTorneo(this.torneo);
                 this.torneoService.notificarTorneoActualizado();
-
+  
                 // Mensaje de éxito y redirección
                 console.log('Cambios guardados correctamente');
                 await this.router.navigate(['/cuenta-admin']);
@@ -101,20 +107,13 @@ export class ModificarTorneoPage implements OnInit {
                 });
                 await errorAlert.present();
               }
-            } else {
-              console.error('Torneo no definido al intentar guardar cambios.');
-              const errorAlert = await this.alertController.create({
-                header: 'Error',
-                message: 'No se pudo guardar los cambios porque el torneo no está definido.',
-                buttons: ['OK'],
-              });
-              await errorAlert.present();
             }
           }
         }
       ]
     });
-
+  
     await alert.present();
   }
+  
 }

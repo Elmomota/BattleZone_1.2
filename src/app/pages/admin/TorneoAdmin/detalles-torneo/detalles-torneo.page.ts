@@ -48,13 +48,14 @@ export class DetallesTorneoPage implements OnInit {
     if (this.torneo && this.torneo.id) {
       this.router.navigate(['/modificar-torneo'], {
         queryParams: {
-          torneo: JSON.stringify(this.torneo)
+          torneo: JSON.stringify(this.torneo) // Pasa el objeto del torneo
         }
       });
     } else {
       console.warn('No se puede modificar, torneo no válido');
     }
   }
+  
 
   async eliminarTorneo() {
     const alert = await this.alertController.create({

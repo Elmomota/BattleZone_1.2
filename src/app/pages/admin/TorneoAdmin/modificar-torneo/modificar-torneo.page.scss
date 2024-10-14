@@ -1,98 +1,66 @@
-/////////////container general
-.content-container {
-    padding: 15px;
-    background-color: #4d55ad;
-    /* Fondo del contenedor */
-    /* Bordes redondeados */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    /* Sombra para profundidad */
-}
-
-//////////////////////toolbar
-ion-toolbar {
-    --background: #32345A;
-    color: #C9B1BD;
-}
-
-//////////////////////////boton imagen
-/// 
-.boton-imagen {
-    margin-top: 10px;
-    /* Añade espacio por encima del botón */
-    margin-bottom: 15px;
-    /* Añade espacio por debajo del botón */
-    --background: #5A556E;
-    color: #C9B1BD;
-    border-radius: 5px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/////////////container general
+/* Container general */
 .content-container {
   padding: 15px;
   background-color: #4d55ad;
   /* Fondo del contenedor */
-  /* Bordes redondeados */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   /* Sombra para profundidad */
 }
 
-//////////////////////toolbar
+/* Toolbar */
 ion-toolbar {
   --background: #32345A;
   color: #C9B1BD;
 }
 
-//////////////////////////boton imagen
-/// 
+/* Botón imagen */
 .boton-imagen {
   margin-top: 10px;
-  /* Añade espacio por encima del botón */
   margin-bottom: 15px;
-  /* Añade espacio por debajo del botón */
   --background: #5A556E;
   color: #C9B1BD;
   border-radius: 5px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Formulario */
 .form-container {
-    padding: 20px; /* Espaciado interno */
-    background-color: #32345A; /* Color de fondo del formulario */
-    border-radius: 10px; /* Bordes redondeados */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para profundidad */
-    max-width: 600px; /* Ancho máximo del formulario */
-    margin: 0 auto; /* Centrar el formulario */
-  }
-  
-  ion-item {
-    --background: #3E4057; /* Fondo de los elementos del formulario */
-    --color: #C9B1BD; /* Color del texto */
-    margin-bottom: 15px; /* Espaciado entre elementos */
-    border-radius: 5px; /* Bordes redondeados de los elementos */
-  }
-  
-  ion-label {
-    --color: #C9B1BD; /* Color del texto de las etiquetas */
-  }
-  
-  ion-input, ion-select, ion-datetime {
-    --background: #3E4057; /* Fondo de los campos de entrada */
-    --color: #C9B1BD; /* Color del texto de los campos de entrada */
-  }
-  
-  .submit-button {
-    margin-top: 20px; /* Margen superior para el botón */
-    --background: #5A556E; /* Color de fondo del botón */
-    color: #C9B1BD; /* Color del texto del botón */
-    border-radius: 5px; /* Bordes redondeados del botón */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para el botón */
-  }
-  
-  ion-button {
-    --background: #5A556E; /* Color de fondo del botón */
-    color: #C9B1BD; /* Color del texto del botón */
-    border-radius: 5px; /* Bordes redondeados del botón */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra para el botón */
-  }
-  
+  padding: 20px;
+  background-color: #32345A;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+ion-item {
+  --background: #3E4057;
+  --color: #C9B1BD;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+ion-label {
+  --color: #C9B1BD;
+}
+
+ion-input, ion-select, ion-datetime {
+  --background: #3E4057;
+  --color: #C9B1BD;
+}
+
+/* Botón de envío */
+.submit-button {
+  margin-top: 20px;
+  --background: #5A556E;
+  color: #C9B1BD;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+ion-button {
+  --background: #5A556E;
+  color: #C9B1BD;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
