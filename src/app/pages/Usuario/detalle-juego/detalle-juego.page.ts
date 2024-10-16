@@ -64,4 +64,10 @@ export class DetalleJuegoPage implements OnInit {
       console.warn('No se puede modificar, juego no válido');
     }
   }
+
+
+  home(){
+    this.router.navigate(['/home']);
+  }
+  
 }

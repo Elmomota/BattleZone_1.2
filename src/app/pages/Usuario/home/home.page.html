@@ -1,51 +1,53 @@
 <ion-header>
-  <!-------------------- toolbar ------------------------------->
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <h2 class="tit-toolbar">Administración Juegos</h2>
-    <ion-avatar slot="end">
-      <img src="assets/icon/user-circle-svgrepo-com.png" alt="Avatar">
-    </ion-avatar>
-  </ion-toolbar>
+    <!-------------------- toolbar ------------------------------->
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <h2 class="tit-toolbar">Administración Juegos</h2>
+        <ion-avatar slot="end" (click)="Ircuenta()">
+            <img src="assets/icon/user-circle-svgrepo-com.png" alt="Avatar">
+        </ion-avatar>
+    </ion-toolbar>
 </ion-header>
 
 <!--------------------- header ------------------------------>
 <!--------------------------------------------------->
 <!------------------------- body -------------------------->
 <ion-content [fullscreen]="true">
-  <h1 class="titulo"> Bienvenido, {{ adminUser }}</h1>
-  <hr>
+    <h1 class="titulo"> Bienvenido, {{ adminUser }}</h1>
+    <hr>
 
 
-  <!--------------------------------------------------->
+    <!--------------------------------------------------->
 
-  <!-- Indicador de carga -->
-  <ion-spinner *ngIf="loading" class="loading-spinner"></ion-spinner>
-  <!--------------------------------------------------->
+    <!-- Indicador de carga -->
+    <ion-spinner *ngIf="loading" class="loading-spinner"></ion-spinner>
+    <!--------------------------------------------------->
 
-  <div *ngIf="!loading">
-    <section class="games-section">
-      <ion-list-header>
-        <ion-label><h5>Juegos</h5></ion-label>
-      </ion-list-header>
+    <div *ngIf="!loading">
+        <section class="games-section">
+            <ion-list-header>
+                <ion-label>
+                    <h5>Juegos</h5>
+                </ion-label>
+            </ion-list-header>
 
-      <div class="horizontal-scroll" *ngIf="filteredJuegos.length > 0; else noJuegos">
-        <div *ngFor="let juego of filteredJuegos" class="game-item" (click)="verDetallesJuego(juego)">
-          <img [src]="juego.logo" alt="{{ juego.nombre }}" />
-        </div>
-      </div>
+            <div class="horizontal-scroll" *ngIf="filteredJuegos.length > 0; else noJuegos">
+                <div *ngFor="let juego of filteredJuegos" class="game-item" (click)="verDetallesJuego(juego)">
+                    <img [src]="juego.logo" alt="{{ juego.nombre }}" />
+                </div>
+            </div>
 
-      <ng-template #noJuegos>
-        <ion-item class="no-juegos">
-          <ion-label>
-            <p>No hay juegos creados todavía.</p>
-          </ion-label>
-        </ion-item>
-      </ng-template>
-    </section>
-  </div>
+            <ng-template #noJuegos>
+                <ion-item class="no-juegos">
+                    <ion-label>
+                        <p>No hay juegos creados todavía.</p>
+                    </ion-label>
+                </ion-item>
+            </ng-template>
+        </section>
+    </div>
 
-  <!-- Botón flotante eliminado -->
+    <!-- Botón flotante eliminado -->
 </ion-content>
