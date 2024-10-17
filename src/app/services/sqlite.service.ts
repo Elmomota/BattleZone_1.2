@@ -7,6 +7,8 @@ import { Administracion } from './administracion';
 import { Juego } from './juego'
 import { TorneoService } from './torneo-service.service';
 import { Platform, AlertController } from '@ionic/angular';
+import { Usuario } from './usuario';
+import { UserTorneo } from './user-torneo'
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +23,7 @@ export class SqliteService {
   private listaTorneos = new BehaviorSubject<Torneo[]>([]);
   private listaAdministradores = new BehaviorSubject<Administracion[]>([]);
   private listaJuegos = new BehaviorSubject<Juego[]>([]);
+  private listaUsuarios = new BehaviorSubject<Usuario[]>([]);
 
   constructor(
     private sqlite: SQLite, 
@@ -50,6 +53,11 @@ export class SqliteService {
   fetchJuegos(): Observable<Juego[]> {
     return this.listaJuegos.asObservable();
   }
+
+    // Obtener los usuarios desde la base de datos
+    fetchUsuarios(): Observable<Usuario[]> {
+      return this.listaUsuarios.asObservable(); // Añadir esta línea
+    }
 
   async presentAlert(titulo: string, msj: string) {
     const alert = await this.alertController.create({
@@ -100,7 +108,20 @@ export class SqliteService {
           contrasena TEXT
         )`, []
       );
-  
+
+      //crear tabla de Usuarios 
+      await this.dbInstance.executeSql(
+        `CREATE TABLE IF NOT EXISTS usuarios (
+          id INTEGER PRIMARY KEY,
+          pnombre TEXT NOT NULL,
+          papellido TEXT NOT NULL,
+          nickname TEXT NOT NULL,
+          correo TEXT NOT NULL UNIQUE,
+          contrasena TEXT NOT NULL,
+          fechaNacimiento TEXT NOT NULL,
+          pais TEXT NOT NULL
+        )`, []
+      );
       // Insertar un administrador por defecto (si no existe)
       await this.dbInstance.executeSql(
         `INSERT OR IGNORE INTO administradores (id, nombre, correo, contrasena)
@@ -122,10 +143,6 @@ export class SqliteService {
           FOREIGN KEY(creadorId) REFERENCES administradores(id) ON DELETE CASCADE
         )`, []
       );
-  
-      
- 
-  
       // Crear tabla juegos si no existe
       await this.dbInstance.executeSql(
         `CREATE TABLE IF NOT EXISTS juegos (
@@ -137,7 +154,22 @@ export class SqliteService {
           cabecera TEXT
         )`, []
       );
-  
+
+      await this.dbInstance.executeSql(`
+        CREATE TABLE IF NOT EXISTS inscripcion_torneo (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id_torneo INTEGER,
+          id_usuario INTEGER,
+          nombre TEXT,
+          apellido TEXT,
+          nickname TEXT,
+          correo TEXT,
+          FOREIGN KEY (id_torneo) REFERENCES torneos(id),
+          FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
+        );
+      `, []);
+
+
       // Insertar juegos por defecto
       await this.dbInstance.executeSql(
         `INSERT OR IGNORE INTO juegos (id, nombre, tipo, descripcion, logo, cabecera) VALUES 
@@ -154,14 +186,42 @@ export class SqliteService {
       this.selectTorneos();
       this.selectAdministradores();
       this.selectJuegos();
+      this.selectUsuarios();
   
     } catch (error) {
       // Mostrar alerta en caso de error
       this.presentAlert('Creación de Tablas', 'Error: ' + JSON.stringify(error));
     }
   }
-  
-  
+
+
+  selectUsuarios() {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+
+    return this.dbInstance.executeSql(`SELECT * FROM usuarios`, []).then(res => {
+      let items: Usuario[] = [];
+      for (let i = 0; i < res.rows.length; i++) {
+        let usuario = res.rows.item(i);
+        items.push({
+          id: usuario.id,
+          pnombre: usuario.pnombre,
+          papellido: usuario.papellido,
+          nickname: usuario.nickname,
+          correo: usuario.correo,
+          contrasena: usuario.contrasena,
+          fechaNacimiento: usuario.fechaNacimiento,
+          edad:usuario.edad,
+          pais: usuario.pais
+        });
+      }
+      this.listaUsuarios.next(items); // Actualizar el observable de usuarios
+    }).catch(e => {
+      this.presentAlert('Error al seleccionar usuarios', JSON.stringify(e));
+    });
+  }
   
   selectJuegos() {
     return this.dbInstance!.executeSql(`SELECT * FROM juegos`, []).then(res => {
@@ -276,4 +336,85 @@ export class SqliteService {
   }
 
   // Las funciones de administrador pueden seguir la misma estructura que los torneos
-}
+  async addUsuario(nuevoUsuario: Usuario) {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+    const sql = 'INSERT INTO usuarios (pnombre, papellido, nickname, correo, contrasena, fechaNacimiento, pais) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    const values = [nuevoUsuario.pnombre, nuevoUsuario.papellido, nuevoUsuario.nickname, nuevoUsuario.correo, nuevoUsuario.contrasena, nuevoUsuario.fechaNacimiento, nuevoUsuario.pais];
+    
+    try {
+      await this.dbInstance.executeSql(sql, values);
+      this.selectUsuarios();  // Actualizar la lista observable de usuarios después de insertar
+    } catch (error) {
+      this.presentAlert('Error al añadir al Usuario', JSON.stringify(error));
+    }
+  }
+  
+
+  async actualizarUsuario(usuario : Usuario){
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, contrasena = ?, fechaNacimiento = ?, edad = ?, pais = ? WHERE id = ?`;
+    const values = [usuario.pnombre, usuario.papellido, usuario.nickname, usuario.correo, usuario.contrasena, usuario.fechaNacimiento, usuario.edad, usuario.pais, usuario.id];
+    
+    try {
+      await this.dbInstance.executeSql(sql, values);
+    } catch (error) {
+      this.presentAlert('Error al añador al Usuario', JSON.stringify(error));
+    }
+
+
+  }
+
+  async loginUsuario(correo: string, contrasena: string): Promise<Usuario | null> {
+    const query = `SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?`;
+    const result = await this.dbInstance!.executeSql(query, [correo, contrasena]);
+    
+    if (result.rows.length > 0) {
+      return result.rows.item(0); // Usuario encontrado
+    } else {
+      return null; // Credenciales incorrectas
+    }
+  }
+
+
+  getUsuarioByCorreoONickname(correo: string, nickname: string): Promise<boolean> {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return Promise.resolve(false); // Retorna false si no hay instancia
+    }
+  
+    const query = `SELECT * FROM usuarios WHERE correo = ? OR nickname = ?`;
+  
+    return this.dbInstance.executeSql(query, [correo, nickname]).then(res => {
+      return res.rows.length > 0; // Retorna true si hay resultados
+    }).catch(e => {
+      console.error('Error al buscar usuario', e);
+      return false; // Retorna false en caso de error
+    });
+  }
+  async inscribirTorneo(inscripcion: UserTorneo): Promise<void> {
+    if (!this.dbInstance) {
+      throw new Error('Database instance is not initialized.');
+    }
+  
+    const query = `INSERT INTO inscripcion_torneo (id_torneo, id_usuario, nombre, apellido, nickname, correo)
+      VALUES (?, ?, ?, ?, ?, ?);
+    `;
+    const values = [
+      inscripcion.id_torneo,
+      inscripcion.id_usuario,
+      inscripcion.nombre,
+      inscripcion.apellido,
+      inscripcion.nickname,
+      inscripcion.correo
+    ];
+  
+    await this.dbInstance.executeSql(query, values);
+  }
+  
+}  

@@ -18,7 +18,7 @@ export class InicioPage implements OnInit {
     this.menuCtrl.enable(true); 
   }
   inicio(){
-    this.router.navigate(['/register']);
+    this.router.navigate(['/registro']);
   }
 
   adminLogin(){

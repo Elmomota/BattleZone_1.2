@@ -11,7 +11,7 @@ import { Juego } from 'src/app/services/juego'; // Importación del modelo de da
 })
 export class HomePage implements OnInit {
 
-  adminUser: string = ''; // Almacena el nombre del administrador
+  usuario: string = ''; // Almacena el nombre del usuario
   juegos: Juego[] = []; // Lista de juegos
   filteredJuegos: Juego[] = [];  // Lista de juegos filtrados
   searchTerm: string = '';  // Término de búsqueda introducido por el usuario
@@ -24,19 +24,20 @@ export class HomePage implements OnInit {
     private sqliteService: SqliteService, // Inyección del servicio SQLite
     
   ) {
-    // Suscribirse a los parámetros de consulta de la ruta activa
-    this.activedrouter.queryParams.subscribe(param => {
-      if (this.router.getCurrentNavigation()?.extras?.state) {
-        // Obtener el nombre del administrador desde los parámetros de navegación
-        this.adminUser = this.router.getCurrentNavigation()?.extras?.state?.['nombreUser'];
-      }
-    });
+
   }
 
-  async ngOnInit() { // Método que se ejecuta al inicializar el componente
-    await this.loadJuegos(); // Cargar los juegos al inicializar la página
 
-   
+  async ngOnInit() {
+    // Recuperar el nombre del usuario desde los parámetros de la ruta
+    this.activedrouter.queryParams.subscribe(params => {
+      if (params && params['usuario']) {
+        const usuario = JSON.parse(params['usuario']);
+        this.usuario = usuario.nickname || 'Usuario';
+      }
+    });
+
+    await this.loadJuegos(); // Cargar los juegos al inicializar la página
   }
 
   async loadJuegos() { // Método para cargar juegos desde el servicio

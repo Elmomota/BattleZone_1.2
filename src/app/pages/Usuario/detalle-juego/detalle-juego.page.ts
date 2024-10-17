@@ -39,7 +39,7 @@ export class DetalleJuegoPage implements OnInit {
           }
         } catch (error) {
           console.error('Error al parsear el juego:', error);
-          this.router.navigate(['/cuenta-admin']);
+          
         }
       }
     });
@@ -53,15 +53,13 @@ export class DetalleJuegoPage implements OnInit {
     });
   }
 
-  modificarJuego() {
-    if (this.juego && this.juego.id) {
-      this.router.navigate(['/modificar-juego'], {
-        queryParams: {
-          juego: JSON.stringify(this.juego)
-        }
-      });
-    } else {
-      console.warn('No se puede modificar, juego no válido');
-    }
+  inscripcion(idTorneo: number) {
+    // Navegar a la página de detalles del torneo con el id del torneo
+    this.router.navigate(['/detalles-torneo'], {
+      queryParams: { idTorneo: idTorneo }
+    });
   }
 }
+
+
+

@@ -55,6 +55,15 @@ const routes: Routes = [
     path: 'detalle-juego/:id',
     loadChildren: () => import('./pages/Usuario/detalle-juego/detalle-juego.module').then( m => m.DetalleJuegoPageModule)
   },
+
+  {
+    path: 'registro',
+    loadChildren: () => import('./pages/Usuario/registro/registro.module').then( m => m.RegistroPageModule)
+  },
+  {
+    path: 'iniciar-sesion',
+    loadChildren: () => import('./pages/Usuario/iniciar-sesion/iniciar-sesion.module').then( m => m.IniciarSesionPageModule)
+  },
   {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
