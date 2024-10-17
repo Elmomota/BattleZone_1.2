@@ -18,33 +18,35 @@
   <hr>
 
 
-  <!--------------------------------------------------->
+    <!--------------------------------------------------->
 
-  <!-- Indicador de carga -->
-  <ion-spinner *ngIf="loading" class="loading-spinner"></ion-spinner>
-  <!--------------------------------------------------->
+    <!-- Indicador de carga -->
+    <ion-spinner *ngIf="loading" class="loading-spinner"></ion-spinner>
+    <!--------------------------------------------------->
 
-  <div *ngIf="!loading">
-    <section class="games-section">
-      <ion-list-header>
-        <ion-label><h5>Juegos</h5></ion-label>
-      </ion-list-header>
+    <div *ngIf="!loading">
+        <section class="games-section">
+            <ion-list-header>
+                <ion-label>
+                    <h5>Juegos</h5>
+                </ion-label>
+            </ion-list-header>
 
-      <div class="horizontal-scroll" *ngIf="filteredJuegos.length > 0; else noJuegos">
-        <div *ngFor="let juego of filteredJuegos" class="game-item" (click)="verDetallesJuego(juego)">
-          <img [src]="juego.logo" alt="{{ juego.nombre }}" />
-        </div>
-      </div>
+            <div class="horizontal-scroll" *ngIf="filteredJuegos.length > 0; else noJuegos">
+                <div *ngFor="let juego of filteredJuegos" class="game-item" (click)="verDetallesJuego(juego)">
+                    <img [src]="juego.logo" alt="{{ juego.nombre }}" />
+                </div>
+            </div>
 
-      <ng-template #noJuegos>
-        <ion-item class="no-juegos">
-          <ion-label>
-            <p>No hay juegos creados todavía.</p>
-          </ion-label>
-        </ion-item>
-      </ng-template>
-    </section>
-  </div>
+            <ng-template #noJuegos>
+                <ion-item class="no-juegos">
+                    <ion-label>
+                        <p>No hay juegos creados todavía.</p>
+                    </ion-label>
+                </ion-item>
+            </ng-template>
+        </section>
+    </div>
 
 
 </ion-content>

@@ -59,6 +59,12 @@ export class DetalleJuegoPage implements OnInit {
       queryParams: { idTorneo: idTorneo }
     });
   }
+
+
+  home(){
+    this.router.navigate(['/home']);
+  }
+  
 }
 
 
