@@ -71,6 +71,12 @@ irADetalleInscripcion(torneo: Torneo) {
     this.router.navigate(['/home']);
   }
   
+  verDetallesTorneo(){
+
+    
+  }
+
+  
 }
 
 

@@ -31,7 +31,7 @@ export class CuentaPage implements OnInit {
 seleccion = 'Torneos jugados';
 
 home(){
-  this.router.navigate(['/home']);
+  this.router.navigate(['/detalle-juego']);
 }
 
 

@@ -1,21 +1,21 @@
 <ion-header>
-  <!-------------------- toolbar ------------------------------->
-  <ion-toolbar>
-    <ion-buttons slot="start">
-      <ion-menu-button></ion-menu-button>
-    </ion-buttons>
-    <ion-avatar slot="end">
-      <img src="assets/icon/user-circle-svgrepo-com.png" alt="Avatar">
-    </ion-avatar>
-  </ion-toolbar>
+    <!-------------------- toolbar ------------------------------->
+    <ion-toolbar>
+        <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-avatar slot="end">
+            <img src="assets/icon/user-circle-svgrepo-com.png" alt="Avatar">
+        </ion-avatar>
+    </ion-toolbar>
 </ion-header>
 
 <!--------------------- header ------------------------------>
 <!--------------------------------------------------->
 <!------------------------- body -------------------------->
 <ion-content [fullscreen]="true">
-  <h1 class="titulo"> Bienvenido de vuelta, {{ usuario }}!</h1>
-  <hr>
+    <h1 class="titulo"> Bienvenido de vuelta, {{ usuario }}!</h1>
+    <hr>
 
 
     <!--------------------------------------------------->
@@ -47,6 +47,40 @@
             </ng-template>
         </section>
     </div>
+
+
+    <hr/>
+
+
+    <h1 class="titulo-noticias">Últimas Noticias:</h1>
+
+
+
+    <div>
+        <ion-list class="div-noticias">
+            <ion-item *ngFor="let noticia of noticias" class="lista-noticia">
+
+                <ion-label>
+                    <div class="imagen-container">
+                        <img [src]="noticia.urlToImage" alt="{{ noticia.title }}">
+                    </div>
+                    <!-- Título en rojo -->
+                    <h2 class="noticia-titulo">{{ noticia.title }}</h2>
+                    <p class="noticia-descripcion">{{ noticia.description }}</p>
+                    <hr>
+                    <h3 class="noticia-autor">Por: {{ noticia.author }}</h3>
+                    <p class="news-date">Publicado el: {{ noticia.publishedAt | date:'dd/MM/yyyy' }}</p>
+
+                    <!-- Botón "Leer más" en morado -->
+                    <ion-button expand="full" color="primary" [href]="noticia.url" target="_blank">Leer más</ion-button>
+                    <hr>
+                </ion-label>
+            </ion-item>
+        </ion-list>
+    </div>
+
+
+
 
 
 </ion-content>

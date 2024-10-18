@@ -14,19 +14,38 @@ import { UserTorneo } from './user-torneo'
 @Injectable({
   providedIn: 'root'
 })
+
+
+////////////creacion instancia bdd
 export class SqliteService {
   private dbInstance: SQLiteObject | null = null;
   private _storage: Storage | null = null;
   
+
+
+
+
   // Observable para el estado de la base de datos
   private isDbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
   
+
+
+
+
+
+
   // Observables para los datos
   private listaTorneos = new BehaviorSubject<Torneo[]>([]);
   private listaAdministradores = new BehaviorSubject<Administracion[]>([]);
   private listaJuegos = new BehaviorSubject<Juego[]>([]);
   private listaUsuarios = new BehaviorSubject<Usuario[]>([]);
 
+
+
+
+
+
+  /////////////////////////////constructor para las conexciones (pa ke todo funcione basicamente)
   constructor(
     private sqlite: SQLite, 
     private torneoService: TorneoService,
@@ -59,15 +78,23 @@ export class SqliteService {
   }
 
 
+
+
+
   // Observar el estado de la base de datos
   dbState(): Observable<boolean> {
     return this.isDbReady.asObservable();
   }
 
+
+
+
   // Obtener los torneos desde la base de datos
   fetchTorneos(): Observable<Torneo[]> {
     return this.listaTorneos.asObservable();
   }
+
+
 
   // Obtener los administradores desde la base de datos
   fetchAdministradores(): Observable<Administracion[]> {
@@ -84,6 +111,12 @@ export class SqliteService {
       return this.listaUsuarios.asObservable(); // Añadir esta línea
     }
 
+
+
+
+
+
+  /////////////////////////////funcion async para crear  alertas pidiendo titulo y msj 
   async presentAlert(titulo: string, msj: string) {
     const alert = await this.alertController.create({
       header: titulo,
@@ -93,6 +126,9 @@ export class SqliteService {
     await alert.present();
   }
 
+
+
+/////////////////////////////crear bd 
   crearBD() {
     this.platform.ready().then(async () => {
       try {
@@ -101,20 +137,38 @@ export class SqliteService {
           location: 'default'
         });
 
+
+
+
+/////////////////////////////lineas para funciones de sql
         await this.dbInstance.executeSql('PRAGMA foreign_keys = ON;', []);
         await this.crearTablas();
         this.isDbReady.next(true); // Base de datos lista
+
+
+///////////////////////////// si hay error agarrar con esta alerta
       } catch (error) {
         this.presentAlert('Creación de BD', 'Error: ' + JSON.stringify(error));
       }
     });
   }
 
+
+///////////////////////////// obtener torneo por nombrey feha 
+
    async obtenerTorneoPorNombreYFecha(nombre: string, fecha: string): Promise<Torneo | null> {
     const query = `SELECT * FROM torneos WHERE nombre = ? OR fechaInicio = ?`;
     const result = await this.dbInstance!.executeSql(query, [nombre, fecha]); // Cambiado 'database' por 'dbInstance'
     return result.rows.length > 0 ? result.rows.item(0) : null;
   }
+
+
+
+
+
+
+
+/////////////////////////////creacion de tablas general///////////////////////////////////
 
   async crearTablas() {
     if (!this.dbInstance) {
@@ -219,6 +273,18 @@ export class SqliteService {
       this.presentAlert('Creación de Tablas', 'Error: ' + JSON.stringify(error));
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   selectUsuarios() {
