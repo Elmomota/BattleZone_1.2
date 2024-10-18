@@ -65,9 +65,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/Usuario/iniciar-sesion/iniciar-sesion.module').then( m => m.IniciarSesionPageModule)
   },
   {
+    path: 'detalle-inscripcion',
+    loadChildren: () => import('./pages/Usuario/detalle-inscripcion/detalle-inscripcion.module').then( m => m.DetalleInscripcionPageModule)
+  },
+  {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
+
 
 
 

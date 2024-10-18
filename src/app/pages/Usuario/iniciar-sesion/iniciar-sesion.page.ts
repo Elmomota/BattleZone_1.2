@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service';
 
 @Component({
@@ -12,24 +12,54 @@ export class IniciarSesionPage {
   correo: string = '';
   contrasena: string = '';
 
-  constructor(private sqliteService: SqliteService , private router: Router, private navCtrl: NavController) {}
+  constructor(private sqliteService: SqliteService, private router: Router, private navCtrl: NavController, private alertController: AlertController) {}
+
+  async mostrarAlerta(usuario: any) {
+    const alert = await this.alertController.create({
+      header: 'Sesión Iniciada',
+      subHeader: 'Detalles del Usuario',
+      message: `Nombre: ${usuario.pnombre} <br> Apellido: ${usuario.papellido} <br> Nickname: ${usuario.nickname} <br> Correo: ${usuario.correo}`, 
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
 
   loginUsuario() {
     this.sqliteService.loginUsuario(this.correo, this.contrasena).then(usuario => {
       if (usuario) {
-        this.navCtrl.navigateForward(`/home`, {
-          queryParams: {
-            usuario: JSON.stringify(usuario) // Pasar los detalles del usuario al home
+        // Buscar los detalles completos del usuario en la base de datos por correo
+        this.sqliteService.getUsuarioByCorreo(this.correo).then(detallesUsuario => {
+          if (detallesUsuario) {
+            // Guardar la sesión con los detalles del usuario
+            this.sqliteService.guardarSesion(detallesUsuario).then(() => {
+              this.mostrarAlerta(detallesUsuario);
+              this.navCtrl.navigateForward(`/home`, {
+                queryParams: {
+                  usuario: JSON.stringify(detallesUsuario)
+                }
+              });
+            });
+          } else {
+            console.error('Usuario no encontrado.');
           }
         });
       } else {
-        // Manejar error
+        // Manejar error de login
+        this.mostrarAlertaError();
       }
     });
   }
-  
-  
 
+  async mostrarAlertaError() {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      subHeader: 'Inicio de sesión fallido',
+      message: 'Correo o contraseña incorrectos.',
+      buttons: ['OK']
+    });
 
+    await alert.present();
+  }
 }
 

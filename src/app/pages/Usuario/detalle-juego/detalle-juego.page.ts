@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, NavController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service'; // Importar el servicio
 import { Torneo } from 'src/app/services/torneo'; // Importa la interfaz Torneo
 
@@ -26,10 +26,14 @@ export class DetalleJuegoPage implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private alertController: AlertController,
-    private sqliteService: SqliteService // Aquí se inyecta el servicio
+    private sqliteService: SqliteService, // Aquí se inyecta el servicio
+    private navCtrl: NavController
   ) {}
 
   ngOnInit() {
+
+    
+
     this.route.queryParams.subscribe(params => {
       if (params && params['juego']) {
         try {
@@ -53,12 +57,14 @@ export class DetalleJuegoPage implements OnInit {
     });
   }
 
-  inscripcion(idTorneo: number) {
-    // Navegar a la página de detalles del torneo con el id del torneo
-    this.router.navigate(['/detalles-torneo'], {
-      queryParams: { idTorneo: idTorneo }
-    });
-  }
+// En la página de listado de torneos (detalle-juego.page.ts)
+irADetalleInscripcion(torneo: Torneo) {
+  this.navCtrl.navigateForward('/detalle-inscripcion', {
+    queryParams: { torneo: JSON.stringify(torneo) }  // Pasar los datos del torneo
+  });
+}
+
+
 
 
   home(){

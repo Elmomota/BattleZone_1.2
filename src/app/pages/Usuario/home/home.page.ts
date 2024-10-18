@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core'; // Importación de componentes y OnInit para manejar el ciclo de vida del componente
-import { ActivatedRoute, Router } from '@angular/router'; // Importación para manejar rutas activas y navegación
-import { NavController } from '@ionic/angular'; // Importación del controlador de navegación de Ionic
-import { SqliteService } from 'src/app/services/sqlite.service'; // Importación del servicio SQLite para gestionar datos
-import { Juego } from 'src/app/services/juego'; // Importación del modelo de datos de juego
+import { Component, OnInit } from '@angular/core'; 
+import { ActivatedRoute, Router } from '@angular/router'; 
+import { NavController } from '@ionic/angular'; 
+import { SqliteService } from 'src/app/services/sqlite.service'; 
+import { Juego } from 'src/app/services/juego'; 
 
 @Component({
   selector: 'app-home',
@@ -11,29 +11,35 @@ import { Juego } from 'src/app/services/juego'; // Importación del modelo de da
 })
 export class HomePage implements OnInit {
 
-  usuario: string = ''; // Almacena el nombre del usuario
+  usuario: string = ''; // Almacena el nickname del usuario
   juegos: Juego[] = []; // Lista de juegos
   filteredJuegos: Juego[] = [];  // Lista de juegos filtrados
   searchTerm: string = '';  // Término de búsqueda introducido por el usuario
   loading: boolean = true; // Estado de carga
 
   constructor(
-    private router: Router, // Inyección del servicio Router para navegar entre páginas
-    private activedrouter: ActivatedRoute, // Inyección del servicio ActivatedRoute para obtener parámetros de la ruta
-    private navCtrl: NavController, // Inyección del controlador de navegación
-    private sqliteService: SqliteService, // Inyección del servicio SQLite
-    
-  ) {
-
-  }
-
+    private router: Router, 
+    private activedrouter: ActivatedRoute, 
+    private navCtrl: NavController, 
+    private sqliteService: SqliteService, 
+  ) {}
 
   async ngOnInit() {
-    // Recuperar el nombre del usuario desde los parámetros de la ruta
+    // Obtener la sesión del usuario usando el servicio SQLite
+    this.sqliteService.obtenerSesion().then(usuario => {
+      if (usuario) {
+        this.usuario = usuario.nickname || 'Usuario';  // Asignar el nickname del usuario
+      } else {
+        // Si no hay sesión activa, redirigir a la página de login
+        this.navCtrl.navigateRoot('/iniciar-sesion');
+      }
+    });
+  
+    // Recuperar el nombre del usuario desde los parámetros de la ruta (si es necesario)
     this.activedrouter.queryParams.subscribe(params => {
       if (params && params['usuario']) {
         const usuario = JSON.parse(params['usuario']);
-        this.usuario = usuario.nickname || 'Usuario';
+        this.usuario = usuario.nickname || this.usuario; // Usar el nickname del parámetro o mantener el de la sesión
       }
     });
 
@@ -43,40 +49,37 @@ export class HomePage implements OnInit {
   async loadJuegos() { // Método para cargar juegos desde el servicio
     this.loading = true; // Cambiar el estado de carga a verdadero
     try {
-      this.sqliteService.fetchJuegos().subscribe(juegos => { // Obtener juegos desde el servicio SQLite
-        this.juegos = juegos; // Almacenar todos los juegos
-        this.filteredJuegos = juegos;  // Inicialmente mostrar todos los juegos
-        this.loading = false; // Cambiar el estado de carga a falso
+      this.sqliteService.fetchJuegos().subscribe(juegos => { 
+        this.juegos = juegos; 
+        this.filteredJuegos = juegos;  
+        this.loading = false; 
       });
     } catch (error) {
-      console.error('Error loading juegos', error); // Manejo de errores al cargar juegos
-      this.loading = false; // Asegurarse de cambiar el estado de carga a falso
+      console.error('Error loading juegos', error); 
+      this.loading = false; 
     }
   }
 
-  verDetallesJuego(juego: Juego) { // Método para navegar a la página de detalles de un juego
-    if (juego && juego.id) { // Verificar que el juego es válido y tiene ID
-      this.navCtrl.navigateForward(`/detalle-juego/${juego.id}`, { // Navegar a la página de detalles del juego
+  verDetallesJuego(juego: Juego) { 
+    if (juego && juego.id) { 
+      this.navCtrl.navigateForward(`/detalle-juego/${juego.id}`, { 
         queryParams: {
-          juego: JSON.stringify(juego) // Pasar datos del juego como parámetros de consulta
+          juego: JSON.stringify(juego) 
         }
       });
     } else {
-      console.warn('Juego no válido', juego); // Advertencia si el juego no es válido
+      console.warn('Juego no válido', juego); 
     }
   }
-
 
   Ircuenta(){
     this.router.navigate(['/cuenta']);
   }
 
-
-
-
-
-
-
-
-
 }
+
+
+
+
+
+

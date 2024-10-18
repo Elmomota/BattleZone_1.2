@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
+import { SqliteService } from 'src/app/services/sqlite.service'; // Importa tu servicio SQLite
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -9,24 +11,30 @@ import { NavController } from '@ionic/angular';
 })
 export class AppComponent {
   public appPages = [
-
-
     { title: 'Home', url: '/home', icon: 'home' },
     { title: 'Torneos', url: '/torneo', icon: 'trophy' },
     { title: 'Noticias Games', url: '/new-games', icon: 'mail'},
     { title: 'Mi Perfil', url: '/cuenta', icon: 'person' },
-   
-    
   ];
   
-  constructor(private router: Router, private menuCtrl: MenuController) {}
-   // Función para cerrar sesión
-   logout() {
-    // Aquí puedes agregar lógica para eliminar datos de la sesión si los estás guardando en localStorage o sessionStorage
+  constructor(
+    private router: Router, 
+    private menuCtrl: MenuController, 
+    private sqliteService: SqliteService // Inyecta el servicio SQLite
+  ) {}
+
+  // Función para cerrar sesión
+  async logout() {
+    // Llamar a eliminarSesion() del servicio SQLite para eliminar la sesión almacenada
+    await this.sqliteService.eliminarSesion();
+
+    // Limpiar datos adicionales si es necesario (localStorage, sessionStorage, etc.)
     localStorage.clear(); // O sessionStorage.clear() si usas sessionStorage
-    this.menuCtrl.close(); // Cierra el menú si está abierto
-    this.router.navigate(['/inicio']); // Redirige a la página de inicio de sesión
+
+    // Cierra el menú si está abierto
+    this.menuCtrl.close();
+
+    // Redirige al usuario a la página de inicio de sesión
+    this.router.navigate(['/inicio']);
   }
-
-
 }

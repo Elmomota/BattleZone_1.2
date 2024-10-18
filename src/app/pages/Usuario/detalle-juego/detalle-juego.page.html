@@ -13,7 +13,7 @@
   <div class="torneos-section">
     <h2>Torneos Relacionados</h2>
     <ion-list *ngIf="torneos.length > 0; else noTorneos">
-      <ion-item *ngFor="let torneo of torneos" (click)="verDetallesTorneo(torneo.id)">
+      <ion-item *ngFor="let torneo of torneos" (click)="irADetalleInscripcion(torneo)">
         <ion-thumbnail slot="start">
           <img [src]="torneo.imagen" alt="{{ torneo.nombre }}" />
         </ion-thumbnail>
