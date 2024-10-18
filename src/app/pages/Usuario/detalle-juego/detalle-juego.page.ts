@@ -65,6 +65,12 @@ export class DetalleJuegoPage implements OnInit {
     this.router.navigate(['/home']);
   }
   
+  verDetallesTorneo(){
+
+    
+  }
+
+  
 }
 
 
