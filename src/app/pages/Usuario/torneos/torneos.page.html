@@ -15,33 +15,33 @@
 <!------------------------------------------------------------------------------------------------------>
 <!-----------------------------body------------------------------------------------------------------------->
 
-<ion-content>
+<ion-content class="buscador">
     <!-- Formulario de búsqueda para filtrar por nombre y juego -->
+    <div class="container">
+        <h1>Buscar torneo</h1>
+        <div class="buscador">
+            <ion-item class="item-b">
+                <ion-label class="espacio" position="floating">Buscar por nombre</ion-label>
+                <ion-input [(ngModel)]="nombreFiltro" placeholder="Nombre del torneo" (ionInput)="filtrarTorneos()"></ion-input>
+            </ion-item>
 
-    <h1>Buscar torneo</h1>
-    <div class="buscador">
-        <ion-item class="item-b">
-            <ion-label class="espacio" position="floating">Buscar por nombre</ion-label>
-            <ion-input [(ngModel)]="nombreFiltro" placeholder="Nombre del torneo" (ionInput)="filtrarTorneos()"></ion-input>
-        </ion-item>
+            <ion-item class="item-b">
+                <ion-label class="espacio" position="floating">Filtrar por juego</ion-label>
+                <ion-select [(ngModel)]="juegoFiltro" placeholder="Selecciona un juego" (ionChange)="filtrarTorneos()">
+                    <ion-select-option *ngFor="let juego of juegos" [value]="juego.nombre">
+                        {{ juego.nombre }}
+                    </ion-select-option>
+                </ion-select>
+            </ion-item>
+        </div>
 
-        <ion-item class="item-b">
-            <ion-label class="espacio" position="floating">Filtrar por juego</ion-label>
-            <ion-select [(ngModel)]="juegoFiltro" placeholder="Selecciona un juego" (ionChange)="filtrarTorneos()">
-                <ion-select-option *ngFor="let juego of juegos" [value]="juego.nombre">
-                    {{ juego.nombre }}
-                </ion-select-option>
-            </ion-select>
-        </ion-item>
+
+
+        <!-- Botón para limpiar filtros -->
+        <ion-button class="btn-limpiar" expand="full" (click)="limpiarFiltros()">Limpiar Filtros</ion-button>
+
+
     </div>
-
-
-
-    <!-- Botón para limpiar filtros -->
-    <ion-button class="btn-limpiar" expand="full" (click)="limpiarFiltros()">Limpiar Filtros</ion-button>
-
-
-
 
 
 
@@ -54,7 +54,9 @@
     <div *ngIf="!loading">
         <div class="content-container">
             <!-- Si hay torneos filtrados -->
+
             <ion-list *ngIf="torneosFiltrados.length > 0; else noTorneos">
+
                 <ion-card *ngFor="let torneo of torneosFiltrados" (click)="seleccionarTorneo(torneo)" class="torneo-card">
                     <ion-card-header>
                         <ion-card-title>{{torneo.nombre}}</ion-card-title>

@@ -20,6 +20,7 @@ export class DetalleInscripcionPage implements OnInit {
     private sqliteService: SqliteService, // Inyectamos el servicio de SQLite
     private router: Router,
     private toastController: ToastController // Agregar ToastController para los mensajes
+    
   ) {}
 
   async ngOnInit() {
@@ -117,6 +118,6 @@ async confirmarInscripcion() {
 
   // Método para regresar a la página anterior
   regresar() {
-    this.navCtrl.navigateBack('/detalle-juego');
+    this.navCtrl.back();
   }
 }

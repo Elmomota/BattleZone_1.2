@@ -10,6 +10,6 @@ export class NotFoundPage {
   constructor(private navCtrl: NavController) {}
 
   goBack() {
-    this.navCtrl.pop(); // Regresar a la página anterior
+    this.navCtrl.back(); // Regresar a la página anterior
   }
 }
