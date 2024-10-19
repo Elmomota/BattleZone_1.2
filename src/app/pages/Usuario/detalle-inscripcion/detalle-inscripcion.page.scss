@@ -1,0 +1,22 @@
+ion-title {
+    text-align: center;
+    color: #ffffff;
+}
+
+ion-content {
+    --background: #1A1C3C;
+    /* Fondo general del formulario */
+    color: #ffffff;
+}
+
+ion-item {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 5px;
+    --background: #868192;
+    /* Color gris violáceo */
+    --border-radius: 12px;
+}

@@ -3,6 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { NavController } from '@ionic/angular'; 
 import { SqliteService } from 'src/app/services/sqlite.service'; 
 import { Juego } from 'src/app/services/juego'; 
+import { ServicioApiService } from 'src/app/services/servicio-api.service';
+
 
 @Component({
   selector: 'app-home',
@@ -16,12 +18,16 @@ export class HomePage implements OnInit {
   filteredJuegos: Juego[] = [];  // Lista de juegos filtrados
   searchTerm: string = '';  // Término de búsqueda introducido por el usuario
   loading: boolean = true; // Estado de carga
+  noticias: any[] = [];
+
 
   constructor(
     private router: Router, 
     private activedrouter: ActivatedRoute, 
     private navCtrl: NavController, 
-    private sqliteService: SqliteService, 
+    private sqliteService: SqliteService,
+    private api: ServicioApiService
+
   ) {}
 
   async ngOnInit() {
@@ -35,6 +41,8 @@ export class HomePage implements OnInit {
       }
     });
   
+
+
     // Recuperar el nombre del usuario desde los parámetros de la ruta (si es necesario)
     this.activedrouter.queryParams.subscribe(params => {
       if (params && params['usuario']) {
@@ -43,7 +51,18 @@ export class HomePage implements OnInit {
       }
     });
 
+   
     await this.loadJuegos(); // Cargar los juegos al inicializar la página
+  
+    this.api.getNoticias().subscribe((res)=>{
+      console.log('Respuesta de la API:', res);
+      this.noticias = res.articles;
+      },(error)=>{
+      console.log(error);
+      });
+  
+  
+  
   }
 
   async loadJuegos() { // Método para cargar juegos desde el servicio
@@ -76,10 +95,17 @@ export class HomePage implements OnInit {
     this.router.navigate(['/cuenta']);
   }
 
+
+  mostrarTodo: boolean = false;
+  limiteNoticias: number = 5; // Mostrar solo 5 inicialmente
+
+  toggleMostrarTodo() {
+    this.mostrarTodo = !this.mostrarTodo;
+    this.limiteNoticias = this.mostrarTodo ? this.noticias.length : 5; // Si mostrarTodo es true, muestra todo, sino muestra 5
+  }
+
+
+
+
+
 }
-
-
-
-
-
-
