@@ -83,8 +83,12 @@ async cargarUsuariosInscritos(id_torneo: number) {
           handler: async () => {
             if (this.torneo) {
               try {
-                await this.sqliteService.eliminarTorneo(this.torneo.id); // Uso del servicio para eliminar
-                this.torneoService.notificarTorneoEliminado(); //uso del servicio de notificacion
+                // Primero, elimina las inscripciones del torneo
+                await this.sqliteService.eliminarInscripcionesPorTorneo(this.torneo.id); // Método para eliminar inscripciones
+  
+                // Ahora elimina el torneo
+                await this.sqliteService.eliminarTorneo(this.torneo.id);
+                this.torneoService.notificarTorneoEliminado();
                 const successAlert = await this.alertController.create({
                   header: 'Éxito',
                   message: 'El torneo ha sido eliminado con éxito.',
@@ -106,8 +110,9 @@ async cargarUsuariosInscritos(id_torneo: number) {
         }
       ]
     });
-
+  
     await alert.present();
   }
+  
 }
 

@@ -40,14 +40,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/Usuario/home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: 'login',
-    loadChildren: () => import('./pages/Usuario/login/login.module').then( m => m.LoginPageModule)
-  },
-  {
-    path: 'register',
-    loadChildren: () => import('./pages/Usuario/register/register.module').then( m => m.RegisterPageModule)
-  },
-  {
     path: 'nuevo-torneo',
     loadChildren: () => import('./pages/admin/TorneoAdmin/nuevo-torneo/nuevo-torneo.module').then( m => m.NuevoTorneoPageModule)
   },
@@ -69,9 +61,23 @@ const routes: Routes = [
     loadChildren: () => import('./pages/Usuario/detalle-inscripcion/detalle-inscripcion.module').then( m => m.DetalleInscripcionPageModule)
   },
   {
+    path: 'torneos',
+    loadChildren: () => import('./pages/Usuario/torneos/torneos.module').then( m => m.TorneosPageModule)
+  },
+
+
+
+
+
+
+
+
+
+  {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
+
 
 
 

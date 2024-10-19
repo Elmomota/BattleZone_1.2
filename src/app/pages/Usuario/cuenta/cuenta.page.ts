@@ -8,7 +8,7 @@ import { SqliteService } from 'src/app/services/sqlite.service';  // Asegúrate 
 })
 export class CuentaPage implements OnInit {
 
-  user: any = {};
+  usuario: any = {};
   torneosJugados: any[] = [];
   seleccion: string = 'Torneos jugados';  // Valor por defecto del segmento
 
@@ -18,24 +18,35 @@ export class CuentaPage implements OnInit {
     this.obtenerDatosUsuario();
   }
 
-  obtenerDatosUsuario() {
-    // Obtener los datos de la sesión
-    this.SqliteService.obtenerSesion().then(sesion => {
-      this.user = sesion.user;  // Aquí se almacenan los datos del usuario
-      // Obtener los torneos inscritos según el ID del usuario
-      this.obtenerTorneosInscritos(sesion.id);
-    }).catch(err => {
-      console.error('Error obteniendo la sesión activa', err);
-    });
+  async obtenerDatosUsuario() {
+    try {
+      this.usuario = await this.SqliteService.obtenerSesion(); // Obtener sesión activa
+      if (this.usuario) {
+        console.log('Datos del usuario:', this.usuario);
+        // Asegúrate de que el usuario tenga un ID
+        if (this.usuario.id) {
+          this.obtenerTorneosInscritos(this.usuario.id); // Obtener torneos inscritos del usuario
+        } else {
+          console.error('El usuario no tiene un ID válido.');
+        }
+      } else {
+        console.error('No se encontró una sesión activa.');
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+    }
   }
+  
 
   obtenerTorneosInscritos(userId: number) {
     this.SqliteService.obtenerTorneosInscritos(userId).then(torneos => {
       this.torneosJugados = torneos;
+      
     }).catch(err => {
       console.error('Error obteniendo los torneos inscritos', err);
     });
   }
+  
 
   home() {
     // Redirigir a la página principal

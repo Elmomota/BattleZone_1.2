@@ -52,57 +52,58 @@ export class DetalleInscripcionPage implements OnInit {
     }
   }
 
-  // Método para confirmar la inscripción
-  async confirmarInscripcion() {
-    if (this.torneo && this.torneo.id !== undefined && this.usuario) {
-      // Verificar si el número de equipos disponibles es mayor que 0
-      if (this.torneo.numEquipos <= 0) {
-        this.mostrarMensaje('No hay cupos disponibles para este torneo.');
-        return; // Si no hay cupos, no proceder con la inscripción
-      }
-
-      // Verificar si el usuario ya está inscrito en el torneo
-      const yaInscrito = await this.sqliteService.verificarInscripcion(this.torneo.id, this.usuario.id);
-      
-      if (yaInscrito) {
-        this.mostrarMensaje('Ya estás inscrito en este torneo.');
-        return; // Si ya está inscrito, detener el proceso
-      }
-
-      // Crear la inscripción
-      const inscripcion: UserTorneo = {
-        id: Date.now(), // Genera un ID único
-        id_torneo: this.torneo.id,
-        id_usuario: this.usuario.id,
-        nombre: this.usuario.nombre,
-        apellido: this.usuario.apellido,
-        nickname: this.usuario.nickname,
-        correo: this.usuario.correo
-      };
-
-      try {
-        // Inscribir al usuario en el torneo
-        await this.sqliteService.inscribirTorneo(inscripcion);
-
-        // Restar 1 al número de equipos (cupo disponible)
-        if (this.torneo.numEquipos > 0) {
-          this.torneo.numEquipos -= 1;
-          await this.sqliteService.actualizarTorneo(this.torneo); // Actualizar el torneo en la base de datos
-        }
-
-        // Mostrar mensaje de éxito
-        this.mostrarMensaje('Inscripción exitosa en el torneo.');
-        console.log('Inscripción guardada:', inscripcion);
-
-        // Redirigir a la página de inicio después de la inscripción
-        this.router.navigate(['/home']);
-      } catch (error) {
-        console.error('Error al inscribir en el torneo:', error);
-      }
-    } else {
-      console.error('Faltan datos del torneo o del usuario.');
+// Método para confirmar la inscripción
+async confirmarInscripcion() {
+  if (this.torneo && this.torneo.id !== undefined && this.usuario) {
+    // Verificar si el número de equipos disponibles es mayor que 0
+    if (this.torneo.numEquipos <= 0) {
+      this.mostrarMensaje('No hay cupos disponibles para este torneo.');
+      return; // Si no hay cupos, no proceder con la inscripción
     }
+
+    // Verificar si el usuario ya está inscrito en el torneo usando correo y nickname
+    const yaInscrito = await this.sqliteService.verificarInscripcionPorCorreoYNickname(this.torneo.id, this.usuario.correo, this.usuario.nickname);
+    
+    if (yaInscrito) {
+      this.mostrarMensaje('Ya estás inscrito en este torneo.');
+      return; // Si ya está inscrito, detener el proceso
+    }
+
+    // Crear la inscripción
+    const inscripcion: UserTorneo = {
+      id: Date.now(), // Genera un ID único
+      id_torneo: this.torneo.id,
+      id_usuario: this.usuario.id,
+      nombre: this.usuario.nombre,
+      apellido: this.usuario.apellido,
+      nickname: this.usuario.nickname,
+      correo: this.usuario.correo
+    };
+
+    try {
+      // Inscribir al usuario en el torneo
+      await this.sqliteService.inscribirTorneo(inscripcion);
+
+      // Restar 1 al número de equipos (cupo disponible)
+      if (this.torneo.numEquipos > 0) {
+        this.torneo.numEquipos -= 1;
+        await this.sqliteService.actualizarTorneo(this.torneo); // Actualizar el torneo en la base de datos
+      }
+
+      // Mostrar mensaje de éxito
+      this.mostrarMensaje('Inscripción exitosa en el torneo.');
+      console.log('Inscripción guardada:', inscripcion);
+
+      // Redirigir a la página de inicio después de la inscripción
+      this.router.navigate(['/home']);
+    } catch (error) {
+      console.error('Error al inscribir en el torneo:', error);
+    }
+  } else {
+    console.error('Faltan datos del torneo o del usuario.');
   }
+}
+
 
   // Método para mostrar mensajes
   async mostrarMensaje(mensaje: string) {

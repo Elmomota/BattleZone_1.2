@@ -12,8 +12,7 @@ import { SqliteService } from 'src/app/services/sqlite.service'; // Importa tu s
 export class AppComponent {
   public appPages = [
     { title: 'Home', url: '/home', icon: 'home' },
-    { title: 'Torneos', url: '/torneo', icon: 'trophy' },
-    { title: 'Noticias Games', url: '/new-games', icon: 'mail'},
+    { title: 'Torneos', url: '/torneos', icon: 'trophy' },
     { title: 'Mi Perfil', url: '/cuenta', icon: 'person' },
   ];
   

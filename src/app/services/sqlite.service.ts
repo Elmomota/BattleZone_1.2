@@ -410,13 +410,12 @@ export class SqliteService {
       this.presentAlert('Error al actualizar torneo', JSON.stringify(error));
     }
   }
-
   async eliminarTorneo(id: number) {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos no está lista.');
       return;
     }
-
+  
     const sql = `DELETE FROM torneos WHERE id = ?`;
     try {
       await this.dbInstance.executeSql(sql, [id]);
@@ -426,6 +425,17 @@ export class SqliteService {
       this.presentAlert('Error al eliminar torneo', JSON.stringify(error));
     }
   }
+  
+  async eliminarInscripcionesPorTorneo(id_torneo: number): Promise<void> {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+  
+    const sql = 'DELETE FROM inscripcion_torneo WHERE id_torneo = ?';
+    await this.dbInstance.executeSql(sql, [id_torneo]);
+  }
+  
 
   // Las funciones de administrador pueden seguir la misma estructura que los torneos
   async addUsuario(nuevoUsuario: Usuario) {
@@ -587,6 +597,19 @@ async obtenerTorneosInscritos(id_usuario: number): Promise<any[]> {
     return [];
   }
 }
+
+
+async verificarInscripcionPorCorreoYNickname(idTorneo: number, correo: string, nickname: string): Promise<boolean> {
+  const query = `SELECT COUNT(*) as count FROM inscripcion_torneo WHERE id_torneo = ? AND (correo = ? OR nickname = ?)`;
+
+  // Ejecutar la consulta y obtener el resultado
+  const result = await this.dbInstance?.executeSql(query, [idTorneo, correo, nickname]);
+
+  // Verificar si result y result.rows existen
+  return result?.rows.length > 0 && result.rows.item(0).count > 0;
+}
+
+
 
 async obtenerUsuariosInscritos(id_torneo: number): Promise<any[]> {
   if (!this.dbInstance) {
