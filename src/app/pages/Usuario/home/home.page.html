@@ -11,7 +11,6 @@
 </ion-header>
 
 <!--------------------- header ------------------------------>
-<!--------------------------------------------------->
 <!------------------------- body -------------------------->
 <ion-content [fullscreen]="true">
     <h1 class="titulo"> Bienvenido de vuelta, {{ usuario }}!</h1>
@@ -33,9 +32,13 @@
             </ion-list-header>
 
             <div class="horizontal-scroll" *ngIf="filteredJuegos.length > 0; else noJuegos">
-                <div *ngFor="let juego of filteredJuegos" class="game-item" (click)="verDetallesJuego(juego)">
+
+
+                <div *ngFor="let juego of filteredJuegos | slice:0:5" class="game-item" (click)="verDetallesJuego(juego)">
                     <img [src]="juego.logo" alt="{{ juego.nombre }}" />
                 </div>
+
+
             </div>
 
             <ng-template #noJuegos>

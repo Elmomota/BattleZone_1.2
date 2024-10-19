@@ -1,19 +1,25 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Iniciar Sesión</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <form (ngSubmit)="loginUsuario()">
-    <ion-item>
-      <ion-label position="floating">Correo</ion-label>
-      <ion-input label="Ingresa tu correo electronico" labelPlacement="floating" placeholder="Correo de usaurio" [(ngModel)]="correo" name="correo"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="floating">Contraseña</ion-label>
-      <ion-input [(ngModel)]="contrasena" type="password" name="contrasena" label="Ingresa tu contraseña" labelPlacement="floating" placeholder="Ingresa tu contraseña"><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
-    </ion-item>
-    <ion-button expand="full" type="submit">Iniciar Sesión</ion-button>
-  </form>
+    <div class="paddin">
+        <ion-title>Iniciar Sesión</ion-title>
+
+        <div class="div-grande">
+
+
+            <form (ngSubmit)="loginUsuario()">
+                <ion-item>
+                    <ion-label class="pos" position="floating">Correo</ion-label>
+                    <ion-input label="Ingresa tu correo electronico" labelPlacement="floating" placeholder="Correo de usaurio" [(ngModel)]="correo" name="correo"></ion-input>
+                </ion-item>
+                <ion-item>
+                    <ion-label class="pos" position="floating">Contraseña</ion-label>
+                    <ion-input label="Ingresa tu contraseña" labelPlacement="floating" placeholder="Ingresa tu contraseña" type="password" [(ngModel)]="contrasena" name="contrasena">
+                        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+                    </ion-input>
+                </ion-item>
+                <ion-button expand="full" type="submit">Iniciar Sesión</ion-button>
+            </form>
+
+        </div>
+    </div>
+
 </ion-content>

@@ -1,9 +1,18 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Inscripción al Torneo</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content>
 
+    <ion-title>Inscripción al Torneo</ion-title>
+
+    <ion-card *ngIf="torneo">
+        <ion-card-header>
+            <ion-card-title>{{ torneo.nombre }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+            <p><strong>Juego:</strong> {{ torneo.juego }}</p>
+            <p><strong>Fecha de inicio:</strong> {{ torneo.fechaInicio }}</p>
+            <p><strong>Estado:</strong> {{ torneo.estado }}</p>
+            <!-- Otros detalles del torneo aquí -->
+        </ion-card-content>
+    </ion-card>
 <ion-content>
   <ion-card *ngIf="torneo">
     <ion-card-header>
@@ -18,11 +27,11 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-button expand="full" color="primary" (click)="confirmarInscripcion()">
-    Confirmar Inscripción
-  </ion-button>
+    <ion-button expand="full" color="primary" (click)="confirmarInscripcion()">
+        Confirmar Inscripción
+    </ion-button>
 
-  <ion-button expand="full" color="secondary" (click)="regresar()">
-    Regresar
-  </ion-button>
+    <ion-button expand="full" color="secondary" (click)="regresar()">
+        Regresar
+    </ion-button>
 </ion-content>

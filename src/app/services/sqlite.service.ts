@@ -253,7 +253,7 @@ export class SqliteService {
       // Insertar juegos por defecto
       await this.dbInstance.executeSql(
         `INSERT OR IGNORE INTO juegos (id, nombre, tipo, descripcion, logo, cabecera) VALUES 
-          (1,'Valorant', 'Shooter', 'Juego de disparos táctico en primera persona.', 'assets/logos/logo-valorant.jpg', 'assets/img/imagen-valorant.jpg'),
+          (1,'Valorant', 'Shooter', 'Juego de disparos táctico en primera persona.', 'https://www.lavanguardia.com/files/image_990_484/uploads/2020/06/02/5fa91dbc37517.png', 'https://www.lavanguardia.com/files/image_990_484/uploads/2020/06/02/5fa91dbc37517.png'),
           (2,'League of Legends', 'MOBA', 'Juego de estrategia y combate por equipos.', 'assets/logos/logo-leagu-of-legends.jpg', 'assets/img/imagen-league-of-legends.jpg'),
           (3,'Fortnite', 'Battle Royale', 'Juego de supervivencia en un entorno de batalla masiva.', 'assets/logos/logo-fortnite.jpg', 'assets/img/imagen-fortnite.jpg'),
           (4,'Street Fighter', 'Pelea', 'Juego de lucha con personajes emblemáticos.', 'assets/logos/logo-street-fighter.jpg', 'assets/img/imagen-street-fighter.jpg')`, []

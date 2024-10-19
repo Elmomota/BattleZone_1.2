@@ -1,68 +1,105 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Registro</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <form (ngSubmit)="registrarUsuario()" #registroForm="ngForm">
-    <ion-item>
-      <ion-label position="floating">Nombre</ion-label>
-      <ion-input [(ngModel)]="nuevoUsuario.pnombre" name="pnombre" required minlength="3" pattern="^[A-Za-z\s]+$" #nombre="ngModel"></ion-input>
-    </ion-item>
-    <div *ngIf="nombre.invalid && nombre.touched" class="error">El nombre debe tener al menos 3 caracteres y no contener números.</div>
 
-    <ion-item>
-      <ion-label position="floating">Apellido</ion-label>
-      <ion-input [(ngModel)]="nuevoUsuario.papellido" name="papellido" required minlength="3" pattern="^[A-Za-z\s]+$" #apellido="ngModel"></ion-input>
-    </ion-item>
-    <div *ngIf="apellido.invalid && apellido.touched" class="error">El apellido debe tener al menos 3 caracteres y no contener números.</div>
+    <ion-title class="titulo">REGISTRO DE CUENTA</ion-title>
+    <hr>
+    <div class="div-grande">
+        <form (ngSubmit)="registrarUsuario()" #registroForm="ngForm">
 
-    <ion-item>
-      <ion-label position="floating">Nickname</ion-label>
-      <ion-input [(ngModel)]="nuevoUsuario.nickname" name="nickname" required minlength="3" #nickname="ngModel"></ion-input>
-    </ion-item>
-    <div *ngIf="nickname.invalid && nickname.touched" class="error">El nickname debe tener al menos 3 caracteres.</div>
+            <!------------------- parte nombre -------------------------------->
 
-    <ion-item>
-      <ion-label position="floating">Correo</ion-label>
-      <ion-input [(ngModel)]="nuevoUsuario.correo" name="correo" required email #correo="ngModel"></ion-input>
-    </ion-item>
-    <div *ngIf="correo.invalid && correo.touched" class="error">Debe ingresar un correo válido.</div>
+            <ion-item>
+                <ion-label position="floating">Nombre</ion-label>
+                <ion-input [(ngModel)]="nuevoUsuario.pnombre" name="pnombre" required minlength="3" pattern="^[A-Za-z\s]+$" #nombre="ngModel"></ion-input>
+            </ion-item>
+            <div *ngIf="nombre.invalid && nombre.touched" class="error">El nombre debe tener al menos 3 caracteres y no contener números.</div>
 
-    <ion-item>
-      <ion-label position="floating">Contraseña</ion-label>
-      <ion-input [(ngModel)]="nuevoUsuario.contrasena" type="password" name="contrasena" required minlength="8" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" #contrasena="ngModel"><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
-    </ion-item>
-    <div *ngIf="contrasena.invalid && contrasena.touched" class="error">La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.</div>
 
-    <ion-item>
-      <ion-label position="floating">Confirmar Contraseña</ion-label>
-      <ion-input [(ngModel)]="confirmarContrasena" type="password" name="confirmarContrasena" required #confirmar="ngModel"><ion-input-password-toggle slot="end"></ion-input-password-toggle></ion-input>
-    </ion-item>
-    <div *ngIf="confirmar.invalid && confirmar.touched || confirmarContrasena !== nuevoUsuario.contrasena" class="error">Las contraseñas no coinciden.</div>
+            <!----------- apellido ---------------------------------------->
 
-    <ion-item>
-      <ion-label position="floating">Fecha de Nacimiento</ion-label>
-      <ion-datetime [(ngModel)]="nuevoUsuario.fechaNacimiento" name="fechaNacimiento" required #fechaNacimiento="ngModel" (ionChange)="calcularEdad($event)"></ion-datetime>
-    </ion-item>
-    <div *ngIf="edad < 14 && fechaNacimiento.touched" class="error">Debes ser mayor de 14 años.</div>
-    <ion-item>
-      <ion-label>Edad: {{ edad }} años</ion-label>
-    </ion-item>
+            <ion-item>
+                <ion-label position="floating">Apellido</ion-label>
+                <ion-input [(ngModel)]="nuevoUsuario.papellido" name="papellido" required minlength="3" pattern="^[A-Za-z\s]+$" #apellido="ngModel"></ion-input>
+            </ion-item>
+            <div *ngIf="apellido.invalid && apellido.touched" class="error">El apellido debe tener al menos 3 caracteres y no contener números.</div>
 
-    <ion-item>
-      <ion-label position="floating">País</ion-label>
-      <ion-input [(ngModel)]="nuevoUsuario.pais" name="pais" required #pais="ngModel"></ion-input>
-    </ion-item>
-    <div *ngIf="pais.invalid && pais.touched" class="error">Debe ingresar un país.</div>
 
-    <ion-button expand="full" type="submit" [disabled]="registroForm.invalid">Registrar</ion-button>
-  </form>
 
-  <div class="separator"></div>
+            <!------------------- nickname -------------------------------->
 
-  <p style="color: blancohielo;">¿Ya tienes una cuenta? 
-    <a (click)="irLogin()">Inicia sesión</a>
-  </p>
+            <ion-item>
+                <ion-label position="floating">Nickname</ion-label>
+                <ion-input [(ngModel)]="nuevoUsuario.nickname" name="nickname" required minlength="3" #nickname="ngModel"></ion-input>
+            </ion-item>
+            <div *ngIf="nickname.invalid && nickname.touched" class="error">El nickname debe tener al menos 3 caracteres.</div>
+
+
+
+            <!------------------- correo -------------------------------->
+
+            <ion-item>
+                <ion-label position="floating">Correo</ion-label>
+                <ion-input [(ngModel)]="nuevoUsuario.correo" name="correo" required email #correo="ngModel"></ion-input>
+            </ion-item>
+            <div *ngIf="correo.invalid && correo.touched" class="error">Debe ingresar un correo válido.</div>
+
+
+
+
+
+
+            <!-------------------- parte contrasenia ------------------------------->
+
+            <ion-item>
+                <ion-label position="floating">Contraseña</ion-label>
+                <ion-input [(ngModel)]="nuevoUsuario.contrasena" type="password" name="contrasena" required minlength="8" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" #contrasena="ngModel">
+                    <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+                </ion-input>
+            </ion-item>
+            <div *ngIf="contrasena.invalid && contrasena.touched" class="error">La contraseña debe tener al menos 8 caracteres, una mayúscula, un número y un carácter especial.</div>
+            <!--------------------------------------------------------------------------------------------------------------------->
+
+            <ion-item>
+                <ion-label position="floating">Confirmar Contraseña</ion-label>
+                <ion-input [(ngModel)]="confirmarContrasena" type="password" name="confirmarContrasena" required #confirmar="ngModel">
+                    <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+                </ion-input>
+            </ion-item>
+            <div *ngIf="confirmar.invalid && confirmar.touched || confirmarContrasena !== nuevoUsuario.contrasena" class="error">Las contraseñas no coinciden.</div>
+
+            <hr>
+
+            <!-------------------- fecha nacimiento ------------------------------->
+
+            <ion-item class="container-calen">
+                <ion-label class="titulo-fecha" position="floating">Fecha de Nacimiento</ion-label>
+                <ion-datetime presentation="date" display-format="DD/MM/YYYY" placeholder="Selecciona fecha" [(ngModel)]="nuevoUsuario.fechaNacimiento" name="fechaNacimiento" required #fechaNacimiento="ngModel" (ionChange)="calcularEdad($event)">
+                </ion-datetime>
+            </ion-item>
+            <div *ngIf="edad < 14 && fechaNacimiento.touched" class="error">Debes ser mayor de 14 años.</div>
+            <ion-item>
+                <ion-label>Edad: {{ edad }} años</ion-label>
+            </ion-item>
+
+            <!-------------------- pais ------------------------------->
+
+            <ion-item>
+                <ion-label position="floating">País</ion-label>
+                <ion-input [(ngModel)]="nuevoUsuario.pais" name="pais" required #pais="ngModel"></ion-input>
+            </ion-item>
+            <div *ngIf="pais.invalid && pais.touched" class="error">Debe ingresar un país.</div>
+
+
+
+
+            <ion-button expand="full" type="submit" [disabled]="registroForm.invalid">Registrar</ion-button>
+        </form>
+
+
+        <div class="separator"></div>
+
+        <p style="color: blancohielo;">¿Ya tienes una cuenta?
+            <a (click)="irLogin()">Inicia sesión</a>
+        </p>
+    </div>
+
 </ion-content>
