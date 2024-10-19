@@ -22,6 +22,7 @@ interface Torneo {
 })
 export class DetallesTorneoPage implements OnInit {
   torneo?: Torneo;
+  usuarios: any[] = [];
 
   constructor(
     private route: ActivatedRoute, 
@@ -36,12 +37,23 @@ export class DetallesTorneoPage implements OnInit {
       if (params && params['torneo']) {
         try {
           this.torneo = JSON.parse(params['torneo']);
+          if (this.torneo && this.torneo.id) {
+            this.cargarUsuariosInscritos(this.torneo.id);
+          }
         } catch (error) {
           console.error('Error al parsear el torneo:', error);
           this.router.navigate(['/cuenta-admin']);
         }
       }
     });
+  }
+
+async cargarUsuariosInscritos(id_torneo: number) {
+    try {
+      this.usuarios = await this.sqliteService.obtenerUsuariosInscritos(id_torneo);
+    } catch (error) {
+      console.error('Error al cargar usuarios inscritos:', error);
+    }
   }
 
   modificarTorneo() {

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
-import { Torneo } from 'src/app/services/torneo'; // Importa la interfaz de Torneo
+import { NavController, ToastController } from '@ionic/angular'; // Agregar ToastController para mostrar mensajes
+import { SqliteService } from 'src/app/services/sqlite.service'; // Servicio de SQLite
+import { Torneo } from 'src/app/services/torneo'; // Interfaz de Torneo
+import { UserTorneo } from 'src/app/services/user-torneo'; // Interfaz de inscripción
 
 @Component({
   selector: 'app-detalle-inscripcion',
@@ -9,37 +11,111 @@ import { Torneo } from 'src/app/services/torneo'; // Importa la interfaz de Torn
   styleUrls: ['./detalle-inscripcion.page.scss'],
 })
 export class DetalleInscripcionPage implements OnInit {
-
-  torneo?: Torneo; // Variable para almacenar los datos del torneo
+  torneo?: Torneo; // Datos del torneo
+  usuario: any = {}; // Datos del usuario
 
   constructor(
     private route: ActivatedRoute,
     private navCtrl: NavController,
-    private router: Router
+    private sqliteService: SqliteService, // Inyectamos el servicio de SQLite
+    private router: Router,
+    private toastController: ToastController // Agregar ToastController para los mensajes
   ) {}
 
-  ngOnInit() {
-    // Recuperar los parámetros de consulta para obtener el torneo
+  async ngOnInit() {
+    // Obtener los datos del torneo de los parámetros de la URL
     this.route.queryParams.subscribe(params => {
       if (params && params['torneo']) {
         try {
-          this.torneo = JSON.parse(params['torneo']); // Parsear el torneo desde los parámetros
+          this.torneo = JSON.parse(params['torneo']);
         } catch (error) {
           console.error('Error al parsear el torneo:', error);
         }
       }
     });
+
+    // Obtener los datos del usuario desde la sesión
+    await this.obtenerDatosUsuario();
   }
 
-  // Método para confirmar inscripción
-  confirmarInscripcion() {
-    // Aquí puedes agregar la lógica para inscribir al usuario en el torneo
-    console.log('Inscripción confirmada para el torneo:', this.torneo);
+  // Método para obtener los datos del usuario de la sesión
+  async obtenerDatosUsuario() {
+    try {
+      this.usuario = await this.sqliteService.obtenerSesion(); // Obtener sesión activa
+      if (this.usuario) {
+        console.log('Datos del usuario:', this.usuario);
+      } else {
+        console.error('No se encontró una sesión activa.');
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos del usuario:', error);
+    }
+  }
+
+  // Método para confirmar la inscripción
+  async confirmarInscripcion() {
+    if (this.torneo && this.torneo.id !== undefined && this.usuario) {
+      // Verificar si el número de equipos disponibles es mayor que 0
+      if (this.torneo.numEquipos <= 0) {
+        this.mostrarMensaje('No hay cupos disponibles para este torneo.');
+        return; // Si no hay cupos, no proceder con la inscripción
+      }
+
+      // Verificar si el usuario ya está inscrito en el torneo
+      const yaInscrito = await this.sqliteService.verificarInscripcion(this.torneo.id, this.usuario.id);
+      
+      if (yaInscrito) {
+        this.mostrarMensaje('Ya estás inscrito en este torneo.');
+        return; // Si ya está inscrito, detener el proceso
+      }
+
+      // Crear la inscripción
+      const inscripcion: UserTorneo = {
+        id: Date.now(), // Genera un ID único
+        id_torneo: this.torneo.id,
+        id_usuario: this.usuario.id,
+        nombre: this.usuario.nombre,
+        apellido: this.usuario.apellido,
+        nickname: this.usuario.nickname,
+        correo: this.usuario.correo
+      };
+
+      try {
+        // Inscribir al usuario en el torneo
+        await this.sqliteService.inscribirTorneo(inscripcion);
+
+        // Restar 1 al número de equipos (cupo disponible)
+        if (this.torneo.numEquipos > 0) {
+          this.torneo.numEquipos -= 1;
+          await this.sqliteService.actualizarTorneo(this.torneo); // Actualizar el torneo en la base de datos
+        }
+
+        // Mostrar mensaje de éxito
+        this.mostrarMensaje('Inscripción exitosa en el torneo.');
+        console.log('Inscripción guardada:', inscripcion);
+
+        // Redirigir a la página de inicio después de la inscripción
+        this.router.navigate(['/home']);
+      } catch (error) {
+        console.error('Error al inscribir en el torneo:', error);
+      }
+    } else {
+      console.error('Faltan datos del torneo o del usuario.');
+    }
+  }
+
+  // Método para mostrar mensajes
+  async mostrarMensaje(mensaje: string) {
+    const toast = await this.toastController.create({
+      message: mensaje,
+      duration: 2000,
+      position: 'top'
+    });
+    toast.present();
   }
 
   // Método para regresar a la página anterior
   regresar() {
     this.navCtrl.navigateBack('/detalle-juego');
   }
-
 }

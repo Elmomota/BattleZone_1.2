@@ -305,7 +305,7 @@ export class SqliteService {
           correo: usuario.correo,
           contrasena: usuario.contrasena,
           fechaNacimiento: usuario.fechaNacimiento,
-          edad:usuario.edad,
+          
           pais: usuario.pais
         });
       }
@@ -433,16 +433,29 @@ export class SqliteService {
       console.error('La instancia de la base de datos no está lista.');
       return;
     }
-    const sql = 'INSERT INTO usuarios (pnombre, papellido, nickname, correo, contrasena, fechaNacimiento, pais) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    const values = [nuevoUsuario.pnombre, nuevoUsuario.papellido, nuevoUsuario.nickname, nuevoUsuario.correo, nuevoUsuario.contrasena, nuevoUsuario.fechaNacimiento, nuevoUsuario.pais];
     
+    const sql = `INSERT INTO usuarios (pnombre, papellido, nickname, correo, contrasena, fechaNacimiento, pais) 
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    
+    const values = [
+      nuevoUsuario.pnombre,
+      nuevoUsuario.papellido,
+      nuevoUsuario.nickname,
+      nuevoUsuario.correo,
+      nuevoUsuario.contrasena,
+      nuevoUsuario.fechaNacimiento,
+      nuevoUsuario.pais
+    ];
+
     try {
       await this.dbInstance.executeSql(sql, values);
-      this.selectUsuarios();  // Actualizar la lista observable de usuarios después de insertar
+      this.selectUsuarios(); // Refrescar la lista de usuarios después de insertar
+      this.presentAlert('Usuario Añadido', 'El usuario ha sido registrado exitosamente.');
     } catch (error) {
-      this.presentAlert('Error al añadir al Usuario', JSON.stringify(error));
+      this.presentAlert('Error al añadir usuario', JSON.stringify(error));
     }
   }
+
   
 
   async actualizarUsuario(usuario : Usuario){
@@ -450,8 +463,8 @@ export class SqliteService {
       console.error('La instancia de la base de datos no está lista.');
       return;
     }
-    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, contrasena = ?, fechaNacimiento = ?, edad = ?, pais = ? WHERE id = ?`;
-    const values = [usuario.pnombre, usuario.papellido, usuario.nickname, usuario.correo, usuario.contrasena, usuario.fechaNacimiento, usuario.edad, usuario.pais, usuario.id];
+    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, contrasena = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
+    const values = [usuario.pnombre, usuario.papellido, usuario.nickname, usuario.correo, usuario.contrasena, usuario.fechaNacimiento, usuario.pais, usuario.id];
     
     try {
       await this.dbInstance.executeSql(sql, values);
@@ -530,6 +543,76 @@ export class SqliteService {
       return null; // Retorna null en caso de error
     });
   }
-  
+async verificarInscripcion(id_torneo: number, id_usuario: number): Promise<boolean> {
+
+  try {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos es nula');
+      return false; // Retorna false si la instancia es nula
+    }
+
+    const query = 'SELECT * FROM inscripciones WHERE id_torneo = ? AND id_usuario = ?';
+    const result = await this.dbInstance.executeSql(query, [id_torneo, id_usuario]);
+
+    // Si hay resultados, significa que ya está inscrito
+    return result.rows.length > 0;
+    
+  } catch (error) {
+    console.error('Error al verificar inscripción:', error);
+    return false; // En caso de error, asumimos que no está inscrito
+  }
+}
+
+async obtenerTorneosInscritos(id_usuario: number): Promise<any[]> {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos es nula');
+    return [];
+  }
+
+  const query = `
+    SELECT t.* 
+    FROM torneos t
+    JOIN inscripcion_torneo i ON t.id = i.id_torneo
+    WHERE i.id_usuario = ?`;
+
+  try {
+    const result = await this.dbInstance.executeSql(query, [id_usuario]);
+    const torneos = [];
+    for (let i = 0; i < result.rows.length; i++) {
+      torneos.push(result.rows.item(i));
+    }
+    return torneos;
+  } catch (error) {
+    console.error('Error al obtener torneos inscritos:', error);
+    return [];
+  }
+}
+
+async obtenerUsuariosInscritos(id_torneo: number): Promise<any[]> {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos es nula');
+    return [];
+  }
+
+  const query = `
+    SELECT u.* 
+    FROM usuarios u
+    JOIN inscripcion_torneo i ON u.id = i.id_usuario
+    WHERE i.id_torneo = ?`;
+
+  try {
+    const result = await this.dbInstance.executeSql(query, [id_torneo]);
+    const usuarios = [];
+    for (let i = 0; i < result.rows.length; i++) {
+      usuarios.push(result.rows.item(i));
+    }
+    return usuarios;
+  } catch (error) {
+    console.error('Error al obtener usuarios inscritos:', error);
+    return [];
+  }
+}
+
+
   
 }  

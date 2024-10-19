@@ -55,17 +55,36 @@ export class NuevoTorneoPage implements OnInit {
   }
 
   async guardarTorneo() {
-    // Verificación del número de equipos
-    if (this.nuevoTorneo.numEquipos < 0 || this.nuevoTorneo.numEquipos > 20) {
+    // Validación del nombre del torneo
+    if (this.nuevoTorneo.nombre.trim().length < 3) {
       const alert = await this.alertController.create({
         header: 'Error de validación',
-        message: 'El número de equipos debe estar entre 0 y 20.',
+        message: 'El nombre del torneo debe tener al menos 3 caracteres.',
         buttons: ['OK']
       });
       await alert.present();
       return; // Salir del método si hay un error
     }
-
+  
+    // Validación de la fecha de inicio
+    const fechaSeleccionada = new Date(this.nuevoTorneo.fechaInicio);
+    const fechaActual = new Date();
+    
+    if (fechaSeleccionada < fechaActual) {
+      this.nuevoTorneo.estado = 'Finalizado'; // Cambia el estado a 'Finalizado'
+    }
+  
+    // Verificación del número de equipos
+    if (this.nuevoTorneo.numEquipos < 2 || this.nuevoTorneo.numEquipos > 20) {
+      const alert = await this.alertController.create({
+        header: 'Error de validación',
+        message: 'El número de equipos debe estar entre 2 y 20.',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return; // Salir del método si hay un error
+    }
+  
     const alert = await this.alertController.create({
       header: 'Confirmar Creación',
       message: '¿Estás seguro de que deseas crear este torneo?',
@@ -78,16 +97,16 @@ export class NuevoTorneoPage implements OnInit {
           text: 'Crear',
           handler: async () => {
             try {
-              // Simulación: Obtén el adminId actual (aquí puedes implementar una lógica para obtener el adminId real)
+              // Simulación: Obtén el adminId actual
               const adminId = await this.obtenerAdminIdActual();
-
+  
               // Verificación antes de crear
               console.log('Nuevo torneo:', this.nuevoTorneo);
-
+  
               // Llama al servicio para crear el nuevo torneo, pasando el torneo y el adminId
               await this.sqliteService.addTorneo(this.nuevoTorneo, adminId);
               this.torneoService.notificarTorneoAgregado();
-
+  
               // Mensaje de éxito y redirección
               console.log('Torneo creado correctamente');
               await this.router.navigate(['/cuenta-admin']);
@@ -104,15 +123,16 @@ export class NuevoTorneoPage implements OnInit {
         }
       ]
     });
-
+  
     await alert.present();
   }
-
-  async obtenerAdminIdActual(): Promise<number> {
-    // Aquí implementas la lógica para obtener el adminId, por ejemplo desde un servicio o del almacenamiento local
-    // En este ejemplo simulo que el adminId es 1
-    return 1; // Reemplaza esto con la lógica adecuada para obtener el adminId real
-  }
+    // Método para obtener el adminId actual
+    async obtenerAdminIdActual(): Promise<number> {
+      // Aquí deberías implementar la lógica real para obtener el adminId
+      // En este ejemplo simplemente devuelve un valor fijo
+      return 1;
+    }
+  
 
   admin_c(){
     this.router.navigate(['/cuenta-admin']);

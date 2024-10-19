@@ -1,14 +1,20 @@
-import { Component, OnInit } from '@angular/core'; 
-import { ActivatedRoute, Router } from '@angular/router'; 
-import { NavController } from '@ionic/angular'; 
-import { SqliteService } from 'src/app/services/sqlite.service'; 
-import { Juego } from 'src/app/services/juego'; 
+import { Component, OnInit } from '@angular/core'; // Importación de componentes y OnInit para manejar el ciclo de vida del componente
+import { ActivatedRoute, Router } from '@angular/router'; // Importación para manejar rutas activas y navegación
+import { NavController } from '@ionic/angular'; // Importación del controlador de navegación de Ionic
+import { SqliteService } from 'src/app/services/sqlite.service'; // Importación del servicio SQLite para gestionar datos
+import { Juego } from 'src/app/services/juego'; // Importación del modelo de datos de juego
+import { ServicioApiService } from 'src/app/services/servicio-api.service';
+
+
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
+
+
 export class HomePage implements OnInit {
 
   usuario: string = ''; // Almacena el nickname del usuario
@@ -16,13 +22,16 @@ export class HomePage implements OnInit {
   filteredJuegos: Juego[] = [];  // Lista de juegos filtrados
   searchTerm: string = '';  // Término de búsqueda introducido por el usuario
   loading: boolean = true; // Estado de carga
+  noticias: any[] = [];
 
   constructor(
-    private router: Router, 
-    private activedrouter: ActivatedRoute, 
-    private navCtrl: NavController, 
-    private sqliteService: SqliteService, 
-  ) {}
+    private router: Router, // Inyección del servicio Router para navegar entre páginas
+    private activedrouter: ActivatedRoute, // Inyección del servicio ActivatedRoute para obtener parámetros de la ruta
+    private navCtrl: NavController, // Inyección del controlador de navegación
+    private sqliteService: SqliteService, // Inyección del servicio SQLite
+    private api: ServicioApiService
+  ) { }
+
 
   async ngOnInit() {
     // Obtener la sesión del usuario usando el servicio SQLite
@@ -44,7 +53,19 @@ export class HomePage implements OnInit {
     });
 
     await this.loadJuegos(); // Cargar los juegos al inicializar la página
-  }
+
+
+    
+
+    this.api.getNoticias().subscribe((res)=>{
+      console.log('Respuesta de la API:', res);
+      this.noticias = res.articles;
+      },(error)=>{
+      console.log(error);
+      });
+     
+
+  } 
 
   async loadJuegos() { // Método para cargar juegos desde el servicio
     this.loading = true; // Cambiar el estado de carga a verdadero
@@ -74,6 +95,18 @@ export class HomePage implements OnInit {
 
   Ircuenta(){
     this.router.navigate(['/cuenta']);
+  }
+
+  iraux(){
+    this.router.navigate(['/home']);
+  }
+
+  mostrarTodo: boolean = false;
+  limiteNoticias: number = 5; // Mostrar solo 5 inicialmente
+
+  toggleMostrarTodo() {
+    this.mostrarTodo = !this.mostrarTodo;
+    this.limiteNoticias = this.mostrarTodo ? this.noticias.length : 5; // Si mostrarTodo es true, muestra todo, sino muestra 5
   }
 
 }

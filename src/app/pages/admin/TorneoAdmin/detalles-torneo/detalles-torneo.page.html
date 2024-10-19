@@ -26,6 +26,34 @@
           </ion-card>
       </ng-container>
 
+
+            <!-- Mostrar usuarios inscritos -->
+            <ion-card *ngIf="usuarios.length > 0">
+                <ion-card-header>
+                  <ion-card-title>Usuarios Inscritos</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                  <ion-list>
+                    <ion-item *ngFor="let usuario of usuarios">
+                      <ion-label>
+                        <h2>{{usuario.nombre}} {{usuario.apellido}}</h2>
+                        <p><strong>Nickname:</strong> {{usuario.nickname}}</p>
+                        <p><strong>Email:</strong> {{usuario.correo}}</p>
+                      </ion-label>
+                    </ion-item>
+                  </ion-list>
+                </ion-card-content>
+              </ion-card>
+              
+              <!-- Mensaje cuando no hay usuarios inscritos -->
+              <ng-template #noUsuarios>
+                <ion-item>
+                  <ion-label>
+                    <p>No hay usuarios inscritos en este torneo.</p>
+                  </ion-label>
+                </ion-item>
+              </ng-template>
+
       <ng-template #noTorneo>
           <ion-item>
               <ion-label>

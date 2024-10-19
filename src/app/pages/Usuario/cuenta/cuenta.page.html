@@ -35,7 +35,10 @@
             </ion-avatar>
 
             <div class="info-perfil">
-                <h4>{{user}}</h4>
+                <h4>{{user.nickname}}</h4>
+                <h6>{{user.pnombre}}" "{{user.papellido}}</h6>
+                
+
             </div>
 
 
@@ -138,82 +141,21 @@
 
                     <!------items------------------------------------------------------------------------------------------------>
                     <!------------------------------------------------------------------------------------------------------>
-                    <div class="game-item">
-                        <div class="distribucion">
-
-                            <img class="imagen-torneos-jugados" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                            <div class="texto">
-                                <h6>Copa Soprole</h6>
-                                <p>Eliminacion directa</p>
-                                <p>Puesto:5°</p>
-                                <P>Fecha: 14/04/202</P>
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-
-                    <div class="game-item">
-                        <div class="distribucion">
-
-                            <img class="imagen-torneos-jugados" src="assets/img/lol2.jpg" alt="Valorant" />
-
-                            <div class="texto">
-                                <h6>Copa Soprole</h6>
-                                <p>Eliminacion directa</p>
-                                <p>Puesto:5°</p>
-                                <P>Fecha: 14/04/202</P>
-
-                            </div>
-
-                        </div>
-
-
-                    </div>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <div class="game-item">
-                        <div class="distribucion">
-
-                            <img class="imagen-torneos-jugados" src="assets/img/fornite.jpg" alt="Valorant" />
-
-                            <div class="texto">
-                                <h6>Copa Soprole</h6>
-                                <p>Eliminacion directa</p>
-                                <p>Puesto:5°</p>
-                                <P>Fecha: 14/04/202</P>
-
-                            </div>
-                        </div>
-
-
-                    </div>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-
-                    <div class="game-item">
-                        <div class="distribucion">
-
-                            <img class="imagen-torneos-jugados" src="assets/img/lol2.jpg" alt="Valorant" />
-
-                            <div class="texto">
-                                <h6>Copa Soprole</h6>
-                                <p>Eliminacion directa</p>
-                                <p>Puesto:5°</p>
-                                <P>Fecha: 14/04/202</P>
-
-                            </div>
-                        </div>
-
-
-                    </div>
+                    
+                        <ion-card *ngFor="let torneo of torneosJugados">
+                            <ion-card-content>
+                                <div class="distribucion">
+                                    <img class="imagen-torneos-jugados" [src]="torneo.imagen" alt="{{torneo.nombre}}" />
+                                    <div class="texto">
+                                        <h6>{{torneo.nombre}}</h6>
+                                        <p>{{torneo.tipo}}</p>
+                                        <p>Puesto: {{torneo.puesto}}</p>
+                                        <p>Fecha: {{torneo.fecha}}</p>
+                                    </div>
+                                </div>
+                            </ion-card-content>
+                        </ion-card>
+                    
 
 
                 </div>

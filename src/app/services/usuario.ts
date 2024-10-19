@@ -6,7 +6,6 @@ export class Usuario {
     correo!: string;
     contrasena!: string;
     fechaNacimiento!: string;
-    edad!: number;
     pais!: string;
     
 }
