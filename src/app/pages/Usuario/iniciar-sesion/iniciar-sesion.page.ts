@@ -61,5 +61,9 @@ export class IniciarSesionPage {
 
     await alert.present();
   }
+
+  irPagina() {
+    this.router.navigate(['/forgot-password']);
+  }
 }
 
