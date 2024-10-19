@@ -1,10 +1,17 @@
 <ion-content [fullscreen]="true" class="not-found-content">
   <div class="not-found-container">
-    <ion-img src="assets/images/not-found.png" alt="Not Found Image" class="not-found-image"></ion-img>
+    <!-- Imagen de la página no encontrada -->
+    <ion-img src="assets/img/not-found.png" alt="Not Found Image" class="not-found-image"></ion-img>
+    
+    <!-- Título de la página -->
     <h1 class="not-found-title">¡Oops! Página No Encontrada</h1>
+    
+    <!-- Mensaje explicando el error -->
     <p class="not-found-message">Lo sentimos, pero la página que buscas no existe o ha sido eliminada.</p>
-    <ion-button expand="full" (click)="goHome()" class="not-found-button">
-      Regresar al Inicio
+    
+    <!-- Botón para regresar a la página anterior -->
+    <ion-button expand="full" (click)="goBack()" class="not-found-button">
+      Regresar
     </ion-button>
   </div>
 </ion-content>

@@ -9,7 +9,7 @@ import { NavController } from '@ionic/angular';
 export class NotFoundPage {
   constructor(private navCtrl: NavController) {}
 
-  goHome() {
-    this.navCtrl.navigateRoot('/'); // Redirigir al inicio
+  goBack() {
+    this.navCtrl.pop(); // Regresar a la página anterior
   }
 }
