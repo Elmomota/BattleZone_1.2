@@ -85,6 +85,6 @@ export class ForgotPasswordPage implements OnInit {
 
   // Método para redirigir a la página de inicio de sesión después de cambiar la contraseña
   irPagina() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/iniciar-sesion']);
   }
 }
