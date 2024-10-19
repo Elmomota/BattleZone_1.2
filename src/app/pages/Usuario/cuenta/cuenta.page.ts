@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { SqliteService } from 'src/app/services/sqlite.service';  // Asegúrate de que esté correctamente importado
+import { NavController } from '@ionic/angular';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-cuenta',
@@ -12,7 +15,7 @@ export class CuentaPage implements OnInit {
   torneosJugados: any[] = [];
   seleccion: string = 'Torneos jugados';  // Valor por defecto del segmento
 
-  constructor(private SqliteService: SqliteService) {}
+  constructor(private SqliteService: SqliteService,private navCtrl: NavController,private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.obtenerDatosUsuario();
@@ -51,5 +54,23 @@ export class CuentaPage implements OnInit {
   home() {
     // Redirigir a la página principal
   }
+
+
+/////////////////////////////////funcion para retroceder
+  
+
+
+irAtras() {
+    this.navCtrl.back();
+  }
+///////////////////////////////////////////////////////////////////
+
+
+  onSegmentChange(event: any) {
+    this.seleccion = event.detail.value;
+    this.cdr.detectChanges();  // Forzar la actualización de la vista
+  }
+
+
 }
 

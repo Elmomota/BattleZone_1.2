@@ -16,9 +16,10 @@
 
         <!------------------botones------------------------------------------------------------------------------------>
 
-        <ion-button fill="clear" class="icono-atras" (click)="home()">
+        <ion-button fill="clear" class="icono-atras" (click)="irAtras()">
             <ion-icon name="arrow-back-circle-outline"></ion-icon>
         </ion-button>
+
         <!------------------------------------------------------------------------------------------------------>
 
         <div class="div-foto-perfil">
@@ -37,7 +38,7 @@
             <div class="info-perfil">
                 <h4>{{usuario.nickname}}</h4>
                 <h6>{{usuario.pnombre}}" "{{usuario.papellido}}</h6>
-                
+
 
             </div>
 
@@ -141,21 +142,21 @@
 
                     <!------items------------------------------------------------------------------------------------------------>
                     <!------------------------------------------------------------------------------------------------------>
- 
-                        <ion-card *ngFor="let torneo of torneosJugados">
-                            <ion-card-content>
-                                <div class="distribucion">
-                                    <img class="imagen-torneos-jugados" [src]="torneo.imagen" alt="{{torneo.nombre}}" />
-                                    <div class="texto">
-                                        <h6>{{torneo.nombre}}</h6>
-                                        <p>{{torneo.tipo}}</p>
-                                        <p>Puesto: {{torneo.puesto}}</p>
-                                        <p>Fecha: {{torneo.fecha}}</p>
-                                    </div>
+
+                    <ion-card *ngFor="let torneo of torneosJugados">
+                        <ion-card-content>
+                            <div class="distribucion">
+                                <img class="imagen-torneos-jugados" [src]="torneo.imagen" alt="{{torneo.nombre}}" />
+                                <div class="texto">
+                                    <h6>{{torneo.nombre}}</h6>
+                                    <p>{{torneo.tipo}}</p>
+                                    <p>Puesto: {{torneo.puesto}}</p>
+                                    <p>Fecha: {{torneo.fecha}}</p>
                                 </div>
-                            </ion-card-content>
-                        </ion-card>
-                    
+                            </div>
+                        </ion-card-content>
+                    </ion-card>
+
 
 
                 </div>

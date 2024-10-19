@@ -1,251 +1,145 @@
 /* Estilos generales */
+
 h1 {
-    margin: 0; /* Eliminar margen superior e inferior */
+    margin: 0;
+    /* Eliminar margen superior e inferior */
 }
 
 ion-header {
-    --background: transparent; /* Fondo transparente */
+    --background: transparent;
+    /* Fondo transparente */
 }
 
-/* Scroll horizontal */
-ion-scroll {
-    white-space: nowrap; /* Scroll horizontal */
-}
-
-.horizontal-scroll {
-    display: flex;
-    overflow-x: auto;
-    scrollbar-width: none; /* Oculta la barra de desplazamiento en navegadores compatibles */
-}
 
 /* Estilos del contenido */
+
 ion-content {
-    --background: #2f3153; /* Fondo oscuro */
-    color: #C9B1BD; /* Color de texto */
+    --background: #2f3153;
+    /* Fondo oscuro */
+    color: #C9B1BD;
+    /* Color de texto */
+    display: flex;
+    justify-content: center;
+    /* Centra horizontalmente */
+    align-items: center;
+    /* Centra verticalmente */
     padding: 15px;
 }
 
-/* Estilos para las secciones de categorías */
-.categories-section ion-chip {
-    margin-right: 8px;
-}
-
-ion-chip {
-    margin-right: 10px;
-    background-color: #5A556E; /* Color de fondo de los chips */
-    color: #C9B1BD; /* Color del texto en los chips */
-}
-
-/* Estilos para el título y nombre del usuario */
-.titulo-bienvenida {
-    text-align: center;
-    font-size: 24px;
-    color: #fff; /* Color blanco */
-}
-
-.usuario-nombre {
-    text-align: center; /* Centrar el nombre del usuario */
-    font-size: 18px;
-    color: #bdbdbd; /* Color más claro para el nombre del usuario */
-    margin-top: 10px;
-}
-
-/* Espaciado en las secciones */
-.categories-section {
-    margin-bottom: 20px;
-}
-
-/* Estilos para los encabezados de listas */
-ion-list-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #C9B1BD; /* Color del encabezado */
-}
-
-/* Estilos para los elementos de juegos */
-.game-item {
-    flex: 0 0 auto;
-    margin-right: 15px;
-    text-align: center;
-    min-width: 120px;
-}
-
-.game-item img {
-    width: 150px; /* Ajustar el tamaño de las imágenes */
-    height: 150px;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px #32345A; /* Sombra de las imágenes */
-}
-
-/* Estilos para los elementos de juegos nuevos */
-.new-games-section .game-item p {
-    color: #868192; /* Color para los textos de juegos nuevos */
-    font-size: 14px;
-}
 
 /* Estilos del toolbar */
+
 ion-toolbar {
-    --background: #32345A; /* Fondo del toolbar */
-    color: #C9B1BD; /* Color del texto del toolbar */
+    --background: #32345A;
+    /* Fondo del toolbar */
+    color: #C9B1BD;
+    /* Color del texto del toolbar */
 }
 
 ion-avatar img {
-    border-radius: 50%; /* Avatar redondeado */
+    border-radius: 50%;
+    /* Avatar redondeado */
 }
 
+
 /* Estilos de la barra de pestañas */
+
 ion-tab-bar {
-    background-color: #32345A; /* Fondo de la barra de pestañas */
+    background-color: #32345A;
+    /* Fondo de la barra de pestañas */
 }
 
 ion-tab-button {
-    color: #C9B1BD; /* Color de los botones de pestaña */
+    color: #C9B1BD;
+    /* Color de los botones de pestaña */
 }
 
 ion-tab-button[aria-selected="true"] ion-icon {
-    color: #BE685D; /* Color del icono seleccionado */
-}
-
-/* Estilos para la sección de noticias */
-.news-section {
-    background-color: #32345A; /* Fondo de la sección de noticias */
-    padding: 15px;
-    border-radius: 15px; /* Bordes redondeados */
-    margin-top: 20px;
-}
-
-.news-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: #5A556E; /* Fondo de cada elemento de noticia */
-    border-radius: 10px; /* Bordes redondeados */
-}
-
-.news-item img {
-    width: 100px; /* Ajustar el tamaño de la imagen */
-    height: 100px;
-    border-radius: 10px; /* Bordes redondeados para la imagen */
-    object-fit: cover; /* Ajustar imagen */
-    margin-right: 15px; /* Espacio entre imagen y texto */
-    box-shadow: 0px 0px 10px #32345A; /* Sombra de las imágenes de noticias */
-}
-
-/* Estilos generales para secciones */
-.categories-section,
-.trending-games-section,
-.news-section {
-    background-color: #32345A; /* Fondo de las secciones */
-    border-radius: 15px; /* Bordes redondeados */
-    padding: 15px;
-    margin: 20px 10px; /* Margen de las secciones */
-    box-shadow: 0px 4px 8px rgba(50, 52, 90, 0.6); /* Sombra de las secciones */
+    color: #BE685D;
+    /* Color del icono seleccionado */
 }
 
 hr {
-    margin-top: 2rem; /* Espacio arriba */
-    margin-bottom: 2rem; /* Espacio abajo */
+    margin-top: 2rem;
+    /* Espacio arriba */
+    margin-bottom: 2rem;
+    /* Espacio abajo */
     border: 0;
-    border-top: 1px solid rgba(0, 0, 0, 0.1); /* Línea horizontal */
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    /* Línea horizontal */
 }
 
+
 /* Estilo para la fecha de noticias */
+
 .news-date {
-    font-size: 0.8em; /* Tamaño de fuente pequeño */
-    color: #aaaaaa; /* Color gris claro */
+    font-size: 0.8em;
+    /* Tamaño de fuente pequeño */
+    color: #aaaaaa;
+    /* Color gris claro */
 }
 
 ion-thumbnail {
-    width: 80px; /* Ajustar el tamaño de la imagen */
+    width: 80px;
+    /* Ajustar el tamaño de la imagen */
     height: 80px;
 }
 
-/* Estilos para la lista de noticias */
-.lista-noticia {
-    --background: #4d55ad; /* Color de fondo */
-    color: #1A1C3C; /* Color del texto */
-    margin-top: -10px; /* Ajustar margen superior */
-}
-
-/* Hacer transparente la lista */
-ion-list {
-    --background: transparent; /* Fondo transparente */
-}
-
-/* Div contenedor de noticias */
-.div-noticias {
-    margin: 20px; /* Margen de las noticias */
-    border-radius: 20px; /* Bordes redondeados */
-}
-
-/* Estilo del título de la noticia */
-.noticia-titulo {
-    font-size: 1.2rem; /* Tamaño de fuente */
-    color: #FF0000; /* Rojo */
-    margin-bottom: 10px; /* Margen inferior */
-}
-
-.titulo {
-    margin-top: 20px; /* Margen superior */
-    text-align: center; /* Centrar texto */
-    color: #bdbdbd; /* Color del texto */
-}
-
-/* Estilo del contenedor de imágenes */
-.imagen-container {
-    width: 150px; /* Ajustar tamaño */
-    height: 150px; /* Ajustar tamaño */
-    background-color: #000; /* Fondo negro */
-    position: static; /* Posición estática */
-    box-shadow: 0px 0px 10px #000; /* Sombra */
-    flex-direction: column; /* Dirección de flex */
-    border-radius: 50px; /* Bordes redondeados */
-}
-
-.imagen-container {
-    width: 100%; /* Ajustar ancho */
-    height: auto; /* Ajustar alto */
-    margin: 0px; /* Margen cero */
-    margin-bottom: 15px; /* Margen inferior */
-}
-
-/* Estilo del título de la noticia */
-.noticia-titulo {
-    font-size: 1.5rem; /* Tamaño de fuente */
-    font-weight: bold; /* Negrita */
-    color: #ffffff; /* Color blanco */
-    margin-bottom: 10px; /* Margen inferior */
-}
-
-.noticia-autor {
-    font-size: 1rem; /* Tamaño de fuente */
-    color: #ffffff; /* Color blanco */
-    margin-bottom: 5px; /* Margen inferior */
-}
-
-.noticia-descripcion {
-    font-size: 1rem; /* Tamaño de fuente */
-    color: #ffffff; /* Color blanco */
-    margin-bottom: 10px; /* Margen inferior */
-}
-
-.news-date {
-    font-size: 0.9rem; /* Tamaño de fuente */
-    color: #ffffff; /* Color blanco */
-    margin-bottom: 10px; /* Margen inferior */
-}
-
-.noticia-imagen {
-    width: 100%; /* Ancho completo */
-    height: 150px; /* Ajustar alto */
-    object-fit: cover; /* Ajustar imagen */
-    border-radius: 10px; /* Bordes redondeados */
-}
 
 /* Estilo de botones */
+
 ion-button {
-    --background: #800080; /* Color morado */
-    margin-top: 10px; /* Margen superior */
+    --background: #800080;
+    /* Color morado */
+    margin-top: 10px;
+    /* Margen superior */
+}
+
+hr {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.buscador {
+    width: 100%;
+    margin-bottom: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 5px;
+    background-color: #32345A;
+    /* Color gris violáceo */
+    --border-radius: 12px;
+    justify-content: center;
+    /* Centra horizontalmente */
+    align-items: center;
+    /* Centra verticalmente */
+}
+
+.item-b {
+    --background: #868192;
+    --border-radius: 12px;
+    margin-bottom: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-top: 5px;
+}
+
+.espacio {
+    margin-bottom: 20px;
+    /* Ajusta el espacio según necesites */
+}
+
+h1 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 15px;
+    color: #3b678a;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+}
+
+.btn-limpiar {
+    --background: #3b678a;
 }
