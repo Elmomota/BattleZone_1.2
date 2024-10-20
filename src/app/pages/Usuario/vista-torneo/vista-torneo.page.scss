@@ -1,0 +1,44 @@
+ion-content {
+    --background: #2f3153;
+    color: #fff;
+}
+
+.imagen-container {
+    width: 30%;
+    position: fixed;
+    width: 100%;
+    height: 30%;
+}
+
+.imagen-container img {
+    width: 30%;
+    object-fit: fill;
+    width: 100%;
+    height: auto;
+}
+
+.div-grande {
+    background-color: #2f3153;
+    top: 200px;
+    position: relative;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    padding: 20px;
+    text-align: center;
+}
+
+.icono-atras {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+}
+
+.participando {
+    border-radius: 20px;
+    background-color: rgb(127, 234, 255);
+}
+
+.key {
+    border-radius: 20px;
+    background-color: rgb(127, 227, 255);
+}
