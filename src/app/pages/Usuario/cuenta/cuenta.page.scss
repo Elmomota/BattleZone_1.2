@@ -144,9 +144,28 @@ ion-icon {
 
 .imagen-historial {
     position: relative;
-    border-radius: 50%;
+    border-radius: 5px;
     height: auto;
     margin-right: 10px;
+}
+
+.distribucion-historial1 {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    justify-content: flex-start;
+    width: auto;
+    height: auto;
+    padding: 10px;
+}
+
+.ov {
+    overflow: hidden;
+}
+
+.distribucion-historial1 img {
+    position: static;
+    width: 50px;
 }
 
 .texto-h {
