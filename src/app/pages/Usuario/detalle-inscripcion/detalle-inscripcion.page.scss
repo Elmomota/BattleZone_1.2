@@ -1,6 +1,7 @@
 ion-title {
     text-align: center;
     color: #ffffff;
+    font-size: 50px;
 }
 
 ion-content {
@@ -19,4 +20,38 @@ ion-item {
     --background: #868192;
     /* Color gris violáceo */
     --border-radius: 12px;
+}
+
+.todo {
+    align-items: center;
+    justify-content: center;
+    margin-top: 150px;
+}
+
+.box {
+    background: #8183a4;
+    border-radius: 25px;
+}
+
+p {
+    color: white;
+}
+
+ion-title {
+    font-size: 23px;
+}
+
+.owo {
+    color: white;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+    font-size: 30px;
+}
+
+.todod {
+    border-radius: 20px;
+    background: #3f458d;
+}
+
+.a {
+    padding-bottom: 15px;
 }

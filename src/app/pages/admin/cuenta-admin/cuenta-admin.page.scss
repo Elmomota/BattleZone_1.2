@@ -10,6 +10,15 @@ ion-toolbar {
     color: #C9B1BD;
 }
 
+card-title {
+    color: white;
+    text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+}
+
+ion-card-subtitle {
+    color: white;
+}
+
 /////////////////////////titulo toolbar
 .tit-toolbar {
     padding-left: 1rem;
@@ -61,4 +70,12 @@ hr {
     margin-bottom: 1rem;
     border: 0;
     border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.torneo-card2 {
+    background-color: #32345A;
+}
+
+ion-card-content {
+    background-color: #4d5182;
 }

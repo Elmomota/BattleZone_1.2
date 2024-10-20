@@ -1,46 +1,73 @@
 <ion-content class="general" [fullscreen]="true">
 
-    <!------------------------------------ Botón Atrás ------------------------------------>
-    <ion-button fill="clear" class="icono-atras" (click)="home()">
-        <ion-icon name="arrow-back-circle-outline"></ion-icon>
-    </ion-button>
-    <!------------------------------------------------------------------------------------>
-  
-    <!------------------------------------ Detalles del Juego ------------------------------------>
-    <div class="game-details">
-        <h1 class="titulo-bienvenida">{{ juego?.nombre }}</h1>
-        <img [src]="juego?.logo" alt="{{ juego?.nombre }} Logo" class="game-logo" />
-        <h3>Descripción:</h3>
-        <p>{{ juego?.descripcion }}</p>
-        <h4>Tipo de Jugabilidad:</h4>
-        <p>{{ juego?.tipo }}</p>
+
+    <div class="imagen-container">
+        <img src="assets/img/Street-Fighter-6.jpg" alt="Street Fighter" />
     </div>
-    <!-------------------------------------------------------------------------------------------->
-  
-    <!------------------------------------ Torneos Relacionados ------------------------------------>
-    <div class="torneos-section">
-        <h2>Torneos Relacionados</h2>
-        <ion-list *ngIf="torneos.length > 0; else noTorneos">
-            <ion-item *ngFor="let torneo of torneos" (click)="irADetalleInscripcion(torneo)">
-                <ion-thumbnail slot="start">
-                    <img [src]="torneo.imagen" alt="{{ torneo.nombre }}" />
-                </ion-thumbnail>
-                <ion-label>
-                    <h3>{{ torneo.nombre }}</h3>
-                    <p>Fecha de Inicio: {{ torneo.fechaInicio }}</p>
-                    <p>Cupos: {{ torneo.numEquipos }}</p>
-                </ion-label>
-            </ion-item>
-        </ion-list>
-        <ng-template #noTorneos>
-            <ion-item>
-                <ion-label>
-                    <h3>No hay torneos relacionados para este juego.</h3>
-                </ion-label>
-            </ion-item>
-        </ng-template>
+
+
+
+    <div class="div-grande">
+
+
+        <!------------------------------------ Botón Atrás ------------------------------------>
+        <ion-button fill="clear" class="icono-atras" (click)="home()">
+            <ion-icon name="arrow-back-circle-outline"></ion-icon>
+        </ion-button>
+        <!------------------------------------------------------------------------------------>
+
+
+
+
+        <!------------------------------------ Detalles del Juego ------------------------------------>
+        <div class="game-details">
+
+
+
+            <h1 class="titulo-bienvenida">{{ juego?.nombre }}</h1>
+            <!------------------------------------------------------------------------------------>
+            <hr>
+            <!------------------------------------------------------------------------------------>
+
+            <h3 class="color-t">Descripción:</h3>
+            <p class="color-t">{{ juego?.descripcion }}</p>
+            <hr>
+            <h4 class="color-t">Tipo de Jugabilidad:</h4>
+            <p class="color-t">{{ juego?.tipo }}</p>
+
+
+
+        </div>
+        <!-------------------------------------------------------------------------------------------->
+
+        <!------------------------------------ Torneos Relacionados ------------------------------------>
+        <div class="torneos-section">
+
+
+            <h2>Torneos Relacionados</h2>
+
+            <div class="box2" *ngIf="torneos.length > 0; else noTorneos">
+                <ion-item class="item-b" *ngFor="let torneo of torneos" (click)="irADetalleInscripcion(torneo)">
+                    <ion-thumbnail slot="start">
+                        <img [src]="torneo.imagen" alt="{{ torneo.nombre }}" />
+                    </ion-thumbnail>
+                    <ion-label>
+                        <h3>{{ torneo.nombre }}</h3>
+                        <p>Fecha de Inicio: {{ torneo.fechaInicio }}</p>
+                        <p>Cupos: {{ torneo.numEquipos }}</p>
+                    </ion-label>
+                </ion-item>
+            </div>
+
+
+            <ng-template #noTorneos>
+                <ion-item>
+                    <ion-label>
+                        <h3>No hay torneos relacionados para este juego.</h3>
+                    </ion-label>
+                </ion-item>
+            </ng-template>
+        </div>
+        <!-------------------------------------------------------------------------------------------->
     </div>
-    <!-------------------------------------------------------------------------------------------->
-  
-  </ion-content>
-  
+</ion-content>

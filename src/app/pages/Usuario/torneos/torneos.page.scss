@@ -16,7 +16,7 @@ ion-header {
 ion-content {
     --background: #2f3153;
     /* Fondo oscuro */
-    color: #C9B1BD;
+    color: #ffffff;
     /* Color de texto */
     display: flex;
     justify-content: center;
@@ -103,27 +103,29 @@ hr {
 }
 
 .buscador {
-    width: 100%;
     margin-bottom: 16px;
     padding-left: 16px;
     padding-right: 16px;
     padding-top: 5px;
-    background-color: #32345A;
+    background-color: #474a7f;
     /* Color gris violáceo */
-    --border-radius: 12px;
+    border-radius: 20px;
     justify-content: center;
     /* Centra horizontalmente */
     align-items: center;
     /* Centra verticalmente */
+    margin: 10px;
+    margin: 10px;
 }
 
 .item-b {
-    --background: #868192;
+    --background: #8183a4;
     --border-radius: 12px;
     margin-bottom: 16px;
     padding-left: 16px;
     padding-right: 16px;
-    padding-top: 5px;
+    margin: 5px;
+    padding-bottom: 20px;
 }
 
 .espacio {
@@ -136,10 +138,72 @@ h1 {
     align-items: center;
     justify-content: center;
     padding-top: 15px;
-    color: #3b678a;
+    color: #ffffff;
     text-shadow: -1px -1px 0 black, 1px -1px 0 black, -1px 1px 0 black, 1px 1px 0 black;
+    padding-bottom: 5px;
 }
 
 .btn-limpiar {
     --background: #3b678a;
+    padding-bottom: 20px;
+}
+
+.container {
+    margin-bottom: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-top: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
+    background-color: #4a4d81;
+    /* Color gris violáceo */
+    border-radius: 20px;
+    justify-content: center;
+    /* Centra horizontalmente */
+    align-items: center;
+    /* Centra verticalmente */
+}
+
+.torneo-card {
+    --background: #313463;
+    padding: 15px;
+    border-radius: 20px;
+}
+
+.content-container {
+    background: #4a4d81;
+    border-radius: 15px;
+}
+
+.no-torneos {
+    --background: #4a4d81;
+    padding: auto;
+    text-align: center;
+}
+
+.ojo {
+    color: white;
+}
+
+.box {
+    --background: #8183a4;
+    border-radius: 5px;
+}
+
+///////////////////icono atras
+.icono-atras {
+    --background: #2f3153;
+    color: #ffffff;
+    position: absolute;
+    /* Color del texto */
+}
+
+.blanco {
+    color: white;
+}
+
+#logo {
+    width: 70%;
+    position: static;
+    padding-left: 100px;
 }

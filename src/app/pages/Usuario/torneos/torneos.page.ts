@@ -3,6 +3,8 @@ import { SqliteService } from 'src/app/services/sqlite.service';
 import { Torneo } from 'src/app/services/torneo';
 import { Juego } from 'src/app/services/juego';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
+
 
 @Component({
   selector: 'app-torneos',
@@ -18,7 +20,7 @@ export class TorneosPage implements OnInit {
   nombreFiltro: string = ''; // Filtro de nombre
   juegoFiltro: string = ''; // Filtro de juego
 
-  constructor(private sqliteService: SqliteService, private router: Router) {}
+  constructor(private sqliteService: SqliteService, private router: Router,private navCtrl: NavController) {}
 
   ngOnInit() {
     // Obtener la lista de torneos y juegos desde la base de datos
@@ -64,4 +66,10 @@ export class TorneosPage implements OnInit {
     this.juegoFiltro = '';
     this.torneosFiltrados = this.torneos; // Mostrar todos los torneos
   }
+
+  irAtras() {
+    this.navCtrl.back();
+  }
+
+
 }
