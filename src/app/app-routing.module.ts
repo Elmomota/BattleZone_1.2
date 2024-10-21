@@ -70,17 +70,17 @@ const routes: Routes = [
   },
 
 
-
-
-
-
-
-
+  {
+    path: 'vista-torneo',
+    loadChildren: () => import('./pages/Usuario/vista-torneo/vista-torneo.module').then( m => m.VistaTorneoPageModule)
+  },
 
   {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then( m => m.NotFoundPageModule)
   },
+
+
 
 
 

@@ -68,7 +68,7 @@ irAtras() {
 
 
   ediPerfil() {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/edicion-perfil']);
   }
 ///////////////////////////////////////////////////////////////////
 

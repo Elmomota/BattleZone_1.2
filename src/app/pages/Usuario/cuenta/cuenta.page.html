@@ -99,13 +99,11 @@
 
 
             <ion-segment-button value='Historial' class="segmento-stats">
-                <ion-label>Historial</ion-label>
+                <ion-label>torneos proximos <br> y en linea</ion-label>
             </ion-segment-button>
 
 
-            <ion-segment-button value='Logros' class="segmento-stats">
-                <ion-label>Logros</ion-label>
-            </ion-segment-button>
+
 
         </ion-segment>
 
@@ -128,10 +126,6 @@
         </div>
 
 
-        <div *ngIf="seleccion == 'Logros'">
-
-            <ion-card-title class="titulo-torneos">Logros</ion-card-title>
-        </div>
 
         <!------------------------------------------------------------------------------------------------------>
 
@@ -143,23 +137,27 @@
         <ion-card id="torneos">
             <ion-card-content class="torneos" *ngIf="seleccion == 'Torneos jugados'">
 
-                <div>
+                <div class="ov">
 
                     <!------items------------------------------------------------------------------------------------------------>
                     <!------------------------------------------------------------------------------------------------------>
 
                     <ion-card *ngFor="let torneo of torneosJugados">
-                        <ion-card-content>
-                            <div class="distribucion">
-                                <img class="imagen-torneos-jugados" [src]="torneo.imagen" alt="{{torneo.nombre}}" />
-                                <div class="texto">
-                                    <h6>{{torneo.nombre}}</h6>
-                                    <p>{{torneo.tipo}}</p>
-                                    <p>Puesto: {{torneo.puesto}}</p>
-                                    <p>Fecha: {{torneo.fecha}}</p>
+                        <div *ngIf="'Finalizado'== torneo.estado">
+
+                            <ion-card-content>
+                                <div class="distribucion-historial1">
+                                    <img class="imagen-historial1" [src]="torneo.imagen" alt="{{torneo.nombre}}" />
+                                    <div class="texto">
+                                        <h6>{{torneo.nombre}}</h6>
+                                        <p>{{torneo.tipo}}</p>
+                                        <p>Puesto: {{torneo.puesto}}</p>
+                                        <p>Fecha: {{torneo.fecha}}</p>
+                                    </div>
+
                                 </div>
-                            </div>
-                        </ion-card-content>
+                            </ion-card-content>
+                        </div>
                     </ion-card>
 
 
@@ -183,163 +181,31 @@
 
                 <div>
 
-                    <!------items------------------------------------------------------------------------------------------------>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <div class="game-item-historial">
-                        <div class="distribucion-historial">
 
-                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
+                    <ion-card *ngFor="let torneo of torneosJugados">
+                        <div *ngIf="'Próximo'== torneo.estado and  'Finalizado'== torneo.estado">
 
-                            <div class="texto-h">
-                                <h6>Valorant</h6>
-                                <p>Victoria</p>
+                            <ion-card-content>
+                                <div class="distribucion-historial1">
+                                    <img class="imagen-historial1" [src]="torneo.imagen" alt="{{torneo.nombre}}" />
+                                    <div class="texto">
+                                        <h6>{{torneo.nombre}}</h6>
+                                        <p>{{torneo.tipo}}</p>
+                                        <p>Puesto: {{torneo.puesto}}</p>
+                                        <p>Fecha: {{torneo.fecha}}</p>
+                                    </div>
 
-
-
-                            </div>
-
-
+                                </div>
+                            </ion-card-content>
                         </div>
-                    </div>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <div class="game-item-historial">
-                        <div class="distribucion-historial">
-
-                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                            <div class="texto-h">
-                                <h6>Valorant</h6>
-                                <p>Victoria</p>
-
-
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <div class="game-item-historial">
-                        <div class="distribucion-historial">
-
-                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                            <div class="texto-h">
-                                <h6>Valorant</h6>
-                                <p>Victoria</p>
-
-
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-
-                    <div class="game-item-historial">
-                        <div class="distribucion-historial">
-
-                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                            <div class="texto-h">
-                                <h6>Valorant</h6>
-                                <p>Victoria</p>
-
-
-
-                            </div>
-
-
-                        </div>
-                    </div>
-
-
+                    </ion-card>
                     <!------------------------------------------------------------------------------------------------------>
                     <hr>
                     <!------------------------------------------------------------------------------------------------------>
 
 
-                    <div class="game-item-historial">
-                        <div class="distribucion-historial">
-
-                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                            <div class="texto-h">
-                                <h6>Valorant</h6>
-                                <p>Victoria</p>
 
 
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <div class="game-item-historial">
-                        <div class="distribucion-historial">
-
-                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                            <div class="texto-h">
-                                <h6>Valorant</h6>
-                                <p>Victoria</p>
-
-
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <div class="game-item-historial">
-                        <div class="distribucion-historial">
-
-                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                            <div class="texto-h">
-                                <h6>Valorant</h6>
-                                <p>Victoria</p>
-
-
-
-                            </div>
-
-
-                        </div>
-                    </div>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-
-                    <div class="game-item-historial">
-                        <div class="distribucion-historial">
-
-                            <img class="imagen-historial" src="assets/img/valorant.jpg" alt="Valorant" />
-
-                            <div class="texto-h">
-                                <h6>Valorant</h6>
-                                <p>Victoria</p>
-
-
-
-                            </div>
-
-
-                        </div>
-                    </div>
                 </div>
             </ion-card-content>
         </ion-card>
