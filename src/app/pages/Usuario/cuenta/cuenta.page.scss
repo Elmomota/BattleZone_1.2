@@ -1,4 +1,4 @@
-/////////////////////////////// principal /////////////////////////////////////////////
+////////////////////////////// principal /////////////////////////////////////////////
 ion-content {
     --background: #2e2f3a;
     color: #fff;
@@ -62,7 +62,6 @@ ion-icon {
     height: 60px;
     display: flex;
     flex-flow: column wrap;
-    overflow: hidden;
 }
 
 .game-item {
@@ -127,6 +126,47 @@ ion-icon {
     display: flex;
 }
 
+/* Nueva sección para torneos jugados */
+.imagen-torneos-jugados {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.texto {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+    margin-top: -30px; /* Superponer el texto sobre la imagen */
+    position: relative;
+    z-index: 1;
+}
+
+.texto h6 {
+    font-family: 'Courier New', Courier, monospace; /* Fuente vintage */
+    font-size: 1.2rem;
+    color: #3a3a3a;
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.texto p {
+    font-family: 'Georgia', serif; /* Fuente clásica */
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Estilo para el ion-card */
+ion-card {
+    --background: #3e3f4c;
+    margin-bottom: 15px; /* Espacio entre tarjetas */
+    border: 1px solid #ccc; /* Bordes sutiles */
+    border-radius: 10px;
+    transition: transform 0.2s; /* Animación al pasar el ratón */
+}
+
+ion-card:hover {
+    transform: scale(1.05); /* Efecto de zoom al pasar el ratón */
+}
+
 .distribucion-historial {
     display: flex;
     align-items: center;
@@ -162,24 +202,6 @@ ion-icon {
     position: absolute;
     top: 10px;
     left: 20px;
-}
-
-.imagen-torneos-jugados {
-    position: relative;
-}
-
-.imagen-torneos-jugados img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    padding-right: 20px;
-}
-
-.texto {
-    position: relative;
-    align-items: start;
-    width: 300px;
-    color: #fff;
 }
 
 .texto-h {
@@ -262,10 +284,6 @@ hr {
 ////////////////////////////////////
 .segmento-stats {
     color: white;
-}
-
-ion-card {
-    --background: #3e3f4c;
 }
 
 ion-card-title {

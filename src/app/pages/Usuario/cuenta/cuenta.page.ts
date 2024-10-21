@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SqliteService } from 'src/app/services/sqlite.service';  // Asegúrate de que esté correctamente importado
 import { NavController } from '@ionic/angular';
 import { ChangeDetectorRef } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -15,7 +16,7 @@ export class CuentaPage implements OnInit {
   torneosJugados: any[] = [];
   seleccion: string = 'Torneos jugados';  // Valor por defecto del segmento
 
-  constructor(private SqliteService: SqliteService,private navCtrl: NavController,private cdr: ChangeDetectorRef) {}
+  constructor(private SqliteService: SqliteService,private navCtrl: NavController,private cdr: ChangeDetectorRef, private router:Router) {}
 
   ngOnInit() {
     this.obtenerDatosUsuario();
@@ -62,6 +63,12 @@ export class CuentaPage implements OnInit {
 
 irAtras() {
     this.navCtrl.back();
+  }
+
+
+
+  ediPerfil() {
+    this.router.navigate(['/home']);
   }
 ///////////////////////////////////////////////////////////////////
 

@@ -14,16 +14,7 @@ export class IniciarSesionPage {
 
   constructor(private sqliteService: SqliteService, private router: Router, private navCtrl: NavController, private alertController: AlertController) {}
 
-  async mostrarAlerta(usuario: any) {
-    const alert = await this.alertController.create({
-      header: 'Sesión Iniciada',
-      subHeader: 'Detalles del Usuario',
-      message: `Nombre: ${usuario.pnombre} <br> Apellido: ${usuario.papellido} <br> Nickname: ${usuario.nickname} <br> Correo: ${usuario.correo}`, 
-      buttons: ['OK']
-    });
 
-    await alert.present();
-  }
 
   loginUsuario() {
     this.sqliteService.loginUsuario(this.correo, this.contrasena).then(usuario => {
@@ -33,7 +24,7 @@ export class IniciarSesionPage {
           if (detallesUsuario) {
             // Guardar la sesión con los detalles del usuario
             this.sqliteService.guardarSesion(detallesUsuario).then(() => {
-              this.mostrarAlerta(detallesUsuario);
+             
               this.navCtrl.navigateForward(`/home`, {
                 queryParams: {
                   usuario: JSON.stringify(detallesUsuario)

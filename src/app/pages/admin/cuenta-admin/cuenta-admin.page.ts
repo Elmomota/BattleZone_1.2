@@ -4,6 +4,7 @@ import { NavController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service';
 import { TorneoService } from 'src/app/services/torneo-service.service';
 import { Torneo } from 'src/app/services/torneo';
+import { Usuario } from 'src/app/services/usuario'; 
 
 @Component({
   selector: 'app-cuenta-admin',
@@ -13,8 +14,11 @@ import { Torneo } from 'src/app/services/torneo';
 export class CuentaAdminPage implements OnInit {
   adminUser: string = '';
   torneos: Torneo[] = [];
-  filteredTorneos: Torneo[] = [];  // Lista filtrada
-  searchTerm: string = '';  // Valor del término de búsqueda
+  filteredTorneos: Torneo[] = [];
+  torneosPasados: Torneo[] = []; // Lista de torneos finalizados
+  usuarios: Usuario[] = []; // Lista de usuarios
+  searchTerm: string = '';
+  selectedSegment: string = 'actuales'; // Valor inicial del segmento
   loading: boolean = true;
 
   constructor(
@@ -31,8 +35,10 @@ export class CuentaAdminPage implements OnInit {
     });
   }
 
+
   async ngOnInit() {
     await this.loadTorneos();
+    await this.loadUsuarios(); // Carga los usuarios
 
     // Suscribirse a eventos de torneos añadidos o eliminados
     this.torneoService.torneoAgregado$.subscribe(() => {
@@ -46,16 +52,44 @@ export class CuentaAdminPage implements OnInit {
   async loadTorneos() {
     this.loading = true;
     try {
-      this.sqliteService.fetchTorneos().subscribe(torneos => {
-        this.torneos = torneos;
-        this.filteredTorneos = torneos;  // Inicialmente mostrar todos los torneos
+        this.sqliteService.fetchTorneos().subscribe(torneos => {
+            this.torneos = torneos;
+            console.log('Torneos cargados:', this.torneos); // Verifica los torneos cargados
+            this.filteredTorneos = torneos;  // Inicialmente mostrar todos los torneos
+            this.loading = false;
+        });
+    } catch (error) {
+        console.error('Error loading torneos', error);
         this.loading = false;
+    }
+}
+
+  async loadUsuarios() {
+    try {
+      this.sqliteService.fetchUsuarios().subscribe(usuarios => {
+        this.usuarios = usuarios;
       });
     } catch (error) {
-      console.error('Error loading torneos', error);
-      this.loading = false;
+      console.error('Error loading usuarios', error);
     }
   }
+  segmentChanged(event: any) {
+    const selectedValue = event.detail.value;
+
+    if (selectedValue === 'actuales') {
+        this.filteredTorneos = this.torneos.filter(torneo => 
+            torneo.estado === 'Próximo' || torneo.estado === 'En curso'
+        );
+    } else if (selectedValue === 'pasados') {
+        this.filteredTorneos = this.torneos.filter(torneo => 
+            torneo.estado === 'Finalizado'
+        );
+    } else if (selectedValue === 'usuarios') {
+        // Aquí ya tenemos los usuarios cargados desde loadUsuarios en ngOnInit
+        console.log('Mostrando usuarios');
+    }
+}
+
 
   verDetallesTorneo(torneo: Torneo) {
     if (torneo && torneo.id) {
@@ -76,8 +110,14 @@ export class CuentaAdminPage implements OnInit {
   // Función de búsqueda
   buscarTorneos() {
     const term = this.searchTerm.toLowerCase();
-    this.filteredTorneos = this.torneos.filter(torneo => 
-      torneo.nombre.toLowerCase().includes(term)
-    );
+    if (this.selectedSegment === 'actuales') {
+      this.filteredTorneos = this.torneos.filter(torneo => 
+        torneo.nombre.toLowerCase().includes(term) && torneo.estado === 'Próximo'|| torneo.estado === 'En curso' 
+      );
+    } else if (this.selectedSegment === 'pasados') {
+      this.filteredTorneos = this.torneos.filter(torneo => 
+        torneo.nombre.toLowerCase().includes(term) && torneo.estado === 'Finalizado'
+      );
+    }
   }
 }

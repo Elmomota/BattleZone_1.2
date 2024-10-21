@@ -636,6 +636,5 @@ async obtenerUsuariosInscritos(id_torneo: number): Promise<any[]> {
   }
 }
 
-
   
 }  

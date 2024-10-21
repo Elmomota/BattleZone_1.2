@@ -64,6 +64,10 @@ const routes: Routes = [
     path: 'torneos',
     loadChildren: () => import('./pages/Usuario/torneos/torneos.module').then( m => m.TorneosPageModule)
   },
+  {
+    path: 'edicion-perfil',
+    loadChildren: () => import('./pages/Usuario/edicion-perfil/edicion-perfil.module').then( m => m.EdicionPerfilPageModule)
+  },
 
 
 

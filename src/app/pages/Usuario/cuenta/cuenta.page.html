@@ -25,10 +25,15 @@
         <div class="div-foto-perfil">
 
 
-            <ion-button fill="clear" class="icono-config">
-                <ion-icon class="icon-foto" name="ellipsis-horizontal-outline"></ion-icon>
-            </ion-button>
-
+            <ion-content>
+                <!-- Botón que activa el menú -->
+                <ion-button (click)="toggleMenu()" fill="clear" class="icono-config"></ion-button>
+            
+                <!-- Menú desplegable -->
+                <ion-list *ngIf="menuVisible">
+                <ion-item button (click)=ediPerfil()>Editar perfil</ion-item>
+                </ion-list>
+            </ion-content>
             <!-----icono y nombre--------------------------------->
 
             <ion-avatar class="avatar">
