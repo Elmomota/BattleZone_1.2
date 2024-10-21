@@ -1,0 +1,67 @@
+/* Container general */
+.content-container {
+    padding: 15px;
+    background-color: #4d55ad;
+    /* Fondo del contenedor */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    /* Sombra para profundidad */
+  }
+  
+  /* Toolbar */
+  ion-toolbar {
+    --background: #32345A;
+    color: #C9B1BD;
+  }
+  
+  /* Botón imagen */
+  .boton-imagen {
+    margin-top: 10px;
+    margin-bottom: 15px;
+    --background: #5A556E;
+    color: #C9B1BD;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Formulario */
+  .form-container {
+    padding: 20px;
+    background-color: #32345A;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  ion-item {
+    --background: #3E4057;
+    --color: #C9B1BD;
+    margin-bottom: 15px;
+    border-radius: 5px;
+  }
+  
+  ion-label {
+    --color: #C9B1BD;
+  }
+  
+  ion-input, ion-select, ion-datetime {
+    --background: #3E4057;
+    --color: #C9B1BD;
+  }
+  
+  /* Botón de envío */
+  .submit-button {
+    margin-top: 20px;
+    --background: #5A556E;
+    color: #C9B1BD;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  ion-button {
+    --background: #5A556E;
+    color: #C9B1BD;
+    border-radius: 5px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  

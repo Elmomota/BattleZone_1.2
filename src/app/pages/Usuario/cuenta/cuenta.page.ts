@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SqliteService } from 'src/app/services/sqlite.service';  // Asegúrate de que esté correctamente importado
-import { NavController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -15,11 +15,18 @@ export class CuentaPage implements OnInit {
   usuario: any = {};
   torneosJugados: any[] = [];
   seleccion: string = 'Torneos jugados';  // Valor por defecto del segmento
+  menuVisible: boolean = false;
 
-  constructor(private SqliteService: SqliteService,private navCtrl: NavController,private cdr: ChangeDetectorRef, private router:Router) {}
+  constructor(private SqliteService: SqliteService,private navCtrl: NavController,private cdr: ChangeDetectorRef, private router:Router,private menuCtrl: MenuController) {}
 
   ngOnInit() {
     this.obtenerDatosUsuario();
+  }
+  toggleMenu() {
+    this.menuVisible = !this.menuVisible; // Cambia el estado de visibilidad
+  }
+  toggleMenuController() {
+    this.menuVisible ? this.menuCtrl.enable(true) : this.menuCtrl.enable(false);
   }
 
   async obtenerDatosUsuario() {

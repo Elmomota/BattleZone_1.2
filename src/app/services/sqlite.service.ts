@@ -482,6 +482,23 @@ export class SqliteService {
       this.presentAlert('Error al añador al Usuario', JSON.stringify(error));
     }
   }
+  async actualizarUsuarioPerfil(usuario: Usuario) {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+  
+    // Asegúrate de que la consulta no intente actualizar el ID
+    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
+    const values = [usuario.pnombre, usuario.papellido, usuario.nickname, usuario.correo, usuario.fechaNacimiento, usuario.pais, usuario.id];
+  
+    try {
+      await this.dbInstance.executeSql(sql, values);
+    } catch (error) {
+      this.presentAlert('Error al actualizar al Usuario', JSON.stringify(error));
+    }
+  }
+  
 
   async loginUsuario(correo: string, contrasena: string): Promise<Usuario | null> {
     const query = `SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?`;
