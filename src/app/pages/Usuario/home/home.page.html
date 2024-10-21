@@ -61,7 +61,7 @@
 
     <div>
         <ion-list class="div-noticias">
-            <ion-item *ngFor="let noticia of noticias" class="lista-noticia">
+            <ion-item *ngFor="let noticia of noticias | slice:0:mostrarNoticias" class="lista-noticia">
 
                 <ion-label>
                     <div class="imagen-container">
@@ -79,6 +79,11 @@
                     <hr>
                 </ion-label>
             </ion-item>
+
+            <ion-button class="vermas" *ngIf="mostrarNoticias &lt; noticias.length" (click)="verMas()">
+                Ver más
+            </ion-button>
+
         </ion-list>
     </div>
 

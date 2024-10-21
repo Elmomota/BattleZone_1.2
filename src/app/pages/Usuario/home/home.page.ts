@@ -15,6 +15,7 @@ import { ServicioApiService } from 'src/app/services/servicio-api.service';
 
 export class HomePage implements OnInit {
 
+  mostrarNoticias: number = 5;  // Controla cuántas noticias mostrar
   usuario: string = ''; // Almacena el nickname del usuario
   juegos: Juego[] = []; // Lista de juegos
   filteredJuegos: Juego[] = [];  // Lista de juegos filtrados
@@ -107,7 +108,13 @@ export class HomePage implements OnInit {
   }
 
 
+  verMas() {
+    this.mostrarNoticias = this.noticias.length;
+  }
 
+comprobacion(){
 
+  
 
+}
 }

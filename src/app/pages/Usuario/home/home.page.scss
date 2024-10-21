@@ -208,7 +208,7 @@ ion-list {
 
 ////////////////div noticias para contener las noticias en una box
 .div-noticias {
-    margin: 20px;
+    margin: 10px;
     border-radius: 20px;
 }
 
@@ -283,7 +283,11 @@ ion-list {
 }
 
 ion-button {
-    --background: #800080;
     /* Morado */
     margin-top: 10px;
+}
+
+.vermas {
+    justify-content: center;
+    padding-left: 60px;
 }
