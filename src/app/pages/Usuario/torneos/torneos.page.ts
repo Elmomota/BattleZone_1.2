@@ -43,7 +43,7 @@ export class TorneosPage implements OnInit {
         : true;
 
       const coincideJuego = this.juegoFiltro
-        ? torneo.juego.toLowerCase() === this.juegoFiltro.toLowerCase()
+        ? torneo.juegoNombre!.toLowerCase() === this.juegoFiltro.toLowerCase()
         : true;
 
       return coincideNombre && coincideJuego;

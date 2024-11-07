@@ -51,7 +51,7 @@ export class DetalleJuegoPage implements OnInit {
 
   loadTorneos(nombreJuego: string) {
     this.sqliteService.fetchTorneos().subscribe(torneos => {
-      this.torneos = torneos.filter(torneo => torneo.juego === nombreJuego); // Filtrar torneos por nombre de juego
+      this.torneos = torneos.filter(torneo => torneo.juegoNombre === nombreJuego); // Filtrar torneos por nombre de juego
     }, error => {
       console.error('Error al cargar torneos:', error);
     });

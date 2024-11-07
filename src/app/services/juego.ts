@@ -1,8 +1,9 @@
 export class Juego {
-    id?: number;  // El id puede ser opcional, ya que al crear un nuevo torneo no tendrá un id
-    nombre!: string;
-    tipo!: string;
-    descripcion!: string;
-    logo!: string;
-    cabecera!: string;
-}
+    id?: number;             // ID del juego
+    nombre!: string;         // Nombre del juego
+    tipo!: string;           // Tipo de jugabilidad del juego
+    descripcion!: string;    // Descripción del juego
+    logo!: string;           // Logo del juego
+    cabecera!: string;       // Imagen de cabecera del juego
+  }
+  

@@ -23,31 +23,33 @@ export class CuentaAdminPage implements OnInit {
 
   constructor(
     private router: Router,
-    private activedrouter: ActivatedRoute,
     private navCtrl: NavController,
     private sqliteService: SqliteService,
     private torneoService: TorneoService
   ) {
-    this.activedrouter.queryParams.subscribe(param => {
-      if (this.router.getCurrentNavigation()?.extras?.state) {
-        this.adminUser = this.router.getCurrentNavigation()?.extras?.state?.['nombreUser'];
-      }
-    });
-  }
 
+  }
 
   async ngOnInit() {
-    await this.loadTorneos();
-    await this.loadUsuarios(); // Carga los usuarios
-
-    // Suscribirse a eventos de torneos añadidos o eliminados
-    this.torneoService.torneoAgregado$.subscribe(() => {
-      this.loadTorneos();
-    });
-    this.torneoService.torneoEliminado$.subscribe(() => {
-      this.loadTorneos();
-    });
+    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    
+    if (usuario && usuario.rol === 1) {
+      this.adminUser = usuario.nickname || 'Admin'; // Usar el nickname del admin
+      await this.loadTorneos();
+      await this.loadUsuarios();
+      // Suscripción a eventos de torneos
+      this.torneoService.torneoAgregado$.subscribe(() => {
+        this.loadTorneos();
+      });
+      this.torneoService.torneoEliminado$.subscribe(() => {
+        this.loadTorneos();
+      });
+    } else {
+      // Si no es admin o no está autenticado, redirigir a login
+      this.navCtrl.navigateRoot('/iniciar-sesion');
+    }
   }
+  
 
   async loadTorneos() {
     this.loading = true;

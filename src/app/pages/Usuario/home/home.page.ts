@@ -38,6 +38,9 @@ export class HomePage implements OnInit {
     this.sqliteService.obtenerSesion().then(usuario => {
       if (usuario) {
         this.usuario = usuario.nickname || 'Usuario';  // Asignar el nickname del usuario
+        if (usuario.rol===1){
+          this.navCtrl.navigateForward('/cuenta-admin')
+        }
       } else {
         // Si no hay sesión activa, redirigir a la página de login
         this.navCtrl.navigateRoot('/iniciar-sesion');

@@ -5,6 +5,7 @@ import { SqliteService } from 'src/app/services/sqlite.service'; // Servicio de 
 import { Torneo } from 'src/app/services/torneo'; // Interfaz de Torneo
 import { UserTorneo } from 'src/app/services/user-torneo'; // Interfaz de inscripción
 
+
 @Component({
   selector: 'app-detalle-inscripcion',
   templateUrl: './detalle-inscripcion.page.html',

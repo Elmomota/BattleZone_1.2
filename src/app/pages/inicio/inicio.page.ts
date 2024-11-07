@@ -40,6 +40,6 @@ export class InicioPage implements OnInit {
   }
 
   adminLogin() {
-    this.router.navigate(['/login-admin']);
+    this.router.navigate(['/iniciar-sesion']);
   }
 }

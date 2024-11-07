@@ -1,5 +1,5 @@
 export class Usuario {
-    id?: number;  
+    id?: number;
     pnombre!: string;
     papellido!: string;
     nickname!: string;
@@ -7,5 +7,6 @@ export class Usuario {
     contrasena!: string;
     fechaNacimiento!: string;
     pais!: string;
-    
+    rol!: number; // Agregamos el campo 'rol' aquí
 }
+

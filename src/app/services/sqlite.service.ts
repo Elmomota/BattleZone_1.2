@@ -3,13 +3,16 @@ import { Injectable } from '@angular/core';
 import { SQLite, SQLiteObject } from '@awesome-cordova-plugins/sqlite/ngx';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Storage } from '@ionic/storage-angular';
+
+
 import { Torneo } from './torneo';
-import { Administracion } from './administracion';
 import { Juego } from './juego'
 import { TorneoService } from './torneo-service.service';
 import { Platform, AlertController } from '@ionic/angular';
 import { Usuario } from './usuario';
-import { UserTorneo } from './user-torneo'
+import { UserTorneo } from './user-torneo';
+import { Preguntas } from './preguntas';
+import { Respuestas } from './respuestas';
 
 @Injectable({
   providedIn: 'root'
@@ -36,9 +39,11 @@ export class SqliteService {
 
   // Observables para los datos
   private listaTorneos = new BehaviorSubject<Torneo[]>([]);
-  private listaAdministradores = new BehaviorSubject<Administracion[]>([]);
+ //ELIMINACION DE ADMINISTRADORES (CLASS Y TABLA)
   private listaJuegos = new BehaviorSubject<Juego[]>([]);
   private listaUsuarios = new BehaviorSubject<Usuario[]>([]);
+  private listaPreguntas =new BehaviorSubject<Preguntas[]>([]);
+  private listaRespuestas =new BehaviorSubject<Respuestas[]>([]);
 
 
 
@@ -95,16 +100,19 @@ export class SqliteService {
   }
 
 
-
-  // Obtener los administradores desde la base de datos
-  fetchAdministradores(): Observable<Administracion[]> {
-    return this.listaAdministradores.asObservable();
-  }
-
   // Obtener los juegos desde la base de datos
   fetchJuegos(): Observable<Juego[]> {
     return this.listaJuegos.asObservable();
   }
+
+    // Obtener los preguntas desde la base de datos
+    fetchPreguntas(): Observable<Preguntas[]> {
+      return this.listaPreguntas.asObservable();
+    }
+    // Obtener los respuestas desde la base de datos
+    fetchRespuestas(): Observable<Respuestas[]> {
+      return this.listaRespuestas.asObservable();
+    }
 
     // Obtener los usuarios desde la base de datos
     fetchUsuarios(): Observable<Usuario[]> {
@@ -170,110 +178,138 @@ export class SqliteService {
 
 /////////////////////////////creacion de tablas general///////////////////////////////////
 
-  async crearTablas() {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-  
-    try {
-
-      // Crear tabla administradores si no existe
-      await this.dbInstance.executeSql(
-        `CREATE TABLE IF NOT EXISTS administradores (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT,
-          correo TEXT,
-          contrasena TEXT
-        )`, []
-      );
-
-      //crear tabla de Usuarios 
-      await this.dbInstance.executeSql(
-        `CREATE TABLE IF NOT EXISTS usuarios (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          pnombre TEXT NOT NULL,
-          papellido TEXT NOT NULL,
-          nickname TEXT NOT NULL,
-          correo TEXT NOT NULL UNIQUE,
-          contrasena TEXT NOT NULL,
-          fechaNacimiento TEXT NOT NULL,
-          pais TEXT NOT NULL
-        )`, []
-      );
-      // Insertar un administrador por defecto (si no existe)
-      await this.dbInstance.executeSql(
-        `INSERT OR IGNORE INTO administradores (id, nombre, correo, contrasena)
-         VALUES (1,'ElmoAdmin', 'al.barreras@gmail.com', 'elmomota770'),
-                (2,'SrchitoAdmin', 'srchitita@gmail.com', 'Srchito123')`, []
-      );
-  
-      // Crear tabla torneos si no existe
-      await this.dbInstance.executeSql(
-        `CREATE TABLE IF NOT EXISTS torneos (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT,
-          juego TEXT,
-          estado TEXT,
-          numEquipos INTEGER,
-          fechaInicio TEXT,
-          imagen TEXT,
-          creadorId INTEGER,
-          FOREIGN KEY(creadorId) REFERENCES administradores(id) ON DELETE CASCADE
-        )`, []
-      );
-      // Crear tabla juegos si no existe
-      await this.dbInstance.executeSql(
-        `CREATE TABLE IF NOT EXISTS juegos (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          nombre TEXT,
-          tipo TEXT,
-          descripcion TEXT,
-          logo TEXT,
-          cabecera TEXT
-        )`, []
-      );
-
-      await this.dbInstance.executeSql(`
-        CREATE TABLE IF NOT EXISTS inscripcion_torneo (
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
-          id_torneo INTEGER,
-          id_usuario INTEGER,
-          nombre TEXT,
-          apellido TEXT,
-          nickname TEXT,
-          correo TEXT,
-          FOREIGN KEY (id_torneo) REFERENCES torneos(id),
-          FOREIGN KEY (id_usuario) REFERENCES usuarios(id)
-        );
-      `, []);
-      
-
-
-      // Insertar juegos por defecto
-      await this.dbInstance.executeSql(
-        `INSERT OR IGNORE INTO juegos (id, nombre, tipo, descripcion, logo, cabecera) VALUES 
-          (1,'Valorant', 'Shooter', 'Juego de disparos táctico en primera persona.', 'https://www.lavanguardia.com/files/image_990_484/uploads/2020/06/02/5fa91dbc37517.png', 'https://www.lavanguardia.com/files/image_990_484/uploads/2020/06/02/5fa91dbc37517.png'),
-          (2,'League of Legends', 'MOBA', 'Juego de estrategia y combate por equipos.', 'assets/logos/logo-leagu-of-legends.jpg', 'assets/img/imagen-league-of-legends.jpg'),
-          (3,'Fortnite', 'Battle Royale', 'Juego de supervivencia en un entorno de batalla masiva.', 'assets/logos/logo-fortnite.jpg', 'assets/img/imagen-fortnite.jpg'),
-          (4,'Street Fighter', 'Pelea', 'Juego de lucha con personajes emblemáticos.', 'assets/logos/logo-street-fighter.jpg', 'assets/img/imagen-street-fighter.jpg')`, []
-      );
-  
-      // Mostrar mensaje de bienvenida
-      this.presentAlert('Bienvenido a', 'BATTLE ZONE');
-  
-      // Cargar datos
-      this.selectTorneos();
-      this.selectAdministradores();
-      this.selectJuegos();
-      this.selectUsuarios();
-  
-    } catch (error) {
-      // Mostrar alerta en caso de error
-      this.presentAlert('Creación de Tablas', 'Error: ' + JSON.stringify(error));
-    }
+async crearTablas() {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos no está lista.');
+    return;
   }
 
+  try {
+    /* Eliminar todas las tablas si existen
+    await this.dbInstance.executeSql(`DROP TABLE IF EXISTS respuestas_seguridad`, []);
+    await this.dbInstance.executeSql(`DROP TABLE IF EXISTS preguntas`, []);
+    await this.dbInstance.executeSql(`DROP TABLE IF EXISTS inscripcion_torneo`, []);
+    await this.dbInstance.executeSql(`DROP TABLE IF EXISTS torneos`, []);
+    await this.dbInstance.executeSql(`DROP TABLE IF EXISTS juegos`, []);
+    await this.dbInstance.executeSql(`DROP TABLE IF EXISTS usuarios`, []);
+    await this.dbInstance.executeSql(`DROP TABLE IF EXISTS administradores`, []);
+*/
+    // Crear tabla usuarios con campo de rol
+    await this.dbInstance.executeSql(
+      `CREATE TABLE IF NOT EXISTS usuarios (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pnombre TEXT NOT NULL,
+        papellido TEXT NOT NULL,
+        nickname TEXT NOT NULL,
+        correo TEXT NOT NULL UNIQUE,
+        contrasena TEXT NOT NULL,
+        fechaNacimiento TEXT NOT NULL,
+        pais TEXT NOT NULL,
+        rol INTEGER NOT NULL DEFAULT 2  -- 1 para administrador, 2 para cliente
+      )`, []
+    );
+
+    // Insertar un usuario administrador por defecto (si no existe)
+    await this.dbInstance.executeSql(
+      `INSERT OR IGNORE INTO usuarios (id, pnombre, papellido, nickname, correo, contrasena, fechaNacimiento, pais, rol)
+       VALUES (1, 'Elmo', 'Admin', 'ElmoAdmin', 'al.barreras@gmail.com', 'elmomota770', '2000-01-01', 'Pais1', 1),
+              (2, 'Srchito', 'Admin', 'SrchitoAdmin', 'srchitita@gmail.com', 'Srchito123', '2000-01-02', 'Pais2', 1)`, []
+    );
+
+    // Crear tabla juegos con clave primaria
+    await this.dbInstance.executeSql(
+      `CREATE TABLE IF NOT EXISTS juegos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT,
+        tipo TEXT,
+        descripcion TEXT,
+        logo TEXT,
+        cabecera TEXT
+      )`, []
+    );
+
+    // Crear tabla torneos con dependencia de la tabla juegos
+    await this.dbInstance.executeSql(
+      `CREATE TABLE IF NOT EXISTS torneos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        nombre TEXT,
+        juegoId INTEGER,
+        estado TEXT,
+        numEquipos INTEGER,
+        fechaInicio TEXT,
+        imagen TEXT,
+        creadorId INTEGER,
+        FOREIGN KEY(juegoId) REFERENCES juegos(id) ON DELETE CASCADE,
+        FOREIGN KEY(creadorId) REFERENCES usuarios(id) ON DELETE CASCADE
+      )`, []
+    );
+
+    // Crear tabla inscripción de torneo con dependencias
+    await this.dbInstance.executeSql(`
+      CREATE TABLE IF NOT EXISTS inscripcion_torneo (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_torneo INTEGER,
+        id_usuario INTEGER,
+        nombre TEXT,
+        apellido TEXT,
+        nickname TEXT,
+        correo TEXT,
+        FOREIGN KEY (id_torneo) REFERENCES torneos(id) ON DELETE CASCADE,
+        FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE
+      );
+    `, []);
+
+    // Insertar juegos por defecto
+    await this.dbInstance.executeSql(
+      `INSERT OR IGNORE INTO juegos (id, nombre, tipo, descripcion, logo, cabecera) VALUES 
+        (1, 'Valorant', 'Shooter', 'Juego de disparos táctico en primera persona.', 'https://www.lavanguardia.com/files/image_990_484/uploads/2020/06/02/5fa91dbc37517.png', 'https://www.lavanguardia.com/files/image_990_484/uploads/2020/06/02/5fa91dbc37517.png'),
+        (2, 'League of Legends', 'MOBA', 'Juego de estrategia y combate por equipos.', 'assets/logos/logo-leagu-of-legends.jpg', 'assets/img/imagen-league-of-legends.jpg'),
+        (3, 'Fortnite', 'Battle Royale', 'Juego de supervivencia en un entorno de batalla masiva.', 'assets/logos/logo-fortnite.jpg', 'assets/img/imagen-fortnite.jpg'),
+        (4, 'Street Fighter', 'Pelea', 'Juego de lucha con personajes emblemáticos.', 'assets/logos/logo-street-fighter.jpg', 'assets/img/imagen-street-fighter.jpg')`, []
+    );
+
+    await this.dbInstance.executeSql(
+      `CREATE TABLE IF NOT EXISTS preguntas (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        pregunta TEXT
+      )`, []
+    );
+
+    // Insertar pregunta por defecto
+    await this.dbInstance.executeSql(
+      `INSERT OR IGNORE INTO preguntas (id, pregunta) VALUES 
+        (1, '¿Cuál es el nombre de tu primera mascota?' ),
+        (2, '¿En qué ciudad naciste?' ),
+        (3, '¿Cuál es tu comida favorita?' ),
+        (4, '¿Cuál fue tu primer trabajo?' ),
+        (5, '¿Cómo se llama tu mejor amigo?' )`, []
+    );
+
+    // Crear tabla respuestas de seguridad
+    await this.dbInstance.executeSql(
+      `CREATE TABLE IF NOT EXISTS respuestas_seguridad (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        preguntaId INTEGER,
+        usuarioId INTEGER,
+        respuesta TEXT,
+        FOREIGN KEY (preguntaId) REFERENCES preguntas(id) ON DELETE CASCADE,
+        FOREIGN KEY (usuarioId) REFERENCES usuarios(id) ON DELETE CASCADE
+      )`, []
+    );
+
+    // Mostrar mensaje de bienvenida
+    this.presentAlert('Bienvenido a', 'BATTLE ZONE');
+
+    // Cargar datos
+    this.selectTorneos();
+    this.selectJuegos();
+    this.selectUsuarios();
+
+  } catch (error) {
+    // Mostrar alerta en caso de error
+    this.presentAlert('Creación de Tablas', 'Error: ' + JSON.stringify(error));
+  }
+}
 
 
 
@@ -282,265 +318,129 @@ export class SqliteService {
 
 
 
+///////////////////SELECT////////////////////////////
 
 
 
 
+async selectUsuarios() {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos no está lista.');
+    return;
+  }
 
-  selectUsuarios() {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
+  try {
+    const res = await this.dbInstance.executeSql(`SELECT * FROM usuarios`, []);
+    const items: Usuario[] = [];
+
+    for (let i = 0; i < res.rows.length; i++) {
+      const usuario = res.rows.item(i);
+      items.push({
+        id: usuario.id,
+        pnombre: usuario.pnombre,
+        papellido: usuario.papellido,
+        nickname: usuario.nickname,
+        correo: usuario.correo,
+        contrasena: usuario.contrasena,
+        fechaNacimiento: usuario.fechaNacimiento,
+        pais: usuario.pais,
+        rol: usuario.rol // Agregando el campo 'rol' aquí
+      });
     }
 
-    return this.dbInstance.executeSql(`SELECT * FROM usuarios`, []).then(res => {
-      let items: Usuario[] = [];
-      for (let i = 0; i < res.rows.length; i++) {
-        let usuario = res.rows.item(i);
-        items.push({
-          id: usuario.id,
-          pnombre: usuario.pnombre,
-          papellido: usuario.papellido,
-          nickname: usuario.nickname,
-          correo: usuario.correo,
-          contrasena: usuario.contrasena,
-          fechaNacimiento: usuario.fechaNacimiento,
-          
-          pais: usuario.pais
-        });
-      }
-      this.listaUsuarios.next(items); // Actualizar el observable de usuarios
-    }).catch(e => {
-      this.presentAlert('Error al seleccionar usuarios', JSON.stringify(e));
-    });
+    this.listaUsuarios.next(items); // Actualizar el observable de usuarios
+  } catch (error) {
+    this.presentAlert('Error al seleccionar usuarios', `Error: ${JSON.stringify(error)}`);
   }
+}
+
   
-  selectJuegos() {
-    return this.dbInstance!.executeSql(`SELECT * FROM juegos`, []).then(res => {
-      let items: Juego[] = [];
-      for (let i = 0; i < res.rows.length; i++) {
-        let juego = res.rows.item(i);
-        items.push({
-          ...juego,
-          logo: juego.logo,        // Rutas del logo
-          cabecera: juego.cabecera // Rutas de la cabecera
-        });
-      }
-      this.listaJuegos.next(items); // Actualizar el observable de juegos
-    }).catch(e => {
-      this.presentAlert('Error al seleccionar juegos', JSON.stringify(e));
-    });
+async selectJuegos() {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos no está lista.');
+    return;
   }
-  
-  
+
+  try {
+    const res = await this.dbInstance.executeSql(`SELECT * FROM juegos`, []);
+    const items: Juego[] = [];
+
+    for (let i = 0; i < res.rows.length; i++) {
+      const juego = res.rows.item(i);
+      items.push({ ...juego });
+    }
+
+    this.listaJuegos.next(items); // Actualizar el observable de juegos
+  } catch (error) {
+    this.presentAlert('Error al seleccionar juegos', `Error: ${JSON.stringify(error)}`);
+  }
+}
 
 
-  selectTorneos() {
-    return this.dbInstance!.executeSql(`
-      SELECT t.*, a.nombre AS creadorNombre 
+selectTorneos() {
+  return this.dbInstance!.executeSql(`
+      SELECT t.*, 
+            a.pnombre || ' ' || a.papellido AS creadorNombre, 
+            j.nombre AS juegoNombre
       FROM torneos t 
-      JOIN administradores a ON t.creadorId = a.id
-    `, []).then(res => {
-      let items: Torneo[] = [];
-      for (let i = 0; i < res.rows.length; i++) {
-        let torneo = res.rows.item(i);
-        items.push({
-          ...torneo,
-          creadorNombre: torneo.creadorNombre
-        });
+      JOIN usuarios a ON t.creadorId = a.id
+      JOIN juegos j ON t.juegoId = j.id
+
+
+  `, []).then(res => {
+    let items: Torneo[] = [];
+    for (let i = 0; i < res.rows.length; i++) {
+      let torneo = res.rows.item(i);
+      items.push({
+        ...torneo,
+        creadorNombre: torneo.creadorNombre,
+        juegoNombre: torneo.juegoNombre // Agregar el nombre del juego
+      });
+    }
+    this.listaTorneos.next(items);
+  }).catch(e => {
+    this.presentAlert('Error al seleccionar torneos', JSON.stringify(e));
+  });
+}
+
+
+
+  async loginUsuario(identificador: string, contrasena: string): Promise<Usuario | null> {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return null;
+    }
+  
+    // Modifica la consulta SQL para buscar tanto por correo como por nickname
+    const query = `SELECT * FROM usuarios WHERE (correo = ? OR nickname = ?) AND contrasena = ?`;
+  
+    try {
+      const result = await this.dbInstance.executeSql(query, [identificador, identificador, contrasena]);
+  
+      if (result.rows.length > 0) {
+        // Devuelve el usuario encontrado, transformando el resultado para que coincida con la clase Usuario
+        return {
+          id: result.rows.item(0).id,
+          pnombre: result.rows.item(0).pnombre,
+          papellido: result.rows.item(0).papellido,
+          nickname: result.rows.item(0).nickname,
+          correo: result.rows.item(0).correo,
+          contrasena: result.rows.item(0).contrasena,
+          fechaNacimiento: result.rows.item(0).fechaNacimiento,
+          pais: result.rows.item(0).pais,
+          rol: result.rows.item(0).rol
+        };
+      } else {
+        return null; // Credenciales incorrectas
       }
-      this.listaTorneos.next(items);
-    }).catch(e => {
-      this.presentAlert('Error al seleccionar torneos', JSON.stringify(e));
-    });
-  }
-
- 
-  
-  
-  selectAdministradores() {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-
-    return this.dbInstance.executeSql(`SELECT * FROM administradores`, []).then(res => {
-      let items: Administracion[] = [];
-      for (let i = 0; i < res.rows.length; i++) {
-        let admin = res.rows.item(i);
-        items.push(admin);
-      }
-      this.listaAdministradores.next(items); // Actualizar el observable de administradores
-    }).catch(e => {
-      this.presentAlert('Error al seleccionar administradores', JSON.stringify(e));
-    });
-  }
-
-  async addTorneo(torneo: Torneo, adminId: number) {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-
-    const sql = `INSERT INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const values = [torneo.nombre, torneo.juego, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, adminId];
-    
-    try {
-      console.log('Insertando torneo con valores:', values);
-      await this.dbInstance.executeSql(sql, values);
-      this.selectTorneos();
     } catch (error) {
-      this.presentAlert('Error al añadir torneo', JSON.stringify(error));
-    }
-  }
-
-  async actualizarTorneo(torneo: Torneo) {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-
-    const sql = `UPDATE torneos SET nombre = ?, juego = ?, estado = ?, numEquipos = ?, fechaInicio = ?, imagen = ? WHERE id = ?`;
-    const values = [torneo.nombre, torneo.juego, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, torneo.id];
-    try {
-      await this.dbInstance.executeSql(sql, values);
-      await this.torneoService.notificarTorneoActualizado();
-      this.selectTorneos(); // Actualizar datos
-    } catch (error) {
-      this.presentAlert('Error al actualizar torneo', JSON.stringify(error));
-    }
-  }
-  async eliminarTorneo(id: number) {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-  
-    const sql = `DELETE FROM torneos WHERE id = ?`;
-    try {
-      await this.dbInstance.executeSql(sql, [id]);
-      await this.torneoService.notificarTorneoEliminado();
-      this.selectTorneos(); // Actualizar datos
-    } catch (error) {
-      this.presentAlert('Error al eliminar torneo', JSON.stringify(error));
+      console.error('Error al realizar el login:', error);
+      return null; // Manejo de errores: retornar null en caso de error
     }
   }
   
-  async eliminarInscripcionesPorTorneo(id_torneo: number): Promise<void> {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
   
-    const sql = 'DELETE FROM inscripcion_torneo WHERE id_torneo = ?';
-    await this.dbInstance.executeSql(sql, [id_torneo]);
-  }
   
-
-  // Las funciones de administrador pueden seguir la misma estructura que los torneos
-  async addUsuario(nuevoUsuario: Usuario) {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-    
-    const sql = `INSERT INTO usuarios (pnombre, papellido, nickname, correo, contrasena, fechaNacimiento, pais) 
-                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    
-    const values = [
-      nuevoUsuario.pnombre,
-      nuevoUsuario.papellido,
-      nuevoUsuario.nickname,
-      nuevoUsuario.correo,
-      nuevoUsuario.contrasena,
-      nuevoUsuario.fechaNacimiento,
-      nuevoUsuario.pais
-    ];
-
-    try {
-      await this.dbInstance.executeSql(sql, values);
-      this.selectUsuarios(); // Refrescar la lista de usuarios después de insertar
-      this.presentAlert('Usuario Añadido', 'El usuario ha sido registrado exitosamente.');
-    } catch (error) {
-      this.presentAlert('Error al añadir usuario', JSON.stringify(error));
-    }
-  }
-
-  
-
-  async actualizarUsuario(usuario : Usuario){
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, contrasena = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
-    const values = [usuario.pnombre, usuario.papellido, usuario.nickname, usuario.correo, usuario.contrasena, usuario.fechaNacimiento, usuario.pais, usuario.id];
-    
-    try {
-      await this.dbInstance.executeSql(sql, values);
-    } catch (error) {
-      this.presentAlert('Error al añador al Usuario', JSON.stringify(error));
-    }
-  }
-  async actualizarUsuarioPerfil(usuario: Usuario) {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-  
-    // Asegúrate de que la consulta no intente actualizar el ID
-    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
-    const values = [usuario.pnombre, usuario.papellido, usuario.nickname, usuario.correo, usuario.fechaNacimiento, usuario.pais, usuario.id];
-  
-    try {
-      await this.dbInstance.executeSql(sql, values);
-    } catch (error) {
-      this.presentAlert('Error al actualizar al Usuario', JSON.stringify(error));
-    }
-  }
-  
-
-  async loginUsuario(correo: string, contrasena: string): Promise<Usuario | null> {
-    const query = `SELECT * FROM usuarios WHERE correo = ? AND contrasena = ?`;
-    const result = await this.dbInstance!.executeSql(query, [correo, contrasena]);
-    
-    if (result.rows.length > 0) {
-      return result.rows.item(0); // Usuario encontrado
-    } else {
-      return null; // Credenciales incorrectas
-    }
-  }
-
-
-  getUsuarioByCorreoONickname(correo: string, nickname: string): Promise<boolean> {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return Promise.resolve(false); // Retorna false si no hay instancia
-    }
-  
-    const query = `SELECT * FROM usuarios WHERE correo = ? OR nickname = ?`;
-  
-    return this.dbInstance.executeSql(query, [correo, nickname]).then(res => {
-      return res.rows.length > 0; // Retorna true si hay resultados
-    }).catch(e => {
-      console.error('Error al buscar usuario', e);
-      return false; // Retorna false en caso de error
-    });
-  }
-  
-  // Método para inscribir al usuario en el torneo
-  async inscribirTorneo(inscripcion: UserTorneo): Promise<void> {
-    if (!this.dbInstance) {
-      throw new Error('Database instance is not initialized.');
-    }
-
-    const query = `INSERT INTO inscripcion_torneo (id_torneo, id_usuario, nombre, apellido, nickname, correo) VALUES (?, ?, ?, ?, ?, ?);`;
-    const values = [inscripcion.id_torneo,inscripcion.id_usuario,inscripcion.nombre,inscripcion.apellido,inscripcion.nickname,inscripcion.correo];
-
-    await this.dbInstance.executeSql(query, values);
-  }
-
-
   getUsuarioByCorreo(correo: string): Promise<any> {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos no está lista.');
@@ -551,7 +451,7 @@ export class SqliteService {
   
     return this.dbInstance.executeSql(query, [correo]).then(res => {
       if (res.rows.length > 0) {
-        // Si se encuentra un usuario, retorna sus detalles
+        // Incluye el campo 'rol' en el objeto de usuario retornado
         return {
           id: res.rows.item(0).id,
           pnombre: res.rows.item(0).pnombre,
@@ -560,7 +460,8 @@ export class SqliteService {
           correo: res.rows.item(0).correo,
           contrasena: res.rows.item(0).contrasena,
           fechaNacimiento: res.rows.item(0).fechaNacimiento,
-          pais: res.rows.item(0).pais
+          pais: res.rows.item(0).pais,
+          rol: res.rows.item(0).rol // Nuevo campo 'rol'
         };
       } else {
         return null; // Retorna null si no se encuentra el usuario
@@ -570,6 +471,11 @@ export class SqliteService {
       return null; // Retorna null en caso de error
     });
   }
+  
+
+
+
+
 async verificarInscripcion(id_torneo: number, id_usuario: number): Promise<boolean> {
 
   try {
@@ -589,6 +495,9 @@ async verificarInscripcion(id_torneo: number, id_usuario: number): Promise<boole
     return false; // En caso de error, asumimos que no está inscrito
   }
 }
+
+
+
 
 async obtenerTorneosInscritos(id_usuario: number): Promise<any[]> {
   if (!this.dbInstance) {
@@ -634,12 +543,7 @@ async obtenerUsuariosInscritos(id_torneo: number): Promise<any[]> {
     return [];
   }
 
-  const query = `
-    SELECT u.* 
-    FROM usuarios u
-    JOIN inscripcion_torneo i ON u.id = i.id_usuario
-    WHERE i.id_torneo = ?`;
-
+  const query = `SELECT u.* FROM usuarios u JOIN inscripcion_torneo i ON u.id = i.id_usuario WHERE i.id_torneo = ?`;
   try {
     const result = await this.dbInstance.executeSql(query, [id_torneo]);
     const usuarios = [];
@@ -652,6 +556,283 @@ async obtenerUsuariosInscritos(id_torneo: number): Promise<any[]> {
     return [];
   }
 }
+
+async getPreguntas(): Promise<Preguntas[]> {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos es nula');
+    return [];
+  }
+  try {
+    const res = await this.dbInstance.executeSql(`SELECT * FROM preguntas`, []);
+    const preguntas: Preguntas[] = [];
+    for (let i = 0; i < res.rows.length; i++) {
+      preguntas.push({
+        id: res.rows.item(i).id,
+        pregunta: res.rows.item(i).pregunta
+      });
+    }
+    return preguntas;
+  } catch (error) {
+    console.error('Error al obtener preguntas de seguridad:', error);
+    return [];
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////INSERT///////////////////////////////////////////////////////
+
+
+async addRespuesta(preguntaId: number, usuarioId: number, respuesta: string): Promise<void> {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos no está lista.');
+    return;
+  }
+  try {
+    await this.dbInstance.executeSql(
+      `INSERT INTO respuestas_seguridad (preguntaId, usuarioId, respuesta) VALUES (?, ?, ?)`,
+      [preguntaId, usuarioId, respuesta]
+    );
+    console.log('Respuesta de seguridad agregada correctamente');
+  } catch (error) {
+    console.error('Error al agregar respuesta de seguridad:', error);
+  }
+}
+
+
+
+
+
+  async addTorneo(torneo: Torneo, adminId: number) {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+
+    const sql = `INSERT INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+    const values = [torneo.nombre, torneo.juegoId, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, adminId];
+    
+    try {
+      console.log('Insertando torneo con valores:', values);
+      await this.dbInstance.executeSql(sql, values);
+      this.selectTorneos();
+    } catch (error) {
+      this.presentAlert('Error al añadir torneo', JSON.stringify(error));
+    }
+  }
+
+  async addUsuario(nuevoUsuario: Usuario): Promise<number | undefined> {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return undefined;
+    }
+  
+    const sql = `INSERT INTO usuarios (pnombre, papellido, nickname, correo, contrasena, fechaNacimiento, pais, rol) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    const values = [
+      nuevoUsuario.pnombre,
+      nuevoUsuario.papellido,
+      nuevoUsuario.nickname,
+      nuevoUsuario.correo,
+      nuevoUsuario.contrasena,
+      nuevoUsuario.fechaNacimiento,
+      nuevoUsuario.pais,
+      nuevoUsuario.rol || 2 // Asume rol 2 como valor predeterminado si no se proporciona
+    ];
+  
+    try {
+      const result = await this.dbInstance.executeSql(sql, values);
+      const usuarioId = result.insertId; // Captura el ID del usuario insertado
+      this.selectUsuarios(); // Refrescar la lista de usuarios después de insertar
+      this.presentAlert('Usuario Añadido', 'El usuario ha sido registrado exitosamente.');
+      return usuarioId;
+    } catch (error) {
+      this.presentAlert('Error al añadir usuario', JSON.stringify(error));
+      return undefined;
+    }
+  }
+  
+
+  async inscribirTorneo(inscripcion: UserTorneo): Promise<void> {
+    if (!this.dbInstance) {
+      throw new Error('Database instance is not initialized.');
+    }
+
+    const query = `INSERT INTO inscripcion_torneo (id_torneo, id_usuario, nombre, apellido, nickname, correo) VALUES (?, ?, ?, ?, ?, ?);`;
+    const values = [inscripcion.id_torneo,inscripcion.id_usuario,inscripcion.nombre,inscripcion.apellido,inscripcion.nickname,inscripcion.correo];
+
+    await this.dbInstance.executeSql(query, values);
+  }
+
+  async addRespuestaSeguridad(preguntaId: number, usuarioId: number, respuesta: string) {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+    const query = `
+      INSERT INTO respuestas_seguridad (preguntaId, usuarioId, respuesta) VALUES (?, ?, ?)
+    `;
+    const values = [preguntaId, usuarioId, respuesta];
+  
+    try {
+      await this.dbInstance.executeSql(query, values);
+      console.log('Respuesta de seguridad almacenada');
+    } catch (error) {
+      console.error('Error al almacenar la respuesta de seguridad:', error);
+    }
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////DELETE/////////////////////////////////////
+
+
+
+
+  async eliminarTorneo(id: number) {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+  
+    const sql = `DELETE FROM torneos WHERE id = ?`;
+    try {
+      await this.dbInstance.executeSql(sql, [id]);
+      await this.torneoService.notificarTorneoEliminado();
+      this.selectTorneos(); // Actualizar datos
+    } catch (error) {
+      this.presentAlert('Error al eliminar torneo', JSON.stringify(error));
+    }
+  }
+  
+  async eliminarInscripcionesPorTorneo(id_torneo: number): Promise<void> {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+  
+    const sql = 'DELETE FROM inscripcion_torneo WHERE id_torneo = ?';
+    await this.dbInstance.executeSql(sql, [id_torneo]);
+  }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////UPDATE///////////////////////////////////////7
+
+
+
+  async actualizarTorneo(torneo: Torneo) {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+
+    const sql = `UPDATE torneos SET nombre = ?, juego = ?, estado = ?, numEquipos = ?, fechaInicio = ?, imagen = ? WHERE id = ?`;
+    const values = [torneo.nombre, torneo.juegoId, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, torneo.id];
+    try {
+      await this.dbInstance.executeSql(sql, values);
+      await this.torneoService.notificarTorneoActualizado();
+      this.selectTorneos(); // Actualizar datos
+    } catch (error) {
+      this.presentAlert('Error al actualizar torneo', JSON.stringify(error));
+    }
+  }
+  async actualizarUsuario(usuario : Usuario){
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, contrasena = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
+    const values = [usuario.pnombre, usuario.papellido, usuario.nickname, usuario.correo, usuario.contrasena, usuario.fechaNacimiento, usuario.pais, usuario.id];
+    
+    try {
+      await this.dbInstance.executeSql(sql, values);
+    } catch (error) {
+      this.presentAlert('Error al añador al Usuario', JSON.stringify(error));
+    }
+  }
+  async actualizarUsuarioPerfil(usuario: Usuario) {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return;
+    }
+  
+    // Asegúrate de que la consulta no intente actualizar el ID
+    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
+    const values = [usuario.pnombre, usuario.papellido, usuario.nickname, usuario.correo, usuario.fechaNacimiento, usuario.pais, usuario.id];
+  
+    try {
+      await this.dbInstance.executeSql(sql, values);
+    } catch (error) {
+      this.presentAlert('Error al actualizar al Usuario', JSON.stringify(error));
+    }
+  }
+  
+
+
+
+
+
 
   
 }  

@@ -1,12 +1,12 @@
-
 export class Torneo {
-  id?: number;  // El id puede ser opcional, ya que al crear un nuevo torneo no tendrá un id
-  nombre!: string;
-  juego!: string;
-  estado!: string;
-  numEquipos!: number;
-  fechaInicio!: string;
-  imagen!: string;
-  creadorNombre?: string;
-  
+  id?: number;             // ID del torneo
+  nombre!: string;         // Nombre del torneo
+  juegoId!: number;        // ID del juego asociado
+  estado!: string;         // Estado del torneo
+  numEquipos!: number;     // Número de equipos en el torneo
+  fechaInicio!: string;    // Fecha de inicio del torneo
+  imagen!: string;         // Imagen representativa del torneo
+  creadorId!: number;      // ID del creador del torneo
+  creadorNombre?: string;  // Nombre del creador del torneo
+  juegoNombre?: string;    // Nombre del juego asociado al torneo
 }

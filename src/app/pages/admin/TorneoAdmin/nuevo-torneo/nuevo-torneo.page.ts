@@ -4,16 +4,7 @@ import { AlertController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service';
 import { TorneoService } from 'src/app/services/torneo-service.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-
-interface Torneo {
-  id?: number;
-  nombre: string;
-  juego: string;
-  estado: string;
-  numEquipos: number;
-  fechaInicio: string;
-  imagen: string;
-}
+import { Torneo } from 'src/app/services/torneo';
 
 @Component({
   selector: 'app-nuevo-torneo',
@@ -21,14 +12,7 @@ interface Torneo {
   styleUrls: ['./nuevo-torneo.page.scss'],
 })
 export class NuevoTorneoPage implements OnInit {
-  nuevoTorneo: Torneo = {
-    nombre: '',
-    juego: '',
-    estado: '',
-    numEquipos: 0,
-    fechaInicio: '',
-    imagen: ''
-  };
+  nuevoTorneo: Torneo = new Torneo(); // Usamos la clase `Torneo`
   previewImage?: string;
 
   constructor(
@@ -104,7 +88,7 @@ export class NuevoTorneoPage implements OnInit {
               console.log('Nuevo torneo:', this.nuevoTorneo);
   
               // Llama al servicio para crear el nuevo torneo, pasando el torneo y el adminId
-              await this.sqliteService.addTorneo(this.nuevoTorneo, adminId);
+              await this.sqliteService.addTorneo(this.nuevoTorneo, adminId); // Agrega `adminId` aquí
               this.torneoService.notificarTorneoAgregado();
   
               // Mensaje de éxito y redirección
@@ -126,15 +110,21 @@ export class NuevoTorneoPage implements OnInit {
   
     await alert.present();
   }
-    // Método para obtener el adminId actual
-    async obtenerAdminIdActual(): Promise<number> {
-      // Aquí deberías implementar la lógica real para obtener el adminId
-      // En este ejemplo simplemente devuelve un valor fijo
-      return 1;
+  
+  
+  // Método para obtener el adminId actual
+  async obtenerAdminIdActual(): Promise<number> {
+    try {
+      const session = await this.sqliteService.obtenerSesion(); // Llama al método de sesión
+      return session && session.adminId ? session.adminId : 1; // Retorna el adminId o un valor por defecto si no existe
+    } catch (error) {
+      console.error('Error al obtener adminId de la sesión:', error);
+      return 0;
     }
+  }
   
 
-  admin_c(){
+  admin_c() {
     this.router.navigate(['/cuenta-admin']);
   }
-} 
+}

@@ -9,30 +9,31 @@ import { SqliteService } from 'src/app/services/sqlite.service';
   styleUrls: ['./iniciar-sesion.page.scss'],
 })
 export class IniciarSesionPage {
-  correo: string = '';
+  correoNickname: string = '';  // Puede ser correo o nickname
   contrasena: string = '';
 
-  constructor(private sqliteService: SqliteService, private router: Router, private navCtrl: NavController, private alertController: AlertController) {}
-
-
+  constructor(
+    private sqliteService: SqliteService,
+    private router: Router,
+    private navCtrl: NavController,
+    private alertController: AlertController
+  ) {}
 
   loginUsuario() {
-    this.sqliteService.loginUsuario(this.correo, this.contrasena).then(usuario => {
+    // Intentamos el inicio de sesión con el correo/nickname y contraseña
+    this.sqliteService.loginUsuario(this.correoNickname, this.contrasena).then(usuario => {
       if (usuario) {
-        // Buscar los detalles completos del usuario en la base de datos por correo
-        this.sqliteService.getUsuarioByCorreo(this.correo).then(detallesUsuario => {
-          if (detallesUsuario) {
-            // Guardar la sesión con los detalles del usuario
-            this.sqliteService.guardarSesion(detallesUsuario).then(() => {
-             
-              this.navCtrl.navigateForward(`/home`, {
-                queryParams: {
-                  usuario: JSON.stringify(detallesUsuario)
-                }
-              });
+        // Guardar la sesión con los detalles del usuario
+        this.sqliteService.guardarSesion(usuario).then(() => {
+          // Redirigir según el rol del usuario
+          if (usuario.rol === 1) {
+            this.navCtrl.navigateForward(`/cuenta-admin`, {
+              queryParams: { usuario: JSON.stringify(usuario) }
             });
-          } else {
-            console.error('Usuario no encontrado.');
+          } else if (usuario.rol === 2) {
+            this.navCtrl.navigateForward(`/home`, {
+              queryParams: { usuario: JSON.stringify(usuario) }
+            });
           }
         });
       } else {
@@ -46,7 +47,7 @@ export class IniciarSesionPage {
     const alert = await this.alertController.create({
       header: 'Error',
       subHeader: 'Inicio de sesión fallido',
-      message: 'Correo o contraseña incorrectos.',
+      message: 'Correo, nickname o contraseña incorrectos.',
       buttons: ['OK']
     });
 
@@ -57,4 +58,3 @@ export class IniciarSesionPage {
     this.router.navigate(['/forgot-password']);
   }
 }
-
