@@ -57,4 +57,8 @@ export class IniciarSesionPage {
   irPagina() {
     this.router.navigate(['/forgot-password']);
   }
+
+  irRegister(){
+    this.router.navigate(['/registro'])
+  }
 }

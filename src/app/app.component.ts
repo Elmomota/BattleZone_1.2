@@ -36,7 +36,7 @@ export class AppComponent implements OnInit {
       if (session.rol === 1) {
         // Redirige al administrador
         this.router.navigate(['/cuenta-admin']);
-      } else {
+      } if (session.rol === 2) {
         // Redirige al cliente
         this.router.navigate(['/home']);
       }

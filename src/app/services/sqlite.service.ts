@@ -67,20 +67,20 @@ export class SqliteService {
     const storage = await this.storage.create();
     this._storage = storage;
   }
-   // Guardar datos de sesión
-   async guardarSesion(usuario: any) {
+  async guardarSesion(usuario: any) {
+    if (!this._storage) await this.init();
     await this._storage?.set('usuario', usuario);
-  }
+}
 
-  // Obtener datos de sesión
-  async obtenerSesion() {
+async obtenerSesion() {
+    if (!this._storage) await this.init();
     return await this._storage?.get('usuario');
-  }
+}
 
-  // Eliminar sesión
-  async eliminarSesion() {
+async eliminarSesion() {
+    if (!this._storage) await this.init();
     await this._storage?.remove('usuario');
-  }
+}
 
 
 
@@ -185,7 +185,8 @@ async crearTablas() {
   }
 
   try {
-    /* Eliminar todas las tablas si existen
+    // Eliminar todas las tablas si existen
+    /*
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS respuestas_seguridad`, []);
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS preguntas`, []);
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS inscripcion_torneo`, []);
@@ -193,7 +194,8 @@ async crearTablas() {
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS juegos`, []);
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS usuarios`, []);
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS administradores`, []);
-*/
+    */
+
     // Crear tabla usuarios con campo de rol
     await this.dbInstance.executeSql(
       `CREATE TABLE IF NOT EXISTS usuarios (

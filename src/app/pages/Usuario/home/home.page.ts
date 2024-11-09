@@ -34,42 +34,39 @@ export class HomePage implements OnInit {
   ) {}
 
   async ngOnInit() {
-    // Obtener la sesión del usuario usando el servicio SQLite
     this.sqliteService.obtenerSesion().then(usuario => {
       if (usuario) {
-        this.usuario = usuario.nickname || 'Usuario';  // Asignar el nickname del usuario
-        if (usuario.rol===1){
-          this.navCtrl.navigateForward('/cuenta-admin')
+        this.usuario = usuario.nickname || 'Usuario';
+
+        // Redirigir a cuenta admin solo si el rol es 1 y no está en CuentaAdminPage
+        if (usuario.rol === 1 && this.router.url !== '/cuenta-admin') {
+          this.navCtrl.navigateForward('/cuenta-admin');
         }
       } else {
-        // Si no hay sesión activa, redirigir a la página de login
         this.navCtrl.navigateRoot('/iniciar-sesion');
       }
     });
-  
-
-
-    // Recuperar el nombre del usuario desde los parámetros de la ruta (si es necesario)
+    
+    // Recupera nombre desde los parámetros de la ruta si está disponible
     this.activedrouter.queryParams.subscribe(params => {
       if (params && params['usuario']) {
         const usuario = JSON.parse(params['usuario']);
-        this.usuario = usuario.nickname || this.usuario; // Usar el nickname del parámetro o mantener el de la sesión
+        this.usuario = usuario.nickname || this.usuario;
       }
     });
 
-   
-    await this.loadJuegos(); // Cargar los juegos al inicializar la página
+    await this.loadJuegos();
   
-    this.api.getNoticias().subscribe((res)=>{
-      console.log('Respuesta de la API:', res);
-      this.noticias = res.articles;
-      },(error)=>{
-      console.log(error);
-      });
-  
-  
-  
-  }
+    // Obtener noticias desde el servicio
+    this.api.getNoticias().subscribe(
+      res => {
+        console.log('Respuesta de la API:', res);
+        this.noticias = res.articles;
+      },
+      error => console.error(error)
+    );
+}
+
 
   async loadJuegos() { // Método para cargar juegos desde el servicio
     this.loading = true; // Cambiar el estado de carga a verdadero

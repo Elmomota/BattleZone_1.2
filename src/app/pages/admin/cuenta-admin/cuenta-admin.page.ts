@@ -31,24 +31,23 @@ export class CuentaAdminPage implements OnInit {
   }
 
   async ngOnInit() {
-    const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+    const usuario = await this.sqliteService.obtenerSesion();
     
     if (usuario && usuario.rol === 1) {
-      this.adminUser = usuario.nickname || 'Admin'; // Usar el nickname del admin
+      this.adminUser = usuario.nickname || 'Admin';
       await this.loadTorneos();
       await this.loadUsuarios();
+
       // Suscripción a eventos de torneos
-      this.torneoService.torneoAgregado$.subscribe(() => {
-        this.loadTorneos();
-      });
-      this.torneoService.torneoEliminado$.subscribe(() => {
-        this.loadTorneos();
-      });
+      this.torneoService.torneoAgregado$.subscribe(() => this.loadTorneos());
+      this.torneoService.torneoEliminado$.subscribe(() => this.loadTorneos());
+
     } else {
-      // Si no es admin o no está autenticado, redirigir a login
+      // Redirigir solo si no es admin o no está autenticado
       this.navCtrl.navigateRoot('/iniciar-sesion');
     }
-  }
+}
+
   
 
   async loadTorneos() {
