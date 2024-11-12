@@ -636,23 +636,24 @@ async addRespuesta(preguntaId: number, usuarioId: number, respuesta: string): Pr
 
 
 
-  async addTorneo(torneo: Torneo, adminId: number) {
-    if (!this.dbInstance) {
-      console.error('La instancia de la base de datos no está lista.');
-      return;
-    }
-
-    const sql = `INSERT INTO torneos (nombre, juego, estado, numEquipos, fechaInicio, imagen, creadorId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const values = [torneo.nombre, torneo.juegoId, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, adminId];
-    
-    try {
-      console.log('Insertando torneo con valores:', values);
-      await this.dbInstance.executeSql(sql, values);
-      this.selectTorneos();
-    } catch (error) {
-      this.presentAlert('Error al añadir torneo', JSON.stringify(error));
-    }
+async addTorneo(torneo: Torneo, adminId: number) {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos no está lista.');
+    return;
   }
+
+  const sql = `INSERT INTO torneos (nombre, juegoId, estado, numEquipos, fechaInicio, imagen, creadorId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+  const values = [torneo.nombre, torneo.juegoId, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, adminId];
+  
+  try {
+    console.log('Insertando torneo con valores:', values);
+    await this.dbInstance.executeSql(sql, values);
+    this.selectTorneos();
+  } catch (error) {
+    this.presentAlert('Error al añadir torneo', JSON.stringify(error));
+  }
+}
+
 
   async addUsuario(nuevoUsuario: Usuario): Promise<number | undefined> {
     if (!this.dbInstance) {

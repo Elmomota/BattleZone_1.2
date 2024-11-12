@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
+import { MenuController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular'; // Importa Storage para manejar la sesión
 
 @Component({
@@ -12,7 +12,8 @@ export class InicioPage implements OnInit {
   constructor(
     private router: Router,
     private menuCtrl: MenuController,
-    private storage: Storage // Inyecta el servicio de almacenamiento
+    private storage: Storage, // Inyecta el servicio de almacenamiento
+    private navCtrl: NavController
   ) {
     this.storage.create(); // Inicializa Ionic Storage
   }
@@ -22,10 +23,18 @@ export class InicioPage implements OnInit {
 
     // Comprueba si hay una sesión activa
     const usuario = await this.storage.get('usuario'); // Recupera los datos del usuario
-    if (usuario) {
-      console.log('Sesión activa:', usuario);
-      this.router.navigate(['/home']); // Redirige a la página de inicio
-    } else {
+    if (usuario.rol === 1) {
+      this.navCtrl.navigateForward(`/cuenta-admin`, {
+        queryParams: { usuario: JSON.stringify(usuario) }
+      });
+    } else if (usuario.rol === 2) {
+      this.navCtrl.navigateForward(`/home`, {
+        queryParams: { usuario: JSON.stringify(usuario) }
+      });
+    }
+    
+    
+    else {
       console.log('No hay sesión activa');
       // Si no hay sesión activa, puedes permanecer en esta página o redirigir a otra página
     }
@@ -36,7 +45,7 @@ export class InicioPage implements OnInit {
   }
 
   inicio() {
-    this.router.navigate(['/registro']);
+    this.router.navigate(['/iniciar-sesion']);
   }
 
   adminLogin() {
