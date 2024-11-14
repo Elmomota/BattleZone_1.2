@@ -819,6 +819,18 @@ async addTorneo(torneo: Torneo, adminId: number) {
       console.error('La instancia de la base de datos no está lista.');
       return;
     }
+
+
+
+
+
+
+
+
+
+
+
+
   
     // Asegúrate de que la consulta no intente actualizar el ID
     const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;

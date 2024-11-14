@@ -69,8 +69,8 @@ export class CuentaPage implements OnInit {
 
 
 irAtras() {
-    this.navCtrl.back();
-  }
+  this.router.navigate(['/home']);
+}
 
 
 
@@ -86,5 +86,9 @@ irAtras() {
   }
 
 
-}
+  cambiarContra(){
 
+    this.router.navigate(['/cambiar-contra']);
+
+  }
+}

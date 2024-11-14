@@ -74,7 +74,11 @@ const routes: Routes = [
   {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
+  },  {
+    path: 'cambiar-contra',
+    loadChildren: () => import('./pages/usuario/cambiar-contra/cambiar-contra.module').then( m => m.CambiarContraPageModule)
   }
+
 ];
 
 @NgModule({

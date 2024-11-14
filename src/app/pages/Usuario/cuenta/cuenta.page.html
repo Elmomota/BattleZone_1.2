@@ -25,15 +25,15 @@
         <div class="div-foto-perfil">
 
 
-            
-                <!-- Botón que activa el menú -->
-                <ion-button (click)="toggleMenu()" fill="clear" class="icono-config"></ion-button>
-            
-                <!-- Menú desplegable -->
-                <ion-list *ngIf="menuVisible">
+
+            <!-- Botón que activa el menú -->
+            <ion-button (click)="toggleMenu()" fill="clear" class="icono-config"></ion-button>
+
+            <!-- Menú desplegable -->
+            <ion-list *ngIf="menuVisible">
                 <ion-item button (click)=ediPerfil()>Editar perfil</ion-item>
-                </ion-list>
-           
+            </ion-list>
+
             <!-----icono y nombre--------------------------------->
 
             <ion-avatar class="avatar">
@@ -41,22 +41,9 @@
             </ion-avatar>
 
             <div class="info-perfil">
-                <h3 class="color-n">{{usuario.nickname}}</h3>
-                <h6 class="color">{{usuario.pnombre}} &nbsp; {{usuario.papellido}}</h6>
-
+                <h2 class="color-n">{{usuario.nickname}}</h2>
 
             </div>
-
-
-            <!---chips juegos main--------------->
-
-            <div class="juegos-per">
-                <ion-chip color="primary">Valorant</ion-chip>
-                <ion-chip color="secondary">LoL</ion-chip>
-                <ion-chip color="tertiary">Street figter</ion-chip>
-            </div>
-
-
 
 
 
@@ -67,24 +54,38 @@
             <!---------------------stats--------------------------------------------------------------------------------->
 
 
-            <ion-row class="profile-stats">
 
-                <ion-col>
-                    <h3>12</h3>
-                    <ion-icon class="iconos-stats" name="trophy"></ion-icon>
-                </ion-col>
-
-                <ion-col>
-                    <h3>420K</h3>
-                    <p>Followers</p>
-                </ion-col>
-
-                <ion-col>
-                    <h3>95</h3>
-                    <p>Jugados</p>
-                </ion-col>
-            </ion-row>
         </div>
+
+
+        <ion-card id="torneos-h">
+            <ion-card-header>
+                <ion-card-title>Ficha de Jugador</ion-card-title>
+            </ion-card-header>
+
+            <ion-item>
+                <ion-label position="floating">Nombre</ion-label>
+                <h6 class="color-n">{{usuario.pnombre}} {{usuario.papellido}}</h6>
+
+            </ion-item>
+
+
+            <ion-item>
+                <ion-label position="floating">Correo</ion-label>
+                <h6 class="color-n">{{usuario.correo}}</h6>
+
+            </ion-item>
+
+
+            <ion-item>
+                <ion-label position="floating">Nombre</ion-label>
+                <h6 class="color-n">{{usuario.pais}}</h6>
+            </ion-item>
+        </ion-card>
+
+        <ion-button (click)="ediPerfil()">Modificar Perfil</ion-button>
+        <ion-button (click)="cambiarContra()">Modificar Contraseña</ion-button>
+
         <!----------------------------segmentos cambiantes-------------------------------------------------------------------------->
         <hr />
 
@@ -99,7 +100,7 @@
 
 
             <ion-segment-button value='Historial' class="segmento-stats">
-                <ion-label>torneos proximos <br> y en linea</ion-label>
+                <ion-label>Tus torneos</ion-label>
             </ion-segment-button>
 
 
@@ -113,29 +114,14 @@
 
         <!------------------------lo que cambia-------------------titulos----------------------------------------------------------->
 
-
-        <div *ngIf="seleccion == 'Torneos jugados'">
-
-            <ion-card-title class="titulo-torneos">Torneos jugados</ion-card-title>
-        </div>
-
-
-        <div *ngIf="seleccion == 'Historial'">
-
-            <ion-card-title class="titulo-torneos">Historial</ion-card-title>
-        </div>
-
-
-
         <!------------------------------------------------------------------------------------------------------>
-
 
 
         <!------------------------------------------------------------------------------------------------------>
         <!-----------------------------parte torneos------------------------------------------------------------------------->
         <!------------------------------------------------------------------------------------------------------>
         <ion-card id="torneos">
-            <ion-card-content class="torneos" *ngIf="seleccion == 'Torneos jugados'">
+            <ion-card-content class="torneos" *ngIf="seleccion == 'Historial'">
 
                 <div class="ov">
 
@@ -177,7 +163,7 @@
         <!-----------------------------parte historial------------------------------------------------------------------------->
         <!------------------------------------------------------------------------------------------------------>
         <ion-card id="torneos-h">
-            <ion-card-content class="historial" *ngIf="seleccion == 'Historial'">
+            <ion-card-content class="historial" *ngIf="seleccion == 'Torneos jugados'">
 
                 <div>
 
@@ -209,132 +195,6 @@
                 </div>
             </ion-card-content>
         </ion-card>
-
-
-
-        <!------------------------------------------------------------------------------------------------------>
-        <!-----------------------------parte logros------------------------------------------------------------------------->
-        <!------------------------------------------------------------------------------------------------------>
-        <ion-card id="torneos-l">
-            <ion-card-content class="logros-orga" *ngIf="seleccion == 'Logros'">
-
-
-                <!------items------------------------------------------------------------------------------------------------>
-                <!------------------------------------------------------------------------------------------------------>
-                <div class="item-logro">
-                    <ion-icon class="logro" name="barbell-outline"></ion-icon>
-
-                </div>
-                <hr>
-
-                <div class="item-logro">
-                    <ion-icon class="logro" name="skull-outline"></ion-icon>
-                </div>
-                <!------------------------------------------------------------------------------------------------------>
-                <!------------------------------------------------------------------------------------------------------>
-
-                <div class="item-logro">
-
-                    <ion-icon class="logro" name="beer-outline"></ion-icon>
-
-
-                </div>
-
-
-                <!------------------------------------------------------------------------------------------------------>
-                <!------------------------------------------------------------------------------------------------------>
-
-
-
-                <div class="item-logro">
-
-                    <ion-icon class="logro" name="construct-outline"></ion-icon>
-                </div>
-
-
-                <!------------------------------------------------------------------------------------------------------>
-                <!------------------------------------------------------------------------------------------------------>
-
-                <div class="item-logro">
-                    <ion-icon class="logro" name="color-palette-outline"></ion-icon>
-
-                    <!------------------------------------------------------------------------------------------------------>
-                    <!------------------------------------------------------------------------------------------------------>
-
-
-
-
-                    <div class="item-logro">
-                        <ion-icon class="logro" name="magnet-outline"></ion-icon>
-                    </div>
-
-
-
-
-
-                    <!------------------------------------------------------------------------------------------------------>
-                    <!------------------------------------------------------------------------------------------------------>
-
-
-
-
-
-                    <div class="item-logro">
-                        <ion-icon class="logro" name="beer-outline"></ion-icon>
-                    </div>
-
-
-
-
-
-                    <!------------------------------------------------------------------------------------------------------>
-                    <!------------------------------------------------------------------------------------------------------>
-
-
-
-
-
-                    <div class="item-logro">
-                        <ion-icon class="logro" name="bug-outline"></ion-icon>
-                    </div>
-
-
-
-                    <!------------------------------------------------------------------------------------------------------>
-
-                    <!------------------------------------------------------------------------------------------------------>
-                </div>
-            </ion-card-content>
-        </ion-card>
-
-
-
-        <!------------------------------------------------------------------------------------------------------>
-        <!------------------------------------------------------------------------------------------------------>
-        <!------------------------------------------------------------------------------------------------------>
-        <hr/>
-        <!------------------------------------------------------------------------------------------------------>
-        <!------------------------------------------------------------------------------------------------------>
-        <!------------------------------------------------------------------------------------------------------>
-
-
-
-
-
-
-        <ion-card-title class="titulo-torneos">Descripcion Jugador:</ion-card-title>
-
-        <ion-card class="texto2">
-
-            <div>
-                <p>Jugador con experiencia en videojuegos desde los 5 años de edad , participante de varios de los torneos mas importantes de battle zone, soy un activo tengo un estilo de juego agresivo y odio pararme a pensar las cosas mi forma de jugar
-                    siempre ha sido apisonar a los demas llendo hacia adelante
-                </p>
-            </div>
-
-        </ion-card>
-
-
 
 
     </div>
