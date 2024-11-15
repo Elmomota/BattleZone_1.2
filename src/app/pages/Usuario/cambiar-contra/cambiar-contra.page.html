@@ -1,13 +1,43 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>cambiar-contra</ion-title>
-  </ion-toolbar>
+    <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+            <ion-back-button></ion-back-button>
+        </ion-buttons>
+        <div class="superior">
+            <ion-title>Cambiar Contraseña</ion-title>
+        </div>
+    </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">cambiar-contra</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="toro" [fullscreen]="true" color="Shade">
+
+
+    <ion-avatar class="avatar">
+        <ion-icon id="icono-user" name="person-circle-outline"></ion-icon>
+    </ion-avatar>
+
+
+    <div class="login-recuadro" style="margin-top: 100px;">
+        <ion-card class="login-card" color="light">
+            <ion-card-header>
+                <ion-card-title>Cambiar contraseña</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+                <form>
+                    <ion-item color="light">
+                        <ion-input type="password" label="Nueva contraseña" labelPlacement="floating" placeholder="Ingrese una nueva contraseña"></ion-input>
+                    </ion-item>
+
+                    <ion-item color="light" lines="none">
+                        <ion-input type="password" label="Contraseña" labelPlacement="floating" placeholder="Ingrese su contraseña" helperText="Ingrese la contraseña de su sesion para confirmar"></ion-input>
+                    </ion-item>
+
+                </form>
+            </ion-card-content>
+        </ion-card>
+
+    </div>
+    <ion-button class="owo">Cambiar nombre de usuario</ion-button>
+
 </ion-content>
