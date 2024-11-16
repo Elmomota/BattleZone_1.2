@@ -14,6 +14,7 @@ import { Torneo } from 'src/app/services/torneo';
 export class ModificarTorneoPage implements OnInit {
   torneo: Torneo = new Torneo(); // Instancia de Torneo
   previewImage?: string;
+  inscritos: any[] = []; // Lista de usuarios inscritos
 
   constructor(
     private route: ActivatedRoute,
@@ -25,20 +26,50 @@ export class ModificarTorneoPage implements OnInit {
 
   ngOnInit() {
     // Cargar el torneo de los parámetros de la URL
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe(async (params) => {
       if (params && params['torneo']) {
         try {
-          this.torneo = JSON.parse(params['torneo']); // Inicializar la instancia con los datos
+          this.torneo = JSON.parse(params['torneo']);
           console.log('Torneo recibido:', this.torneo);
-
-          // Asignar la imagen para la vista previa
           this.previewImage = this.torneo.imagen;
+
+          // Cargar usuarios inscritos y verificar la cantidad de equipos
+          this.inscritos = await this.obtenerUsuariosInscritos(this.torneo.id!);
+          this.validarEquipos();
         } catch (error) {
           console.error('Error al parsear el torneo:', error);
           this.router.navigate(['/cuenta-admin']);
         }
       }
     });
+  }
+
+  async obtenerUsuariosInscritos(idTorneo: number): Promise<any[]> {
+    return await this.sqliteService.obtenerUsuariosInscritos(idTorneo);
+  }
+
+  validarEquipos(): boolean {
+    const numeroEquipos = this.inscritos.length;
+
+    if (numeroEquipos < 6 || numeroEquipos > 30 || numeroEquipos % 2 !== 0) {
+      this.alertController.create({
+        header: 'Error en la cantidad de equipos',
+        message: 'El número de equipos debe ser par, y estar entre 6 y 30 participantes.',
+        buttons: ['OK']
+      }).then(alert => alert.present());
+      return false;
+    }
+
+    if (this.torneo.numEquipos! < numeroEquipos) {
+      this.alertController.create({
+        header: 'Cantidad de equipos insuficiente',
+        message: `El número de equipos no puede ser menor a los participantes inscritos (${numeroEquipos}).`,
+        buttons: ['OK']
+      }).then(alert => alert.present());
+      return false;
+    }
+
+    return true;
   }
 
   async onFileSelected() {
@@ -56,6 +87,9 @@ export class ModificarTorneoPage implements OnInit {
   }
 
   async guardarCambios() {
+    // Validar equipos antes de guardar
+    if (!this.validarEquipos()) return;
+
     const alert = await this.alertController.create({
       header: 'Confirmar Cambios',
       message: '¿Estás seguro de que deseas guardar los cambios?',

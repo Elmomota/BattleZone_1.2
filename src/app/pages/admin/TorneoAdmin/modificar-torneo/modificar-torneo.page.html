@@ -30,11 +30,15 @@
                 <ion-select [(ngModel)]="torneo.estado" name="estado" required>
                     <ion-select-option value="Próximo">Próximo</ion-select-option>
                     <ion-select-option value="En curso">En curso</ion-select-option>
-                    <ion-select-option value="Finalizado">Finalizado</ion-select-option>
+                    
                 </ion-select>
             </ion-item>
   
             <!-- Campo Equipos Inscritos -->
+
+            <ion-item>
+                <ion-label>Cantidad de Inscritos: {{ inscritos.length }}</ion-label>
+            </ion-item>
             <ion-item>
                 <ion-label position="floating">Cupos</ion-label>
                 <ion-input type="number" [(ngModel)]="torneo.numEquipos" name="numEquipos" required></ion-input>

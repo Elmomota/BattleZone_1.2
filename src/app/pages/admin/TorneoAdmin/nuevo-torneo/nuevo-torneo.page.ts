@@ -5,6 +5,7 @@ import { SqliteService } from 'src/app/services/sqlite.service';
 import { TorneoService } from 'src/app/services/torneo-service.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Torneo } from 'src/app/services/torneo';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-nuevo-torneo',
@@ -19,10 +20,32 @@ export class NuevoTorneoPage implements OnInit {
     private router: Router,
     private alertController: AlertController,
     private sqliteService: SqliteService,
-    private torneoService: TorneoService
+    private torneoService: TorneoService,
+    private http: HttpClient
   ) {}
 
   ngOnInit() {}
+  async enviarMensajeDiscord(torneo: Torneo) {
+    const webhookUrl = 'https://discordapp.com/api/webhooks/1306977558629318696/Oi7MP5F6asZXQpgJPjqvatN63ClJRYDHQ6gdk8qPKvJFR4dxICKtU8lVYdWqnbn97x62'; // Reemplaza con tu webhook
+  
+    const mensaje = {
+      content: `🎉 **Nuevo Torneo Creado** 🎮
+      - **Nombre**: ${torneo.nombre}
+      - **Juego**: ${torneo.juegoNombre}
+      - **Estado**: ${torneo.estado}
+      - **Número de Equipos**: ${torneo.numEquipos}
+      - **Fecha de Inicio**: ${torneo.fechaInicio}
+      `,
+    };
+  
+    try {
+      await this.http.post(webhookUrl, mensaje).toPromise();
+      console.log('Mensaje enviado a Discord');
+    } catch (error) {
+      console.error('Error al enviar mensaje a Discord:', error);
+    }
+  }
+  
 
   async onFileSelected() {
     const image = await Camera.getPhoto({
@@ -59,15 +82,17 @@ export class NuevoTorneoPage implements OnInit {
     }
   
     // Verificación del número de equipos
-    if (this.nuevoTorneo.numEquipos < 2 || this.nuevoTorneo.numEquipos > 20) {
-      const alert = await this.alertController.create({
-        header: 'Error de validación',
-        message: 'El número de equipos debe estar entre 2 y 20.',
-        buttons: ['OK']
-      });
-      await alert.present();
-      return; // Salir del método si hay un error
-    }
+// Verificación del número de equipos
+if (this.nuevoTorneo.numEquipos < 4 || this.nuevoTorneo.numEquipos > 8 || this.nuevoTorneo.numEquipos % 2 !== 0) {
+  const alert = await this.alertController.create({
+    header: 'Error de validación',
+    message: 'El número de equipos debe ser un número par entre 4 y 8.',
+    buttons: ['OK']
+  });
+  await alert.present();
+  return; // Salir del método si hay un error
+}
+
   
     const alert = await this.alertController.create({
       header: 'Confirmar Creación',
@@ -90,6 +115,7 @@ export class NuevoTorneoPage implements OnInit {
               // Llama al servicio para crear el nuevo torneo, pasando el torneo y el adminId
               await this.sqliteService.addTorneo(this.nuevoTorneo, adminId); // Agrega `adminId` aquí
               this.torneoService.notificarTorneoAgregado();
+              await this.enviarMensajeDiscord(this.nuevoTorneo);
   
               // Mensaje de éxito y redirección
               console.log('Torneo creado correctamente');
