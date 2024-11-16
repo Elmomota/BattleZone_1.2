@@ -126,7 +126,9 @@ ion-icon {
     display: flex;
 }
 
+
 /* Nueva sección para torneos jugados */
+
 .imagen-torneos-jugados {
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -136,35 +138,44 @@ ion-icon {
     padding: 10px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 8px;
-    margin-top: -30px; /* Superponer el texto sobre la imagen */
+    margin-top: -30px;
+    /* Superponer el texto sobre la imagen */
     position: relative;
     z-index: 1;
 }
 
 .texto h6 {
-    font-family: 'Courier New', Courier, monospace; /* Fuente vintage */
+    font-family: 'Courier New', Courier, monospace;
+    /* Fuente vintage */
     font-size: 1.2rem;
     color: #3a3a3a;
     text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
 }
 
 .texto p {
-    font-family: 'Georgia', serif; /* Fuente clásica */
+    font-family: 'Georgia', serif;
+    /* Fuente clásica */
     font-size: 0.9rem;
     color: #555;
 }
 
+
 /* Estilo para el ion-card */
+
 ion-card {
     --background: #3e3f4c;
-    margin-bottom: 15px; /* Espacio entre tarjetas */
-    border: 1px solid #ccc; /* Bordes sutiles */
+    margin-bottom: 15px;
+    /* Espacio entre tarjetas */
+    border: 1px solid #ccc;
+    /* Bordes sutiles */
     border-radius: 10px;
-    transition: transform 0.2s; /* Animación al pasar el ratón */
+    transition: transform 0.2s;
+    /* Animación al pasar el ratón */
 }
 
 ion-card:hover {
-    transform: scale(1.05); /* Efecto de zoom al pasar el ratón */
+    transform: scale(1.05);
+    /* Efecto de zoom al pasar el ratón */
 }
 
 .distribucion-historial {
@@ -272,7 +283,7 @@ ion-card:hover {
 }
 
 .avatar {
-    width: 100px;
+    width: 150px;
     height: 100px;
     margin: 0 auto;
 }
@@ -326,4 +337,50 @@ ion-slide {
 
 .color {
     color: white;
+}
+
+h2 {
+    padding-bottom: 20px;
+}
+
+ion-item {
+    --background: var(#33356b);
+    border-radius: 20px;
+    margin: 10px 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.color-n {
+    font-size: 24px;
+    /* Ajusta el tamaño a tus necesidades */
+}
+
+.superior {
+    display: flex;
+    justify-content: center;
+}
+
+.login-recuadro {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    border-top: 100px;
+    padding-top: 100px;
+}
+
+.login-card {
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+}
+
+ion-button {
+    margin-top: 30px;
+    /* Espaciado entre el botón y el formulario */
+    align-items: center;
 }

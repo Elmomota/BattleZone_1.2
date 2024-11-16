@@ -21,22 +21,17 @@ import { Respuestas } from './respuestas';
 
 ////////////creacion instancia bdd
 export class SqliteService {
-  private dbInstance: SQLiteObject | null = null;
+
+
+  public dbInstance!: SQLiteObject;
   private _storage: Storage | null = null;
-  
-
-
+    public usuarioSesionSubject: BehaviorSubject<any> = new BehaviorSubject(null);
+  public usuarioSesion$ = this.usuarioSesionSubject.asObservable();
 
 
   // Observable para el estado de la base de datos
   private isDbReady: BehaviorSubject<boolean> = new BehaviorSubject(false);
   
-
-
-
-
-
-
   // Observables para los datos
   private listaTorneos = new BehaviorSubject<Torneo[]>([]);
  //ELIMINACION DE ADMINISTRADORES (CLASS Y TABLA)
@@ -178,6 +173,17 @@ async eliminarSesion() {
 
 /////////////////////////////creacion de tablas general///////////////////////////////////
 
+
+
+
+
+
+
+
+
+
+
+
 async crearTablas() {
   if (!this.dbInstance) {
     console.error('La instancia de la base de datos no está lista.');
@@ -207,15 +213,17 @@ async crearTablas() {
         contrasena TEXT NOT NULL,
         fechaNacimiento TEXT NOT NULL,
         pais TEXT NOT NULL,
-        rol INTEGER NOT NULL DEFAULT 2  -- 1 para administrador, 2 para cliente
+        rol INTEGER NOT NULL DEFAULT 2,  -- 1 para administrador, 2 para cliente
+        imagen_user TEXT
+
       )`, []
     );
 
     // Insertar un usuario administrador por defecto (si no existe)
     await this.dbInstance.executeSql(
-      `INSERT OR IGNORE INTO usuarios (id, pnombre, papellido, nickname, correo, contrasena, fechaNacimiento, pais, rol)
-       VALUES (1, 'Elmo', 'Admin', 'ElmoAdmin', 'al.barreras@gmail.com', 'elmomota770', '2000-01-01', 'Pais1', 1),
-              (2, 'Srchito', 'Admin', 'SrchitoAdmin', 'srchitita@gmail.com', 'Srchito123', '2000-01-02', 'Pais2', 1)`, []
+      `INSERT OR IGNORE INTO usuarios (id, pnombre, papellido, nickname, correo, contrasena, fechaNacimiento, pais, rol, imagen_user)
+       VALUES (1, 'Elmo', 'Admin', 'ElmoAdmin', 'al.barreras@gmail.com', 'elmomota770', '2000-01-01', 'Pais1', 1, ''),
+              (2, 'Srchito', 'Admin', 'SrchitoAdmin', 'srchitita@gmail.com', 'Srchito123', '2000-01-02', 'Pais2', 1 , '')`, []
     );
 
     // Crear tabla juegos con clave primaria
@@ -269,6 +277,16 @@ async crearTablas() {
         (3, 'Fortnite', 'Battle Royale', 'Juego de supervivencia en un entorno de batalla masiva.', 'assets/logos/logo-fortnite.jpg', 'assets/img/imagen-fortnite.jpg'),
         (4, 'Street Fighter', 'Pelea', 'Juego de lucha con personajes emblemáticos.', 'assets/logos/logo-street-fighter.jpg', 'assets/img/imagen-street-fighter.jpg')`, []
     );
+
+
+
+
+
+
+
+
+
+
 
     await this.dbInstance.executeSql(
       `CREATE TABLE IF NOT EXISTS preguntas (
@@ -346,7 +364,8 @@ async selectUsuarios() {
         contrasena: usuario.contrasena,
         fechaNacimiento: usuario.fechaNacimiento,
         pais: usuario.pais,
-        rol: usuario.rol // Agregando el campo 'rol' aquí
+        rol: usuario.rol, // Agregando el campo 'rol' aquí
+        imagen_user: usuario.imagen
       });
     }
 
@@ -413,6 +432,7 @@ selectTorneos() {
       return null;
     }
   
+
     // Modifica la consulta SQL para buscar tanto por correo como por nickname
     const query = `SELECT * FROM usuarios WHERE (correo = ? OR nickname = ?) AND contrasena = ?`;
   
@@ -430,7 +450,8 @@ selectTorneos() {
           contrasena: result.rows.item(0).contrasena,
           fechaNacimiento: result.rows.item(0).fechaNacimiento,
           pais: result.rows.item(0).pais,
-          rol: result.rows.item(0).rol
+          rol: result.rows.item(0).rol,
+          imagen_user:result.rows.item(0).imagen
         };
       } else {
         return null; // Credenciales incorrectas
@@ -463,7 +484,9 @@ selectTorneos() {
           contrasena: res.rows.item(0).contrasena,
           fechaNacimiento: res.rows.item(0).fechaNacimiento,
           pais: res.rows.item(0).pais,
-          rol: res.rows.item(0).rol // Nuevo campo 'rol'
+          rol: res.rows.item(0).rol ,// Nuevo campo 'rol',
+          imagen:res.rows.item(0).imagen
+
         };
       } else {
         return null; // Retorna null si no se encuentra el usuario
@@ -819,6 +842,7 @@ async addTorneo(torneo: Torneo, adminId: number) {
       console.error('La instancia de la base de datos no está lista.');
       return;
     }
+
   
     // Asegúrate de que la consulta no intente actualizar el ID
     const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
@@ -830,9 +854,18 @@ async addTorneo(torneo: Torneo, adminId: number) {
       this.presentAlert('Error al actualizar al Usuario', JSON.stringify(error));
     }
   }
+
+
+
+
   
 
-
+  actualizarFotoUsuario(id_usuario: number, foto: string) {
+    const query = `UPDATE usuarios SET imagen_user = ? WHERE id_usuario = ?`;
+    return this.dbInstance.executeSql(query, [foto, id_usuario])
+      .then(() =>    console.log('Foto actualizada correctamente'))
+      .catch(e => console.error('Error al actualizar la foto', e));
+  }
 
 
 

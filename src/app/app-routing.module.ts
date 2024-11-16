@@ -71,10 +71,17 @@ const routes: Routes = [
     path: 'vista-torneo',
     loadChildren: () => import('./pages/Usuario/vista-torneo/vista-torneo.module').then(m => m.VistaTorneoPageModule)
   },
+
+
+  {
+    path: 'cambiar-contra',
+    loadChildren: () => import('./pages/Usuario/cambiar-contra/cambiar-contra.module').then( m => m.CambiarContraPageModule)
+  },
   {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
   }
+
 ];
 
 @NgModule({

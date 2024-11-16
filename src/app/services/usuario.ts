@@ -8,5 +8,7 @@ export class Usuario {
     fechaNacimiento!: string;
     pais!: string;
     rol!: number; // Agregamos el campo 'rol' aquí
+    imagen_user?: string;         // Imagen representativa del torneo
+
 }
 
