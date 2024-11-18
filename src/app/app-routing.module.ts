@@ -72,20 +72,19 @@ const routes: Routes = [
     loadChildren: () => import('./pages/Usuario/vista-torneo/vista-torneo.module').then(m => m.VistaTorneoPageModule)
   },
 
-
   {
     path: 'cambiar-contra',
     loadChildren: () => import('./pages/Usuario/cambiar-contra/cambiar-contra.module').then( m => m.CambiarContraPageModule)
-  }, 
-  {
-    path: 'cuenta-user',
-    loadChildren: () => import('./pages/Usuario/cuenta-user/cuenta-user.module').then( m => m.CuentaUserPageModule)
   },
   {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
   },
- 
+  {
+    path: 'progreso',
+    loadChildren: () => import('./pages/Usuario/progreso/progreso.module').then( m => m.ProgresoPageModule)
+  },
+
 
 
 ];
