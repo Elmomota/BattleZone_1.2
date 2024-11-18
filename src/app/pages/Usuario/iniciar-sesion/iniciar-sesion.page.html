@@ -3,12 +3,10 @@
         <ion-title>Iniciar Sesión</ion-title>
 
         <div class="div-grande">
-
-
             <form (ngSubmit)="loginUsuario()">
                 <ion-item>
                     <ion-label class="pos" position="floating"></ion-label>
-                    <ion-input label="Ingresa tu correo electronico" labelPlacement="floating" placeholder="Correo de usaurio" [(ngModel)]="correoNickname" name="correoNickname"></ion-input>
+                    <ion-input label="Ingresa tu correo electrónico" labelPlacement="floating" placeholder="Correo de usuario" [(ngModel)]="correoNickname" name="correoNickname"></ion-input>
                 </ion-item>
                 <ion-item>
                     <ion-label class="pos" position="floating"></ion-label>
@@ -18,7 +16,6 @@
                 </ion-item>
                 <ion-button expand="full" type="submit">Iniciar Sesión</ion-button>
             </form>
-
         </div>
 
         <p color="blancohielo">
@@ -28,8 +25,7 @@
             <p>O</p>
         </div>
         <div>
-            <p>No tienes cuenta?<a (click)="irRegister()">Registrate aqui</a></p>
+            <p>No tienes cuenta? <a (click)="irRegister()">Regístrate aquí</a></p>
         </div>
     </div>
-
 </ion-content>

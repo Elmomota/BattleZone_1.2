@@ -42,6 +42,24 @@ ion-item {
     height: 50px;
 }
 
+/* Estilos para los enlaces */
 a {
-    justify-content: center;
+    display: inline-block;
+    text-align: center;
+    color: #00d4ff; /* Azul neón */
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+a:hover {
+    color: #ffffff; /* Cambia a blanco al pasar el mouse */
+    text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; /* Efecto de brillo */
+}
+
+a:focus {
+    outline: none;
+    text-decoration: underline; /* Subrayado adicional para accesibilidad */
+    color: #00ff88; /* Verde brillante al enfocarse */
 }

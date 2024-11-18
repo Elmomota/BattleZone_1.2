@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service'; // Importa tu servicio SQLite
 
-
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -15,6 +14,7 @@ export class AppComponent implements OnInit {
     { title: 'Torneos', url: '/torneos', icon: 'trophy' },
     { title: 'Mi Perfil', url: '/cuenta', icon: 'person' },
   ];
+  private rolUsuario: number | null = null; // Para almacenar el rol del usuario
 
   constructor(
     private router: Router,
@@ -32,17 +32,40 @@ export class AppComponent implements OnInit {
     const session = await this.sqliteService.obtenerSesion(); // Asumiendo que tienes una función que recupera la sesión desde la base de datos
     
     if (session) {
-      // Si la sesión está activa, redirige al usuario dependiendo de su rol
+      this.rolUsuario = session.rol; // Guarda el rol del usuario
+
+      // Actualiza las opciones del menú según el rol
+      this.updateMenu();
+
+      // Redirige al usuario dependiendo de su rol
       if (session.rol === 1) {
         // Redirige al administrador
         this.router.navigate(['/cuenta-admin']);
-      } if (session.rol === 2) {
+      } else if (session.rol === 2) {
         // Redirige al cliente
         this.router.navigate(['/home']);
       }
     } else {
       // Si no hay sesión, redirige a la página de inicio (login)
       this.router.navigate(['/inicio']);
+    }
+  }
+
+  // Función para actualizar el menú según el rol del usuario
+  updateMenu() {
+    if (this.rolUsuario === 1) {
+      // Rol de administrador: cambia "Home" a "Cuenta Admin" y elimina "Torneos"
+      this.appPages = [
+        { title: 'Cuenta Admin', url: '/cuenta-admin', icon: 'person' },
+        { title: 'Mi Perfil', url: '/cuenta', icon: 'person' },
+      ];
+    } else if (this.rolUsuario === 2) {
+      // Rol de cliente: mantiene el menú completo
+      this.appPages = [
+        { title: 'Home', url: '/home', icon: 'home' },
+        { title: 'Torneos', url: '/torneos', icon: 'trophy' },
+        { title: 'Mi Perfil', url: '/cuenta', icon: 'person' },
+      ];
     }
   }
 

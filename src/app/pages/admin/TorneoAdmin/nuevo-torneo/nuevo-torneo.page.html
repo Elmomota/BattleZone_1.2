@@ -35,8 +35,8 @@
                 <ion-label position="floating">Juego</ion-label>
                 <ion-select [(ngModel)]="nuevoTorneo.juegoId" name="juego" required>
                     <ion-select-option value="1">Valorant</ion-select-option>
-                    <ion-select-option value="2">Fortnite</ion-select-option>
-                    <ion-select-option value="3">League of Legends</ion-select-option>
+                    <ion-select-option value="2">League of Legends</ion-select-option>
+                    <ion-select-option value="3">Fortnite</ion-select-option>
                     <ion-select-option value="4">Street Fighter</ion-select-option>
                 </ion-select>
             </ion-item>
@@ -57,18 +57,27 @@
 
             <ion-item>
                 <ion-label position="floating">Cupos</ion-label>
-                <ion-input type="number" [(ngModel)]="nuevoTorneo.numEquipos" name="numEquipos" required min="2"></ion-input>
+                <ion-select [(ngModel)]="nuevoTorneo.numEquipos" name="numEquipos" required #numEquipos="ngModel">
+                    <ion-select-option value="4">4</ion-select-option>
+                    <ion-select-option value="8">8</ion-select-option>
+                    <ion-select-option value="16">16</ion-select-option>
+                </ion-select>
             </ion-item>
-
+            
 
 
 
 
             <ion-item>
                 <ion-label position="floating">Fecha de Inicio</ion-label>
-                <ion-datetime [(ngModel)]="nuevoTorneo.fechaInicio" presentation="date" name="fechaInicio" display-format="YYYY-MM-DD" required></ion-datetime>
-
+                <ion-datetime [(ngModel)]="nuevoTorneo.fechaInicio" 
+                              presentation="date-time" 
+                              name="fechaInicio" 
+                              display-format="DD/MM/YYYY HH:mm" 
+                              required>
+                </ion-datetime>
             </ion-item>
+            
 
 
 

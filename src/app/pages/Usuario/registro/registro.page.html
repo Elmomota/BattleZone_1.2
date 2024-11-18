@@ -54,19 +54,41 @@
                 <!-------------------- fecha nacimiento ------------------------------->
                 <ion-item class="container-calen">
                     <ion-label class="titulo-fecha" position="floating">Fecha de Nacimiento</ion-label>
-                    <ion-datetime presentation="date" display-format="DD/MM/YYYY" placeholder="Selecciona fecha" [(ngModel)]="nuevoUsuario.fechaNacimiento" name="fechaNacimiento" required #fechaNacimiento="ngModel" (ionChange)="calcularEdad($event)">
+                    <ion-datetime 
+                        presentation="date" 
+                        display-format="DD/MM/YY" 
+                        placeholder="Selecciona fecha" 
+                        [(ngModel)]="nuevoUsuario.fechaNacimiento" 
+                        name="fechaNacimiento" 
+                        required 
+                        #fechaNacimiento="ngModel" 
+                        (ionChange)="calcularEdad($event)">
                     </ion-datetime>
-                </ion-item>
-                <div *ngIf="edad < 14 || (edad >= 0 && fechaNacimiento.touched)" class="error">Debes ser mayor de 14 años.</div>
-                <ion-item>
-                    <ion-label>Edad: {{ edad }} años</ion-label>
                 </ion-item>
 
                 <!-------------------- país ------------------------------->
                 <ion-item>
                     <ion-label position="floating">País</ion-label>
-                    <ion-input [(ngModel)]="nuevoUsuario.pais" name="pais" required #pais="ngModel"></ion-input>
+                    <ion-select [(ngModel)]="nuevoUsuario.pais" name="pais" required #pais="ngModel">
+                        <ion-select-option value="Argentina">Argentina</ion-select-option>
+                        <ion-select-option value="Brasil">Brasil</ion-select-option>
+                        <ion-select-option value="Chile">Chile</ion-select-option>
+                        <ion-select-option value="Colombia">Colombia</ion-select-option>
+                        <ion-select-option value="México">México</ion-select-option>
+                        <ion-select-option value="Perú">Perú</ion-select-option>
+                        <ion-select-option value="Uruguay">Uruguay</ion-select-option>
+                        <ion-select-option value="Venezuela">Venezuela</ion-select-option>
+                        <ion-select-option value="Ecuador">Ecuador</ion-select-option>
+                        <ion-select-option value="Paraguay">Paraguay</ion-select-option>
+                        <ion-select-option value="Bolivia">Bolivia</ion-select-option>
+                        <ion-select-option value="Honduras">Honduras</ion-select-option>
+                        <ion-select-option value="Guatemala">Guatemala</ion-select-option>
+                        <ion-select-option value="El Salvador">El Salvador</ion-select-option>
+                        <ion-select-option value="Nicaragua">Nicaragua</ion-select-option>
+                        <!-- Añadir más países si es necesario -->
+                    </ion-select>
                 </ion-item>
+                
                 <div *ngIf="pais.invalid && pais.touched" class="error">Debe ingresar un país.</div>
 
                 <ion-button expand="full" (click)="pasoAnterior()">Atrás</ion-button>

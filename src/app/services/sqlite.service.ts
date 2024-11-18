@@ -78,6 +78,12 @@ async eliminarSesion() {
     await this._storage?.remove('usuario');
 }
 
+async actualizarSesion(usuario: Usuario) {
+  if (!this._storage) await this.init();
+  await this._storage?.set('usuario', usuario); 
+  this.usuarioSesionSubject.next(usuario); 
+}
+
 
 
 
@@ -338,7 +344,7 @@ async crearTablas() {
 
     // Cargar datos
     this.selectTorneos();
-    this.selectJuegos();
+    this.selectJuegosMenu();
     this.selectUsuarios();
 
   } catch (error) {
@@ -355,6 +361,30 @@ async crearTablas() {
 
 
 ///////////////////SELECT////////////////////////////
+
+async validarRespuestaSeguridad(usuarioId: number, respuesta: string) {
+  const result = await this.dbInstance.executeSql(
+    `SELECT * FROM respuestas_seguridad
+     WHERE usuarioId = ? AND respuesta = ?`,
+    [usuarioId, respuesta]
+  );
+
+  return result.rows.length > 0;
+}
+
+async getPreguntaSeguridad(usuarioId: number): Promise<string | null> {
+  const result = await this.dbInstance.executeSql(
+    `SELECT p.pregunta FROM respuestas_seguridad rs
+     JOIN preguntas p ON rs.preguntaId = p.id
+     WHERE rs.usuarioId = ?`,
+    [usuarioId]
+  );
+
+  // Si hay resultados, devuelve el texto de la pregunta
+  return result.rows.length > 0 ? result.rows.item(0).pregunta : null;
+}
+
+
 
 
 async obtenerDuelosPorTorneo(id_torneo: number): Promise<Duelo[]> {
@@ -402,7 +432,29 @@ async selectUsuarios() {
 }
 
   
-async selectJuegos() {
+async selectJuegos(): Promise<Juego[]> {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos no está lista.');
+    return [];
+  }
+
+  try {
+    const res = await this.dbInstance.executeSql(`SELECT * FROM juegos`, []);
+    const items: Juego[] = [];
+
+    for (let i = 0; i < res.rows.length; i++) {
+      const juego = res.rows.item(i);
+      items.push({ ...juego });
+    }
+
+    // Devolver la lista de juegos
+    return items;
+  } catch (error) {
+    this.presentAlert('Error al seleccionar juegos', `Error: ${JSON.stringify(error)}`);
+    return [];
+  }
+}
+async selectJuegosMenu() {
   if (!this.dbInstance) {
     console.error('La instancia de la base de datos no está lista.');
     return;
@@ -422,6 +474,7 @@ async selectJuegos() {
     this.presentAlert('Error al seleccionar juegos', `Error: ${JSON.stringify(error)}`);
   }
 }
+
 
 
 selectTorneos() {
@@ -922,18 +975,36 @@ async actualizarDuelo(duelo: Duelo): Promise<void> {
       this.presentAlert('Error al actualizar torneo', JSON.stringify(error));
     }
   }
-  async actualizarUsuario(usuario : Usuario){
+  async actualizarUsuario(usuario: Usuario) {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos no está lista.');
       return;
     }
-    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, contrasena = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
-    const values = [usuario.pnombre, usuario.papellido, usuario.nickname, usuario.correo, usuario.contrasena, usuario.fechaNacimiento, usuario.pais, usuario.id];
-    
+  
+    // Verifica que el usuario tiene un ID válido
+    if (!usuario.id) {
+      console.error('El usuario no tiene un ID válido.');
+      return;
+    }
+  
+    // Consulta SQL para actualizar los datos del usuario
+    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
+    const values = [
+      usuario.pnombre,
+      usuario.papellido,
+      usuario.nickname,
+      usuario.correo,
+      usuario.fechaNacimiento,
+      usuario.pais,
+      usuario.id,
+    ];
+  
     try {
       await this.dbInstance.executeSql(sql, values);
+      console.log('Usuario actualizado con éxito.');
     } catch (error) {
-      this.presentAlert('Error al añador al Usuario', JSON.stringify(error));
+      console.error('Error al actualizar el usuario:', error);
+      throw error;  // Lanzamos el error para que sea capturado por el componente
     }
   }
   async actualizarUsuarioPerfil(usuario: Usuario) {

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core'; 
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service';
 import { TorneoService } from 'src/app/services/torneo-service.service';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { Torneo } from 'src/app/services/torneo';
+import { Juego } from 'src/app/services/juego';  // Asegúrate de tener esta clase
 
 @Component({
   selector: 'app-modificar-torneo',
@@ -13,6 +14,7 @@ import { Torneo } from 'src/app/services/torneo';
 })
 export class ModificarTorneoPage implements OnInit {
   torneo: Torneo = new Torneo(); // Instancia de Torneo
+  juegos: Juego[] = []; // Lista de juegos
   previewImage?: string;
   inscritos: any[] = []; // Lista de usuarios inscritos
 
@@ -24,7 +26,7 @@ export class ModificarTorneoPage implements OnInit {
     private torneoService: TorneoService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     // Cargar el torneo de los parámetros de la URL
     this.route.queryParams.subscribe(async (params) => {
       if (params && params['torneo']) {
@@ -32,10 +34,13 @@ export class ModificarTorneoPage implements OnInit {
           this.torneo = JSON.parse(params['torneo']);
           console.log('Torneo recibido:', this.torneo);
           this.previewImage = this.torneo.imagen;
-
+  
           // Cargar usuarios inscritos y verificar la cantidad de equipos
           this.inscritos = await this.obtenerUsuariosInscritos(this.torneo.id!);
           this.validarEquipos();
+  
+          // Cargar la lista de juegos
+          this.juegos = await this.obtenerJuegos(); // Ahora selectJuegos() devolverá un array de juegos
         } catch (error) {
           console.error('Error al parsear el torneo:', error);
           this.router.navigate(['/cuenta-admin']);
@@ -43,9 +48,14 @@ export class ModificarTorneoPage implements OnInit {
       }
     });
   }
+  
 
   async obtenerUsuariosInscritos(idTorneo: number): Promise<any[]> {
     return await this.sqliteService.obtenerUsuariosInscritos(idTorneo);
+  }
+
+  async obtenerJuegos(): Promise<Juego[]> {
+    return await this.sqliteService.selectJuegos();  // Asegúrate de tener un método que obtenga los juegos de la base de datos
   }
 
   validarEquipos(): boolean {

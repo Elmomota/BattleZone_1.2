@@ -1,43 +1,49 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>Actualizar Datos</ion-title>
+    <ion-title>Editar Perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <ion-card>
-    <ion-card-header>
-      <ion-card-title>Datos Actuales</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <p><strong>Nombre:</strong> {{ pnombre }}</p>
-      <p><strong>Apellido:</strong> {{ papellido }}</p>
-      <p><strong>Nickname:</strong> {{ nickname }}</p>
-      <p><strong>Correo Electrónico:</strong> {{ eleCorreo }}</p>
-    </ion-card-content>
-  </ion-card>
+<ion-content [fullscreen]="true">
+  <div class="content-container">
+    <form *ngIf="usuario" (ngSubmit)="guardarCambios()">
+      <!-- Campo Nombre -->
+      <ion-item>
+        <ion-label position="floating">Nombre</ion-label>
+        <ion-input [(ngModel)]="usuario.pnombre" name="nombre" required></ion-input>
+      </ion-item>
 
-  <form (ngSubmit)="enviarConfirmacion()">
-    <ion-item>
-      <ion-label position="floating">Nuevo Nombre</ion-label>
-      <ion-input type="text" [(ngModel)]="pnombre" name="pnombre" required></ion-input>
-    </ion-item>
+      <!-- Campo Apellido -->
+      <ion-item>
+        <ion-label position="floating">Apellido</ion-label>
+        <ion-input [(ngModel)]="usuario.papellido" name="apellido" required></ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Nuevo Apellido</ion-label>
-      <ion-input type="text" [(ngModel)]="papellido" name="papellido" required></ion-input>
-    </ion-item>
+      <!-- Campo Nickname -->
+      <ion-item>
+        <ion-label position="floating">Nickname</ion-label>
+        <ion-input [(ngModel)]="usuario.nickname" name="nickname" required></ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Nuevo Nickname</ion-label>
-      <ion-input type="text" [(ngModel)]="nickname" name="nickname" required></ion-input>
-    </ion-item>
+      <!-- Campo Correo -->
+      <ion-item>
+        <ion-label position="floating">Correo</ion-label>
+        <ion-input type="email" [(ngModel)]="usuario.correo" name="correo" required></ion-input>
+      </ion-item>
 
-    <ion-item>
-      <ion-label position="floating">Nuevo Correo Electrónico</ion-label>
-      <ion-input type="email" [(ngModel)]="eleCorreo" name="eleCorreo" required></ion-input>
-    </ion-item>
+      <!-- Foto de Perfil -->
+      <ion-item>
+        <ion-label>Foto de Perfil</ion-label>
+        <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
+        <ion-button class="boton-imagen" (click)="triggerFileInput(fileInput)">Seleccionar Imagen</ion-button>
+      </ion-item>
 
-    <ion-button expand="full" type="submit">Actualizar Datos</ion-button>
-  </form>
+      <!-- Vista previa de la imagen -->
+      <ion-item *ngIf="previewImage">
+        <img [src]="previewImage" alt="Vista previa de la imagen" style="width: 100%; height: auto; border-radius: 10px;" />
+      </ion-item>
+
+      <ion-button expand="full" type="submit">Guardar Cambios</ion-button>
+    </form>
+  </div>
 </ion-content>
