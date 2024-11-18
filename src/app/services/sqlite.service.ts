@@ -13,6 +13,7 @@ import { Usuario } from './usuario';
 import { UserTorneo } from './user-torneo';
 import { Preguntas } from './preguntas';
 import { Respuestas } from './respuestas';
+import { Duelo } from './duelo';
 
 @Injectable({
   providedIn: 'root'
@@ -193,6 +194,7 @@ async crearTablas() {
   try {
     // Eliminar todas las tablas si existen
     /*
+    await this.dbInstance.executeSql(`DROP TABLE IF EXISTS duelos`, []);
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS respuestas_seguridad`, []);
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS preguntas`, []);
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS inscripcion_torneo`, []);
@@ -202,7 +204,6 @@ async crearTablas() {
     await this.dbInstance.executeSql(`DROP TABLE IF EXISTS administradores`, []);
     */
 
-    // Crear tabla usuarios con campo de rol
     await this.dbInstance.executeSql(
       `CREATE TABLE IF NOT EXISTS usuarios (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -216,6 +217,20 @@ async crearTablas() {
         rol INTEGER NOT NULL DEFAULT 2,  -- 1 para administrador, 2 para cliente
         imagen_user TEXT
 
+      )`, []
+    );
+    // Crear tabla usuarios con campo de rol
+    await this.dbInstance.executeSql(
+      `CREATE TABLE IF NOT EXISTS duelos (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id_torneo INTEGER NOT NULL,
+        ronda INTEGER NOT NULL,
+        jugador1 TEXT NOT NULL,
+        jugador2 TEXT,
+        estado_jugador1 TEXT DEFAULT 'pendiente', -- pendiente, ganó, perdió
+        estado_jugador2 TEXT DEFAULT 'pendiente', -- pendiente, ganó, perdió
+        ganador TEXT, -- nickname del ganador
+        FOREIGN KEY (id_torneo) REFERENCES torneos (id)
       )`, []
     );
 
@@ -248,6 +263,7 @@ async crearTablas() {
         numEquipos INTEGER,
         fechaInicio TEXT,
         imagen TEXT,
+        rondas INTEGER,
         creadorId INTEGER,
         FOREIGN KEY(juegoId) REFERENCES juegos(id) ON DELETE CASCADE,
         FOREIGN KEY(creadorId) REFERENCES usuarios(id) ON DELETE CASCADE
@@ -340,6 +356,16 @@ async crearTablas() {
 
 ///////////////////SELECT////////////////////////////
 
+
+async obtenerDuelosPorTorneo(id_torneo: number): Promise<Duelo[]> {
+  const query = `SELECT * FROM duelos WHERE id_torneo = ? ORDER BY ronda ASC, id ASC`;
+  const result = await this.dbInstance.executeSql(query, [id_torneo]);
+  const duelos: Duelo[] = [];
+  for (let i = 0; i < result.rows.length; i++) {
+    duelos.push(result.rows.item(i));
+  }
+  return duelos;
+}
 
 
 
@@ -582,6 +608,9 @@ async obtenerUsuariosInscritos(id_torneo: number): Promise<any[]> {
   }
 }
 
+
+
+
 async getPreguntas(): Promise<Preguntas[]> {
   if (!this.dbInstance) {
     console.error('La instancia de la base de datos es nula');
@@ -637,6 +666,41 @@ async getPreguntas(): Promise<Preguntas[]> {
 
 
 /////////////////////////////////////////////INSERT///////////////////////////////////////////////////////
+async insertarDuelo(duelos: Duelo | Duelo[]): Promise<void> {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos no está lista.');
+    return;
+  }
+
+  const duelosArray = Array.isArray(duelos) ? duelos : [duelos];
+  const sql = `
+    INSERT INTO duelo (id_torneo, ronda, jugador1, jugador2, estado_jugador1, estado_jugador2, ganador)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
+  `;
+
+  try {
+    for (const duelo of duelosArray) {
+      const values = [
+        duelo.id_torneo,
+        duelo.ronda,
+        duelo.jugador1,
+        duelo.jugador2,
+        duelo.estado_jugador1,
+        duelo.estado_jugador2,
+        duelo.ganador,
+      ];
+      console.log('Insertando duelo con valores:', values);
+      await this.dbInstance.executeSql(sql, values);
+    }
+    console.log('Duelos insertados correctamente');
+  } catch (error) {
+    console.error('Error al insertar duelo:', error);
+  }
+}
+
+
+
+
 
 
 async addRespuesta(preguntaId: number, usuarioId: number, respuesta: string): Promise<void> {
@@ -665,8 +729,8 @@ async addTorneo(torneo: Torneo, adminId: number) {
     return;
   }
 
-  const sql = `INSERT INTO torneos (nombre, juegoId, estado, numEquipos, fechaInicio, imagen, creadorId) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-  const values = [torneo.nombre, torneo.juegoId, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, adminId];
+  const sql = `INSERT INTO torneos (nombre, juegoId, estado, numEquipos, fechaInicio, imagen, rondas, creadorId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+  const values = [torneo.nombre, torneo.juegoId, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen,torneo.rondas, adminId];
   
   try {
     console.log('Insertando torneo con valores:', values);
@@ -807,14 +871,49 @@ async addTorneo(torneo: Torneo, adminId: number) {
 
 
 
+async actualizarDuelo(duelo: Duelo): Promise<void> {
+  if (!this.dbInstance) {
+    console.error('La instancia de la base de datos no está lista.');
+    return;
+  }
+
+  const sql = `
+    UPDATE duelo
+    SET estado_jugador1 = ?, estado_jugador2 = ?, ganador = ?
+    WHERE id_torneo = ? AND ronda = ? AND jugador1 = ? AND jugador2 = ?
+  `;
+  const values = [
+    duelo.estado_jugador1,
+    duelo.estado_jugador2,
+    duelo.ganador,
+    duelo.id_torneo,
+    duelo.ronda,
+    duelo.jugador1,
+    duelo.jugador2,
+  ];
+
+  try {
+    console.log('Actualizando duelo con valores:', values);
+    await this.dbInstance.executeSql(sql, values);
+    console.log('Duelo actualizado correctamente');
+    // Realiza alguna acción si es necesario, por ejemplo, notificar al usuario
+  } catch (error) {
+    console.error('Error al actualizar duelo:', error);
+  }
+}
+
+
+
+
+
   async actualizarTorneo(torneo: Torneo) {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos no está lista.');
       return;
     }
 
-    const sql = `UPDATE torneos SET nombre = ?, juego = ?, estado = ?, numEquipos = ?, fechaInicio = ?, imagen = ? WHERE id = ?`;
-    const values = [torneo.nombre, torneo.juegoId, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, torneo.id];
+    const sql = `UPDATE torneos SET nombre = ?, juegoId = ?, estado = ?, numEquipos = ?, fechaInicio = ?, imagen = ?, rondas = ? WHERE id = ?`;
+    const values = [torneo.nombre, torneo.juegoId, torneo.estado, torneo.numEquipos, torneo.fechaInicio, torneo.imagen, torneo.rondas, torneo.id];
     try {
       await this.dbInstance.executeSql(sql, values);
       await this.torneoService.notificarTorneoActualizado();

@@ -1,57 +1,104 @@
-.torneo-card {
-  background-color: #5A556E;
-  color: #C9B1BD;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-  margin-top: 15px;
-  margin-bottom: 15px;
-  /* Ajusta este valor para agregar más o menos espacio */
-}
-
-////////////contenido general
-ion-content {
-  --background: #4d55ad;
-  color: #fff;
-  margin-top: 150px;
-}
-
-ion-card-header {
+.torneo-header {
   text-align: center;
-  /* Centrar el texto del encabezado */
+  padding: 20px;
+  background: var(--ion-color-light);
+  border-radius: 10px;
+  margin: 15px;
+}
+
+.torneo-header img {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 15px;
+  margin-bottom: 10px;
+}
+
+.torneo-header h2 {
+  font-size: 1.8em;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.torneo-header p {
+  font-size: 1em;
+  color: var(--ion-color-medium);
+}
+
+.acciones {
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+ion-card {
+  margin: 15px;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 ion-card-title {
-  font-size: 24px;
-  /* Tamaño de fuente del título */
+  font-size: 1.2em;
   font-weight: bold;
-  /* Negrita para el título */
+  text-align: center;
+}
+
+ion-list {
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+ion-item {
+  --background: var(--ion-color-light);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+ion-item h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+ion-item p {
+  color: var(--ion-color-medium);
+  font-size: 0.9em;
 }
 
 ion-button {
-  margin-top: 10px;
-  /* Espaciado entre botones */
+  border-radius: 8px;
+  font-size: 1em;
+}
+.torneo {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
 }
 
-ion-img {
-  max-width: 100%;
-  /* Asegura que la imagen no exceda el ancho de la tarjeta */
-  border-radius: 10px;
-  /* Bordes redondeados para la imagen */
+.ronda {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-/////////////////////card grande
-/// 
-.content-container {
-  padding: 15px;
-  background-color: #32345A;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-  margin-top: 50px;
-  /* Incrementa el padding superior para más espacio */
+.duelo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 5px;
 }
 
-//////////////////toolbar
-ion-toolbar {
-  --background: #32345A;
-  color: #C9B1BD;
+.jugador {
+  padding: 5px;
+}
+
+.jugador.ganador {
+  font-weight: bold;
+  color: green;
+}
+
+.vs {
+  font-weight: bold;
 }

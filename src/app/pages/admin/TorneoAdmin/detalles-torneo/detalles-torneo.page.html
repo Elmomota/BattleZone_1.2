@@ -6,44 +6,62 @@
 
 <ion-content [fullscreen]="true">
     <div class="content-container">
+        <!-- Detalles del torneo -->
         <ng-container *ngIf="torneo; else noTorneo">
             <ion-card class="torneo-card">
                 <ion-card-header>
-                    <ion-card-title>{{torneo.nombre}}</ion-card-title>
+                    <ion-card-title>{{ torneo.nombre }}</ion-card-title>
                 </ion-card-header>
                 <ion-card-content>
-                    <ion-img [src]="torneo.imagen" alt="{{torneo.nombre}}" *ngIf="torneo.imagen; else noImage"></ion-img>
+                    <ion-img [src]="torneo.imagen" alt="{{ torneo.nombre }}" *ngIf="torneo.imagen; else noImage"></ion-img>
                     <ng-template #noImage>
                         <p>No hay imagen disponible.</p>
                     </ng-template>
-                    <p><strong>Juego:</strong> {{torneo.juego}}</p>
-                    <p><strong>Estado:</strong> {{torneo.estado}}</p>
-                    <p><strong>Cupos:</strong> {{torneo.numEquipos}}</p>
-                    <p><strong>Fecha de Inicio:</strong> {{torneo.fechaInicio | date}}</p>
+                    <p><strong>Juego:</strong> {{ torneo.juegoNombre || 'No especificado' }}</p>
+                    <p><strong>Estado:</strong> {{ torneo.estado }}</p>
+                    <p><strong>Cupos:</strong> {{ torneo.numEquipos }}</p>
+                    <p><strong>Fecha de Inicio:</strong> {{ torneo.fechaInicio | date }}</p>
+                    <p *ngIf="torneo.creadorNombre"><strong>Creador:</strong> {{ torneo.creadorNombre }}</p>
                     <ion-button expand="full" color="primary" (click)="modificarTorneo()">Modificar</ion-button>
                     <ion-button expand="full" color="danger" (click)="eliminarTorneo()">Eliminar</ion-button>
                 </ion-card-content>
             </ion-card>
         </ng-container>
 
+        <!-- Mostrar rondas y duelos -->
+        <div class="torneo">
+            <div class="ronda" *ngFor="let ronda of rondas">
+                <div class="duelo" *ngFor="let duelo of ronda" (click)="seleccionarDuelo(duelo)">
+                    <div class="jugador" [class.ganador]="duelo.estado_jugador1 === 'ganó'">
+                        {{ duelo.jugador1 || 'BYE' }}
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="jugador" [class.ganador]="duelo.estado_jugador2 === 'ganó'">
+                        {{ duelo.jugador2 || 'BYE' }}
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Mostrar usuarios inscritos -->
-        <ion-card class="torneo-card" *ngIf="usuarios.length > 0">
-            <ion-card-header>
-                <ion-card-title>Usuarios Inscritos</ion-card-title>
-            </ion-card-header>
-            <ion-card-content>
-                <ion-list>
-                    <ion-item *ngFor="let usuario of usuarios">
-                        <ion-label>
-                            <h2>{{usuario.nombre}} {{usuario.apellido}}</h2>
-                            <p><strong>Nickname:</strong> {{usuario.nickname}}</p>
-                            <p><strong>Email:</strong> {{usuario.correo}}</p>
-                        </ion-label>
-                    </ion-item>
-                </ion-list>
-            </ion-card-content>
-        </ion-card>
+        <ng-container *ngIf="usuarios.length > 0; else noUsuarios">
+            <ion-card class="torneo-card">
+                <ion-card-header>
+                    <ion-card-title>Usuarios Inscritos</ion-card-title>
+                </ion-card-header>
+                <ion-card-content>
+                    <ion-list>
+                        <ion-item *ngFor="let usuario of usuarios">
+                            <ion-label>
+                                <h2>{{ usuario.pnombre }} {{ usuario.papellido }}</h2>
+                                <p><strong>Nickname:</strong> {{ usuario.nickname }}</p>
+                                <p><strong>Email:</strong> {{ usuario.correo }}</p>
+                            </ion-label>
+                        </ion-item>
+                    </ion-list>
+                </ion-card-content>
+            </ion-card>
+        </ng-container>
 
         <!-- Mensaje cuando no hay usuarios inscritos -->
         <ng-template #noUsuarios>
@@ -54,6 +72,7 @@
             </ion-item>
         </ng-template>
 
+        <!-- Mensaje cuando no hay detalles del torneo -->
         <ng-template #noTorneo>
             <ion-item>
                 <ion-label>
@@ -61,7 +80,5 @@
                 </ion-label>
             </ion-item>
         </ng-template>
-
     </div>
-
 </ion-content>

@@ -95,7 +95,7 @@ export class HomePage implements OnInit {
   }
 
   Ircuenta(){
-    this.router.navigate(['/cuenta']);
+    this.navCtrl.navigateForward(['/cuenta-user']);
   }
 
 

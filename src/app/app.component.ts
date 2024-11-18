@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   public appPages = [
     { title: 'Home', url: '/home', icon: 'home' },
     { title: 'Torneos', url: '/torneos', icon: 'trophy' },
-    { title: 'Mi Perfil', url: '/cuenta', icon: 'person' },
+    { title: 'Mi Perfil', url: '/cuenta-user', icon: 'person' },
   ];
 
   constructor(

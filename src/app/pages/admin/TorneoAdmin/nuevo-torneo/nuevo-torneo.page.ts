@@ -30,21 +30,32 @@ export class NuevoTorneoPage implements OnInit {
   
     const mensaje = {
       content: `🎉 **Nuevo Torneo Creado** 🎮
-      - **Nombre**: ${torneo.nombre}
-      - **Juego**: ${torneo.juegoNombre}
-      - **Estado**: ${torneo.estado}
-      - **Número de Equipos**: ${torneo.numEquipos}
-      - **Fecha de Inicio**: ${torneo.fechaInicio}
+  - **Nombre**: ${torneo.nombre}
+  - **Juego**: ${torneo.juegoNombre}
+  - **Modo**: 🔥1 vs 1🔥
+  - **Estado**: ${torneo.estado}
+  - **Cupos**: ${torneo.numEquipos}
+  - **Rondas**: ${torneo.rondas}
+  - **Fecha de Inicio**: ${torneo.fechaInicio}
       `,
     };
   
     try {
-      await this.http.post(webhookUrl, mensaje).toPromise();
-      console.log('Mensaje enviado a Discord');
+      // Usamos el Observable y nos suscribimos para enviar el mensaje
+      this.http.post(webhookUrl, mensaje).subscribe(
+        response => {
+          console.log('Mensaje enviado a Discord', response);
+        },
+        error => {
+          console.error('Error al enviar mensaje a Discord:', error);
+        }
+      );
     } catch (error) {
       console.error('Error al enviar mensaje a Discord:', error);
     }
   }
+  
+  
   
 
   async onFileSelected() {
@@ -67,7 +78,7 @@ export class NuevoTorneoPage implements OnInit {
       const alert = await this.alertController.create({
         header: 'Error de validación',
         message: 'El nombre del torneo debe tener al menos 3 caracteres.',
-        buttons: ['OK']
+        buttons: ['OK'],
       });
       await alert.present();
       return; // Salir del método si hay un error
@@ -82,21 +93,26 @@ export class NuevoTorneoPage implements OnInit {
     }
   
     // Verificación del número de equipos
-// Verificación del número de equipos
-if (this.nuevoTorneo.numEquipos < 4 || this.nuevoTorneo.numEquipos > 8 || this.nuevoTorneo.numEquipos % 2 !== 0) {
-  const alert = await this.alertController.create({
-    header: 'Error de validación',
-    message: 'El número de equipos debe ser un número par entre 4 y 8.',
-    buttons: ['OK']
-  });
-  await alert.present();
-  return; // Salir del método si hay un error
-}
-
+    if (
+      this.nuevoTorneo.numEquipos < 4 ||
+      this.nuevoTorneo.numEquipos > 8 ||
+      this.nuevoTorneo.numEquipos % 2 !== 0
+    ) {
+      const alert = await this.alertController.create({
+        header: 'Error de validación',
+        message: 'El número de equipos debe ser un número par entre 4 y 8.',
+        buttons: ['OK'],
+      });
+      await alert.present();
+      return; // Salir del método si hay un error
+    }
+  
+    // Cálculo de rondas
+    this.nuevoTorneo.rondas = Math.log2(this.nuevoTorneo.numEquipos);
   
     const alert = await this.alertController.create({
       header: 'Confirmar Creación',
-      message: '¿Estás seguro de que deseas crear este torneo?',
+      message: `¿Estás seguro de que deseas crear este torneo? Se configurarán ${this.nuevoTorneo.rondas} rondas.`,
       buttons: [
         {
           text: 'Cancelar',
@@ -129,13 +145,14 @@ if (this.nuevoTorneo.numEquipos < 4 || this.nuevoTorneo.numEquipos > 8 || this.n
               });
               await errorAlert.present();
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
   
     await alert.present();
   }
+  
   
   
   // Método para obtener el adminId actual

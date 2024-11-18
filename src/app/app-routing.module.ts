@@ -76,11 +76,17 @@ const routes: Routes = [
   {
     path: 'cambiar-contra',
     loadChildren: () => import('./pages/Usuario/cambiar-contra/cambiar-contra.module').then( m => m.CambiarContraPageModule)
+  }, 
+  {
+    path: 'cuenta-user',
+    loadChildren: () => import('./pages/Usuario/cuenta-user/cuenta-user.module').then( m => m.CuentaUserPageModule)
   },
   {
     path: '**',
     loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
-  }
+  },
+ 
+
 
 ];
 
