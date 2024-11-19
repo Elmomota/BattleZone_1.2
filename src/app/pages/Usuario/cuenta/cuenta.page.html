@@ -1,40 +1,23 @@
 <ion-content class="general" [fullscreen]="true">
 
-    <!------Imagen atras------------------------------------------------------------------------------------------------>
-
-
+    <!-- Imagen principal -->
     <div class="imagen-container">
-        <img src="assets/img/Street-Fighter-6.jpg" alt="Street Fighter" />
+        <img src="assets/img/Street-Fighter-6.jpg" alt="Street Fighter" onerror="this.src='assets/img/default.jpg'" />
     </div>
-
-    <!------------------------------------------------------------------------------------------------------>
-    <!------------bloque grande----------------------------------------------------------------------------->
-    <!------------------------------------------------------------------------------------------------------>
-
 
     <div class="div-grande">
 
-        <!------------------botones------------------------------------------------------------------------------------>
-
+        <!-- Botón de regreso -->
         <ion-button fill="clear" class="icono-atras" (click)="irAtras()">
             <ion-icon name="arrow-back-circle-outline"></ion-icon>
         </ion-button>
 
-        <!------------------------------------------------------------------------------------------------------>
-
+        <!-- Perfil del usuario -->
         <div class="div-foto-perfil">
-
-
-
-            <!-- Botón que activa el menú -->
             <ion-button (click)="toggleMenu()" fill="clear" class="icono-config"></ion-button>
-
-            <!-- Menú desplegable -->
             <ion-list *ngIf="menuVisible">
-                <ion-item button (click)=ediPerfil()>Editar perfil</ion-item>
+                <ion-item button (click)="ediPerfil()">Editar perfil</ion-item>
             </ion-list>
-
-            <!-----icono y nombre--------------------------------->
 
             <ion-avatar class="avatar">
                 <ion-icon id="icono-user" name="person-circle-outline"></ion-icon>
@@ -42,173 +25,71 @@
 
             <div class="info-perfil">
                 <h2 class="color-n">{{usuario.nickname}}</h2>
-
             </div>
-
-
-
-            <!------------------------------------------------------------------------------------------------------>
             <hr />
-            <!------------------------------------------------------------------------------------------------------>
 
-            <!---------------------stats--------------------------------------------------------------------------------->
+            <!-- Ficha de Jugador -->
+            <ion-card id="torneos-h">
+                <ion-card-header>
+                    <ion-card-title>Ficha de Jugador</ion-card-title>
+                </ion-card-header>
 
+                <ion-item>
+                    <ion-label position="floating">Nombre</ion-label>
+                    <h6 class="color-n">{{usuario.pnombre}} {{usuario.papellido}}</h6>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Correo</ion-label>
+                    <h6 class="color-n">{{usuario.correo}}</h6>
+                </ion-item>
+                <ion-item>
+                    <ion-label position="floating">Nickname</ion-label>
+                    <h6 class="color-n">{{usuario.nickname}}</h6>
+                </ion-item>
+            </ion-card>
 
+            <ion-button (click)="ediPerfil()">Modificar Perfil</ion-button>
+            <ion-button (click)="cambiarContra()">Modificar Contraseña</ion-button>
+            <hr />
 
-        </div>
+            <!-- Segmento -->
+            <ion-segment [(ngModel)]="seleccion">
+                <ion-segment-button value="Torneos jugados" class="segmento-stats">
+                    <ion-label style="white-space: pre-line">Torneos jugados</ion-label>
+                </ion-segment-button>
+                <ion-segment-button value="Historial" class="segmento-stats">
+                    <ion-label>Tus torneos</ion-label>
+                </ion-segment-button>
+            </ion-segment>
 
-
-        <ion-card id="torneos-h">
-            <ion-card-header>
-                <ion-card-title>Ficha de Jugador</ion-card-title>
-            </ion-card-header>
-
-            <ion-item>
-                <ion-label position="floating">Nombre</ion-label>
-                <h6 class="color-n">{{usuario.pnombre}} {{usuario.papellido}}</h6>
-
-            </ion-item>
-
-
-            <ion-item>
-                <ion-label position="floating">Correo</ion-label>
-                <h6 class="color-n">{{usuario.correo}}</h6>
-
-            </ion-item>
-
-
-            <ion-item>
-                <ion-label position="floating">Nickname</ion-label>
-                <h6 class="color-n">{{usuario.nickname}}</h6>
-            </ion-item>
-        </ion-card>
-
-        <ion-button (click)="ediPerfil()">Modificar Perfil</ion-button>
-        <ion-button (click)="cambiarContra()">Modificar Contraseña</ion-button>
-
-        <!----------------------------segmentos cambiantes-------------------------------------------------------------------------->
-        <hr />
-
-        <!----------------------------1-------------------------------------------------------------------------->
-
-        <ion-segment [(ngModel)]="seleccion">
-
-
-            <ion-segment-button value='Torneos jugados' class="segmento-stats">
-                <ion-label style="white-space: pre-line">Torneos jugados</ion-label>
-            </ion-segment-button>
-
-
-            <ion-segment-button value='Historial' class="segmento-stats">
-                <ion-label>Tus torneos</ion-label>
-            </ion-segment-button>
-
-
-
-
-        </ion-segment>
-
-        <!------------------------------------------------------------------------------------------------------>
-
-
-
-        <!------------------------lo que cambia-------------------titulos----------------------------------------------------------->
-
-
-        <div *ngIf="seleccion == 'Torneos jugados'">
-
-        </div>
-
-
-        <div *ngIf="seleccion == 'Historial'">
-
-        </div>
-
-
-
-        <!------------------------------------------------------------------------------------------------------>
-
-
-
-        <!------------------------------------------------------------------------------------------------------>
-        <!-----------------------------parte torneos------------------------------------------------------------------------->
-        <!------------------------------------------------------------------------------------------------------>
-        <ion-card id="torneos">
-            <ion-card-content class="torneos" *ngIf="seleccion == 'Historial'">
-
-                <div class="ov">
-
-                    <!------items------------------------------------------------------------------------------------------------>
-                    <!------------------------------------------------------------------------------------------------------>
-
-                    <ion-card *ngFor="let torneo of torneosJugados">
-                        <div *ngIf="'Finalizado'== torneo.estado">
-
-                            <ion-card-content>
-                                <div class="distribucion-historial1">
-                                    <img class="imagen-historial1" [src]="torneo.imagen" alt="{{torneo.nombre}}" />
-                                    <div class="texto">
-                                        <h6>{{torneo.nombre}}</h6>
-                                        <p>{{torneo.tipo}}</p>
-                                        <p>Puesto: {{torneo.puesto}}</p>
-                                        <p>Fecha: {{torneo.fecha}}</p>
-                                    </div>
-
+            <!-- Torneos Historial -->
+            <div *ngIf="seleccion == 'Historial'">
+                <ion-card id="torneos">
+                    <ion-card-content class="torneos">
+                        <div class="ov">
+                            <ion-card *ngFor="let torneo of torneosJugados">
+                                <div *ngIf="'Finalizado' == torneo.estado">
+                                    <ion-card-content>
+                                        <div class="distribucion-historial1">
+                                            <img 
+                                                class="imagen-historial1" 
+                                                [src]="torneo.imagen || 'assets/img/default.jpg'" 
+                                                alt="{{torneo.nombre}}" 
+                                                onerror="this.src='assets/img/default.jpg'" />
+                                            <div class="texto">
+                                                <h6>{{torneo.nombre}}</h6>
+                                                <p>{{torneo.tipo}}</p>
+                                                <p>Puesto: {{torneo.puesto}}</p>
+                                                <p>Fecha: {{torneo.fecha}}</p>
+                                            </div>
+                                        </div>
+                                    </ion-card-content>
                                 </div>
-                            </ion-card-content>
+                            </ion-card>
                         </div>
-                    </ion-card>
-
-
-
-                </div>
-            </ion-card-content>
-        </ion-card>
-
-
-
-
-
-
-
-
-        <!------------------------------------------------------------------------------------------------------>
-        <!-----------------------------parte historial------------------------------------------------------------------------->
-        <!------------------------------------------------------------------------------------------------------>
-        <ion-card id="torneos-h">
-            <ion-card-content class="historial" *ngIf="seleccion == 'Torneos jugados'">
-
-                <div>
-
-
-                    <ion-card *ngFor="let torneo of torneosJugados">
-                        <div *ngIf="'Próximo'== torneo.estado and  'Finalizado'== torneo.estado">
-
-                            <ion-card-content>
-                                <div class="distribucion-historial1">
-                                    <img class="imagen-historial1" [src]="torneo.imagen" alt="{{torneo.nombre}}" />
-                                    <div class="texto">
-                                        <h6>{{torneo.nombre}}</h6>
-                                        <p>{{torneo.tipo}}</p>
-                                        <p>Puesto: {{torneo.puesto}}</p>
-                                        <p>Fecha: {{torneo.fecha}}</p>
-                                    </div>
-
-                                </div>
-                            </ion-card-content>
-                        </div>
-                    </ion-card>
-                    <!------------------------------------------------------------------------------------------------------>
-                    <hr>
-                    <!------------------------------------------------------------------------------------------------------>
-
-
-
-
-                </div>
-            </ion-card-content>
-        </ion-card>
-
-
+                    </ion-card-content>
+                </ion-card>
+            </div>
+        </div>
     </div>
 </ion-content>

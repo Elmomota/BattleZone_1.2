@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { TorneosPageRoutingModule } from './torneos-routing.module';
 
 import { TorneosPage } from './torneos.page';
+import { TorneoService } from 'src/app/services/torneo-service.service'; 
 
 @NgModule({
   imports: [
@@ -15,6 +16,7 @@ import { TorneosPage } from './torneos.page';
     IonicModule,
     TorneosPageRoutingModule
   ],
-  declarations: [TorneosPage]
+  declarations: [TorneosPage],
+  providers: [TorneoService]
 })
 export class TorneosPageModule {}

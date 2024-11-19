@@ -99,7 +99,7 @@ export class ForgotPasswordPage implements OnInit {
 
     // Verificar que la pregunta seleccionada coincide con las del usuario
     if (!this.preguntasUsuario.includes(this.preguntaSeleccionada)) {
-      await this.presentAlert('Error', 'La pregunta seleccionada no coincide con tus datos.');
+      await this.presentAlert('Error', 'Los datos ingresados son incorrectos.');
       return;
     }
 
@@ -114,7 +114,7 @@ export class ForgotPasswordPage implements OnInit {
         await this.presentAlert('Éxito', 'Respuesta correcta. Cambia tu contraseña.');
         this.step = 3; // Avanzar al paso 3
       } else {
-        await this.presentAlert('Error', 'La respuesta no es correcta.');
+        await this.presentAlert('Error', 'Los datos ingresados son incorrectos.');
       }
     } catch (error) {
       await this.presentAlert('Error', 'Ocurrió un error al validar la respuesta.');

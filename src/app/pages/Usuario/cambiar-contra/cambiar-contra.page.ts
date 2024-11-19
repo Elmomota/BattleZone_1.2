@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { SqliteService } from 'src/app/services/sqlite.service';  // Importa tu servicio SQLite
+import { AlertController, NavController } from '@ionic/angular';
+import { SqliteService } from 'src/app/services/sqlite.service';
+import { Usuario } from 'src/app/services/usuario';
 
 @Component({
   selector: 'app-cambiar-contra',
@@ -9,46 +9,73 @@ import { SqliteService } from 'src/app/services/sqlite.service';  // Importa tu 
   styleUrls: ['./cambiar-contra.page.scss'],
 })
 export class CambiarContraPage implements OnInit {
-  nuevaContrasena: string = '';
+  usuario: Usuario = new Usuario();
   contrasenaActual: string = '';
-  usuario: any; // Objeto de usuario para almacenar los datos actuales (puedes obtenerlos desde sesión o base de datos)
+  nuevaContrasena: string = '';
+  confirmarContrasena: string = '';
 
   constructor(
     private sqliteService: SqliteService,
     private alertController: AlertController,
-    private router: Router
+    private navController: NavController
   ) {}
 
-  ngOnInit() {
-    // Aquí puedes obtener el usuario desde sesión o base de datos
-    this.usuario = { id: 1, correo: 'test@correo.com' }; // Ejemplo de datos de usuario
+  async ngOnInit() {
+    try {
+      const usuarioSesion = await this.sqliteService.obtenerSesion();
+      if (usuarioSesion) {
+        this.usuario = usuarioSesion;
+      } else {
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'No se encontró un usuario activo.',
+          buttons: ['OK'],
+        });
+        await alert.present();
+        this.navController.navigateBack('/login');
+      }
+    } catch (error) {
+      console.error('Error al obtener la sesión:', error);
+    }
   }
 
   async cambiarContrasena() {
-    if (!this.nuevaContrasena || !this.contrasenaActual) {
-      await this.presentAlert('Error', 'Ambos campos son obligatorios.');
+    if (!this.contrasenaActual || !this.nuevaContrasena || !this.confirmarContrasena) {
+      await this.presentAlert('Error', 'Todos los campos son obligatorios.');
+      return;
+    }
+
+    if (this.nuevaContrasena !== this.confirmarContrasena) {
+      await this.presentAlert('Error', 'Las nuevas contraseñas no coinciden.');
       return;
     }
 
     try {
-      // Verificar la contraseña actual
-      const usuarioVerificado = await this.sqliteService.loginUsuario(this.usuario.correo, this.contrasenaActual);
+      // Verificar si la contraseña actual es correcta
+      const usuarioVerificado = await this.sqliteService.loginUsuario(
+        this.usuario.correo,
+        this.contrasenaActual
+      );
 
       if (usuarioVerificado) {
-        // Si la contraseña actual es correcta, proceder a actualizar la nueva contraseña
+        // Actualizar la contraseña en la base de datos
         this.usuario.contrasena = this.nuevaContrasena;
-        await this.sqliteService.actualizarUsuario(this.usuario); // Actualizar en la base de datos
+        await this.sqliteService.actualizarUsuarioContra(this.usuario);
 
-        // Mostrar éxito y redirigir a la página de inicio de sesión
-        await this.presentAlert('Éxito', 'Contraseña actualizada correctamente.');
-        this.router.navigate(['/iniciar-sesion']);
+        const alert = await this.alertController.create({
+          header: 'Éxito',
+          message: 'Contraseña actualizada correctamente.',
+          buttons: ['OK'],
+        });
+        await alert.present();
+
+        this.navController.navigateBack('/cuenta');
       } else {
-        // Si la contraseña actual es incorrecta
         await this.presentAlert('Error', 'La contraseña actual es incorrecta.');
       }
     } catch (error) {
       console.error('Error al cambiar la contraseña:', error);
-      await this.presentAlert('Error', 'Ocurrió un error al cambiar la contraseña.');
+      await this.presentAlert('Error', 'No se pudo actualizar la contraseña. Inténtalo de nuevo.');
     }
   }
 

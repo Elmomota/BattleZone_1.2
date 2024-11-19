@@ -1,55 +1,64 @@
-<ion-header [translucent]="true">
+<ion-header>
     <ion-toolbar color="primary">
-      <ion-buttons slot="start">
-        <ion-back-button></ion-back-button>
-      </ion-buttons>
-      <div class="superior">
-        <ion-title>Cambiar Contraseña</ion-title>
-      </div>
+      <ion-title>Cambiar Contraseña</ion-title>
     </ion-toolbar>
   </ion-header>
   
-  <ion-content class="toro" [fullscreen]="true" color="Shade">
-    <ion-avatar class="avatar">
-      <ion-icon id="icono-user" name="person-circle-outline"></ion-icon>
-    </ion-avatar>
+  <ion-content class="ion-padding">
+    <div class="container">
+      <ion-list>
+        <!-- Campo: Contraseña Actual -->
+        <ion-item>
+          <ion-label position="floating">Contraseña Actual</ion-label>
+          <ion-input
+            type="password"
+            [(ngModel)]="contrasenaActual"
+            placeholder="Ingresa tu contraseña actual"
+            clearInput
+          ></ion-input>
+        </ion-item>
   
-    <div class="login-recuadro" style="margin-top: 100px;">
-      <ion-card class="login-card" color="light">
-        <ion-card-header>
-          <ion-card-title>Cambiar contraseña</ion-card-title>
-        </ion-card-header>
+        <!-- Campo: Nueva Contraseña -->
+        <ion-item>
+          <ion-label position="floating">Nueva Contraseña</ion-label>
+          <ion-input
+            type="password"
+            [(ngModel)]="nuevaContrasena"
+            placeholder="Ingresa tu nueva contraseña"
+            clearInput
+          ></ion-input>
+        </ion-item>
   
-        <ion-card-content>
-          <form (ngSubmit)="cambiarContrasena()">
-            <ion-item color="light">
-              <ion-input 
-                [(ngModel)]="nuevaContrasena" 
-                name="nuevaContrasena" 
-                type="password" 
-                label="Nueva contraseña" 
-                labelPlacement="floating" 
-                placeholder="Ingrese una nueva contraseña" 
-                required>
-              </ion-input>
-            </ion-item>
+        <!-- Campo: Confirmar Contraseña -->
+        <ion-item>
+          <ion-label position="floating">Confirmar Contraseña</ion-label>
+          <ion-input
+            type="password"
+            [(ngModel)]="confirmarContrasena"
+            placeholder="Confirma tu nueva contraseña"
+            clearInput
+          ></ion-input>
+        </ion-item>
+      </ion-list>
   
-            <ion-item color="light" lines="none">
-              <ion-input 
-                [(ngModel)]="contrasenaActual" 
-                name="contrasenaActual" 
-                type="password" 
-                label="Contraseña actual" 
-                labelPlacement="floating" 
-                placeholder="Ingrese su contraseña actual" 
-                required>
-              </ion-input>
-            </ion-item>
+      <!-- Botón para guardar cambios -->
+      <ion-button
+        expand="block"
+        color="success"
+        (click)="cambiarContrasena()"
+      >
+        Guardar Cambios
+      </ion-button>
   
-            <ion-button type="submit" expand="full" class="owo">Cambiar contraseña</ion-button>
-          </form>
-        </ion-card-content>
-      </ion-card>
+      <!-- Botón para cancelar y regresar -->
+      <ion-button
+        expand="block"
+        color="medium"
+        fill="outline"
+        routerLink="/cuenta"
+      >
+        Cancelar
+      </ion-button>
     </div>
   </ion-content>
   

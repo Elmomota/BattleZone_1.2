@@ -1,3 +1,4 @@
+  
   import { Component, OnInit } from '@angular/core';
   import { SqliteService } from 'src/app/services/sqlite.service';  // Asegúrate de que esté correctamente importado
   import { MenuController, NavController } from '@ionic/angular';
