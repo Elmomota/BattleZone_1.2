@@ -63,3 +63,26 @@ a:focus {
     text-decoration: underline; /* Subrayado adicional para accesibilidad */
     color: #00ff88; /* Verde brillante al enfocarse */
 }
+.paddin {
+    padding: 20px;
+  }
+  
+  .text-center {
+    text-align: center; /* Centra el texto horizontalmente */
+    margin-top: 20px;   /* Espaciado superior para separar del contenido principal */
+  }
+  
+  a {
+    color: #007aff; /* Color del enlace */
+    text-decoration: none; /* Sin subrayado */
+  }
+  
+  a:hover {
+    text-decoration: underline; /* Subrayado al pasar el cursor */
+  }
+  
+  p {
+    margin: 10px 0; /* Espaciado vertical entre los párrafos */
+    color: #fff;    /* Cambia el color del texto */
+  }
+  

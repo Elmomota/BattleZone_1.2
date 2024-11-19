@@ -1,6 +1,6 @@
 <ion-header>
     <ion-toolbar>
-        <ion-title>Detalles</ion-title>
+        <ion-title>Detalles del Torneo</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -28,20 +28,6 @@
             </ion-card>
         </ng-container>
 
-        <!-- Mostrar rondas y duelos -->
-        <div class="torneo">
-            <div class="ronda" *ngFor="let ronda of rondas">
-                <div class="duelo" *ngFor="let duelo of ronda">
-                    <div class="jugador" [class.ganador]="duelo.estado_jugador1 === 'ganó'">
-                        {{ duelo.jugador1 || 'BYE' }}
-                    </div>
-                    <div class="vs">VS</div>
-                    <div class="jugador" [class.ganador]="duelo.estado_jugador2 === 'ganó'">
-                        {{ duelo.jugador2 || 'BYE' }}
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <!-- Mostrar usuarios inscritos -->
         <ng-container *ngIf="usuarios.length > 0; else noUsuarios">
@@ -80,5 +66,24 @@
                 </ion-label>
             </ion-item>
         </ng-template>
+    </div>
+
+    <br><br><br>
+
+    <!-- Mostrar rondas y duelos (gráfico visible siempre) -->
+    <div class="torneo-container" style="background-color: #f1f1f1; padding: 20px; border-radius: 8px;">
+        <div class="torneo">
+            <div class="ronda" *ngFor="let ronda of rondas">
+                <div class="duelo" *ngFor="let duelo of ronda" (click)="seleccionarDuelo(duelo)">
+                    <div class="jugador" [ngClass]="{'ganador': duelo.estado_jugador1 === 'ganó'}">
+                        {{ duelo.jugador1 || 'BYE' }}
+                    </div>
+                    <div class="vs">VS</div>
+                    <div class="jugador" [ngClass]="{'ganador': duelo.estado_jugador2 === 'ganó'}">
+                        {{ duelo.jugador2 || 'BYE' }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </ion-content>

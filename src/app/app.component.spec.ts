@@ -1,19 +1,21 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
+import { SqliteService } from './services/sqlite.service';
+import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
 
 describe('AppComponent', () => {
-
-
   beforeEach(async () => {
-
     await TestBed.configureTestingModule({
       declarations: [AppComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       imports: [RouterModule.forRoot([])],
+      providers: [
+        { provide: SQLite, useValue: {} }, // Mock SQLite
+        { provide: SqliteService, useValue: { /* Métodos simulados */ } },
+      ],
     }).compileComponents();
   });
 
@@ -23,7 +25,6 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  // TODO(ROU-10799): Fix the flaky test.
   xit('should have menu labels', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
@@ -43,5 +44,4 @@ describe('AppComponent', () => {
     expect(menuItems[0].getAttribute('ng-reflect-router-link')).toEqual('/folder/inbox');
     expect(menuItems[1].getAttribute('ng-reflect-router-link')).toEqual('/folder/outbox');
   });
-
 });
