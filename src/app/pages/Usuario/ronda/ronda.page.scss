@@ -1,0 +1,99 @@
+ion-content {
+    --background: #2e2f3a;
+    color: #fff;
+}
+
+
+/* Estilo del botón de volver */
+
+.icono-atras {
+    position: absolute;
+    top: 10px;
+    left: 20px;
+    z-index: 10;
+    color: white;
+}
+
+
+/* Contenedor del logo */
+
+.logo-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.logo-torneo {
+    width: 150px;
+    height: auto;
+    border-radius: 10px;
+}
+
+
+/* Detalles del torneo */
+
+.detalles-torneo {
+    text-align: center;
+    margin-top: 20px;
+    color: white;
+}
+
+.detalles-torneo h1 {
+    font-size: 28px;
+    margin: 0;
+}
+
+.detalles-torneo p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+
+/* Imagen y detalles del juego */
+
+.detalles-juego {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.imagen-juego {
+    width: 200px;
+    height: auto;
+    border-radius: 10px;
+}
+
+.nombre-juego {
+    font-size: 20px;
+    margin-top: 10px;
+    color: white;
+}
+
+
+/* Contenedor del enfrentamiento */
+
+.enfrentamiento-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.jugador {
+    text-align: center;
+}
+
+.versus {
+    margin: 0 20px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+}
+
+.avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #8183a4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

@@ -24,12 +24,12 @@
 
 
 
-            <h1 class="titulo-bienvenida">Mis torneos</h1>
+            <h1 class="titulo-bienvenida">Duelos</h1>
             <!------------------------------------------------------------------------------------>
             <hr>
             <!------------------------------------------------------------------------------------>
 
-            <p class="color-t">Aca puedes ver todos tus torneos en linea</p>
+            <p class="color-t">Aca se ven todos los duelos de del respectivo torneo , por favor administrador asignar ganador.</p>
             <hr>
 
 
@@ -42,21 +42,7 @@
         <div class="torneos-section">
 
 
-            <h2>Torneos Relacionados</h2>
-
-            <div class="box2" *ngIf="torneos.length > 0;">
-                <ion-item class="item-b" *ngFor="let torneo of torneos" (click)="irADetalleInscripcion(torneo)">
-                    <ion-thumbnail slot="start">
-                        <img [src]="torneo.imagen" alt="{{ torneo.nombre }}" />
-                    </ion-thumbnail>
-                    <ion-label>
-                        <h3>{{ torneo.nombre }}</h3>
-                        <p>Fecha de Inicio: {{ torneo.fechaInicio }}</p>
-                        <p>Cupos: {{ torneo.numEquipos }}</p>
-                    </ion-label>
-                </ion-item>
-            </div>
-
+            <h2>Duelos Relacionados</h2>
 
 
         </div>

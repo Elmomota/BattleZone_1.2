@@ -31,7 +31,7 @@
         <!-- Mostrar rondas y duelos -->
         <div class="torneo">
             <div class="ronda" *ngFor="let ronda of rondas">
-                <div class="duelo" *ngFor="let duelo of ronda" (click)="seleccionarDuelo(duelo)">
+                <div class="duelo" *ngFor="let duelo of ronda">
                     <div class="jugador" [class.ganador]="duelo.estado_jugador1 === 'ganó'">
                         {{ duelo.jugador1 || 'BYE' }}
                     </div>

@@ -50,76 +50,19 @@ export class DetallesTorneoPage implements OnInit {
   }
   
 
-  async generarDuelos(torneoId: number, usuarios: Usuario[], numRondas: number) {
-    try {
-      let participantes = usuarios.map(usuario => usuario.pnombre + ' ' + usuario.papellido); // Extrae nombre y apellido
-      this.rondas = [];
-      console.log('Participantes:', participantes); // Verifica los participantes
-      for (let ronda = 1; ronda <= numRondas; ronda++) {
-        const duelos: Duelo[] = [];
-        for (let i = 0; i < participantes.length; i += 2) {
-          const jugador1 = participantes[i];
-          const jugador2 = participantes[i + 1] || null;
-          duelos.push({
-            id_torneo: torneoId,
-            ronda,
-            jugador1,
-            jugador2,
-            estado_jugador1: 'pendiente',
-            estado_jugador2: jugador2 ? 'pendiente' : 'ganó',
-            ganador: null,
-          });
-        }
-        this.rondas.push(duelos);
-        participantes = duelos.map((duelo) => duelo.ganador || duelo.jugador1);
-      }
-      console.log('Rondas generadas:', this.rondas); // Verifica la organización de los duelos
-      await this.sqliteService.insertarDuelo(this.rondas.reduce((acc, ronda) => acc.concat(ronda), []));
-    } catch (error) {
-      console.error('Error al generar los duelos:', error);
-    }
-  }
   
 
-  async seleccionarDuelo(duelo: Duelo) {
-    const alert = await this.alertController.create({
-      header: 'Actualizar Duelo',
-      message: `Selecciona el resultado para el duelo: ${duelo.jugador1} vs ${duelo.jugador2 || 'BYE'}`,
-      inputs: [
-        { type: 'radio', label: duelo.jugador1, value: 'jugador1' },
-        { type: 'radio', label: duelo.jugador2 || 'BYE', value: 'jugador2' },
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Guardar',
-          handler: async (ganador) => {
-            duelo.estado_jugador1 = ganador === 'jugador1' ? 'ganó' : 'perdió';
-            duelo.estado_jugador2 = ganador === 'jugador2' ? 'ganó' : 'perdió';
-            duelo.ganador = ganador === 'jugador1' ? duelo.jugador1 : duelo.jugador2;
-            await this.sqliteService.actualizarDuelo(duelo);
-            await this.actualizarDuelos();
-          },
-        },
-      ],
-    });
 
-    await alert.present();
-  }
 
-  async actualizarDuelos() {
-    if (this.torneo) {
-      try {
-        const duelos = await this.sqliteService.obtenerDuelosPorTorneo(this.torneo.id);
-        this.rondas = [];
-        for (let ronda = 1; ronda <= this.torneo.rondas; ronda++) {
-          this.rondas.push(duelos.filter((duelo) => duelo.ronda === ronda));
-        }
-      } catch (error) {
-        console.error('Error al actualizar duelos:', error);
-      }
-    }
-  }
+
+
+
+
+
+
+
+
+  
 
   modificarTorneo() {
     if (this.torneo && this.torneo.id) {
