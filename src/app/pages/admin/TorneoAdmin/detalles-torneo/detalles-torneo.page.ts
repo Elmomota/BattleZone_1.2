@@ -133,7 +133,7 @@ async seleccionarDuelo(duelo: Duelo) {
           
           // Guardar el resultado del duelo
           await this.sqliteService.actualizarDuelo(duelo);
-          await this.actualizarDuelos();
+     
         },
       },
     ],
@@ -143,19 +143,15 @@ async seleccionarDuelo(duelo: Duelo) {
 }
 
 
-  async actualizarDuelos() {
-    if (this.torneo) {
-      try {
-        const duelos = await this.sqliteService.obtenerDuelosPorTorneo(this.torneo.id);
-        this.rondas = [];
-        for (let ronda = 1; ronda <= this.torneo.rondas; ronda++) {
-          this.rondas.push(duelos.filter((duelo) => duelo.ronda === ronda));
-        }
-      } catch (error) {
-        console.error('Error al actualizar duelos:', error);
-      }
-    }
-  }
+
+
+
+
+
+
+
+
+  
 
   modificarTorneo() {
     if (this.torneo && this.torneo.id) {

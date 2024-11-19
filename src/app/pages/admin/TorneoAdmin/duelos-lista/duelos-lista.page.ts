@@ -13,20 +13,20 @@ interface Juego {
   logo: string;
   cabecera: string;
 }
-
-
-
-
 @Component({
-  selector: 'app-progreso',
-  templateUrl: './progreso.page.html',
-  styleUrls: ['./progreso.page.scss'],
+  selector: 'app-duelos-lista',
+  templateUrl: './duelos-lista.page.html',
+  styleUrls: ['./duelos-lista.page.scss'],
 })
 
 
 
 
-export class ProgresoPage implements OnInit {
+
+
+
+
+export class DuelosListaPage implements OnInit {
   usuario: any = {};
 
   juego?: Juego;

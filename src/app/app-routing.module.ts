@@ -74,13 +74,32 @@ const routes: Routes = [
     loadChildren: () => import('./pages/Usuario/cambiar-contra/cambiar-contra.module').then( m => m.CambiarContraPageModule)
   },
   {
-    path: '**',
-    loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
-  },
-  {
     path: 'progreso',
     loadChildren: () => import('./pages/Usuario/progreso/progreso.module').then( m => m.ProgresoPageModule)
   },
+  {
+    path: 'ronda',
+    loadChildren: () => import('./pages/Usuario/ronda/ronda.module').then( m => m.RondaPageModule)
+  },
+  {
+    path: 'duelos-lista',
+    loadChildren: () => import('./pages/admin/TorneoAdmin/duelos-lista/duelos-lista.module').then( m => m.DuelosListaPageModule)
+  },
+  {
+    path: 'duelos-administrar',
+    loadChildren: () => import('./pages/admin/TorneoAdmin/duelos-administrar/duelos-administrar.module').then( m => m.DuelosAdministrarPageModule)
+  },
+
+
+  {
+    path: '**',
+    loadChildren: () => import('./pages/not-found/not-found.module').then(m => m.NotFoundPageModule)
+  },
+
+
+
+
+
 
 
 

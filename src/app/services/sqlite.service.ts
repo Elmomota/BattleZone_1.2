@@ -238,6 +238,7 @@ async crearTablas() {
         estado_jugador2 TEXT DEFAULT 'pendiente', -- pendiente, ganó, perdió
         ganador TEXT, -- nickname del ganador
         FOREIGN KEY (id_torneo) REFERENCES torneos (id)
+        
       )`, []
     );
 
@@ -357,9 +358,73 @@ async crearTablas() {
 
 
 
+///////////////////LOGICA TORNEOS///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// LOGICA TORNEOS
+
+
+async crearDuelo(duelo: any) {
+  const query = `
+    INSERT INTO duelos (id_torneo, jugador1, jugador2, ronda, tiempoInicio) 
+    VALUES (?, ?, ?, ?, ?)
+  `;
+  const values = [duelo.id_torneo, duelo.jugador1, duelo.jugador2, duelo.ronda, duelo.tiempoInicio];
+  try {
+    await this.dbInstance.executeSql(query, values);
+    console.log('Duelo creado:', duelo);
+  } catch (error) {
+    console.error('Error al crear el duelo:', error);
+  }
+}
+
+async eliminarJugadorPerdedor(nickname: string) {
+  const query = `
+    DELETE FROM user_torneo 
+    WHERE nickname = ?
+  `;
+  try {
+    await this.dbInstance.executeSql(query, [nickname]);
+    console.log('Jugador eliminado:', nickname);
+  } catch (error) {
+    console.error('Error al eliminar jugador:', error);
+  }
+}
 
 
 
+
+
+
+
+
+async insertarDueloConUsuario(idTorneo: number, ronda: number, jugador1: string, jugador2: string | null = null): Promise<void> {
+  if (!this.dbInstance) {
+    console.error('La base de datos no está inicializada.');
+    return;
+  }
+
+  try {
+    const query = `
+      INSERT INTO duelos (id_torneo, ronda, jugador1, jugador2) 
+      VALUES (?, ?, ?, ?);
+    `;
+    await this.dbInstance.executeSql(query, [idTorneo, ronda, jugador1, jugador2]);
+    this.presentAlert('Éxito', 'El duelo ha sido agregado correctamente.');
+  } catch (error) {
+    this.presentAlert('Error', 'No se pudo agregar el duelo: ' + JSON.stringify(error));
+    console.error('Error al insertar duelo:', error);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////SELECT////////////////////////////
 
@@ -656,7 +721,15 @@ async obtenerTorneosInscritos(id_usuario: number): Promise<any[]> {
 }
 
 
+
+
+
+
+
+
+
 async verificarInscripcionPorCorreoYNickname(idTorneo: number, correo: string, nickname: string): Promise<boolean> {
+
   const query = `SELECT COUNT(*) as count FROM inscripcion_torneo WHERE id_torneo = ? AND (correo = ? OR nickname = ?)`;
 
   // Ejecutar la consulta y obtener el resultado
@@ -665,6 +738,14 @@ async verificarInscripcionPorCorreoYNickname(idTorneo: number, correo: string, n
   // Verificar si result y result.rows existen
   return result?.rows.length > 0 && result.rows.item(0).count > 0;
 }
+
+
+
+
+
+
+
+
 
 
 

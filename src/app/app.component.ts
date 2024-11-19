@@ -65,6 +65,7 @@ export class AppComponent implements OnInit {
         { title: 'Home', url: '/home', icon: 'home' },
         { title: 'Torneos', url: '/torneos', icon: 'trophy' },
         { title: 'Mi Perfil', url: '/cuenta', icon: 'person' },
+        { title: 'Mis Torneos', url: '/progreso', icon: 'trophy' },
       ];
     }
   }

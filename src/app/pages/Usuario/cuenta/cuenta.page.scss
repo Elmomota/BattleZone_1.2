@@ -179,13 +179,11 @@ ion-card:hover {
 }
 
 .distribucion-historial {
-    display: flex;
-    align-items: center;
-    overflow: hidden;
-    justify-content: flex-start;
-    width: auto;
-    height: auto;
-    padding: 10px;
+    --background: #8183a4;
+    --border-radius: 12px;
+    margin-bottom: 16px;
+    margin: 5px;
+    padding-bottom: 20px;
 }
 
 .distribucion-historial img {
