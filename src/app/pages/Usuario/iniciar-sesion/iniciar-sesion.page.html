@@ -1,31 +1,33 @@
 <ion-content>
     <div class="paddin">
-        <ion-title>Iniciar Sesión</ion-title>
-
-        <div class="div-grande">
-            <form (ngSubmit)="loginUsuario()">
-                <ion-item>
-                    <ion-label class="pos" position="floating"></ion-label>
-                    <ion-input label="Ingresa tu correo electrónico" labelPlacement="floating" placeholder="Correo de usuario" [(ngModel)]="correoNickname" name="correoNickname"></ion-input>
-                </ion-item>
-                <ion-item>
-                    <ion-label class="pos" position="floating"></ion-label>
-                    <ion-input label="Ingresa tu contraseña" labelPlacement="floating" placeholder="Ingresa tu contraseña" type="password" [(ngModel)]="contrasena" name="contrasena">
-                        <ion-input-password-toggle slot="end"></ion-input-password-toggle>
-                    </ion-input>
-                </ion-item>
-                <ion-button expand="full" type="submit">Iniciar Sesión</ion-button>
-            </form>
-        </div>
-
+      <ion-title>Iniciar Sesión</ion-title>
+  
+      <div class="div-grande">
+        <form (ngSubmit)="loginUsuario()">
+          <ion-item>
+            <ion-label class="pos" position="floating"></ion-label>
+            <ion-input label="Ingresa tu correo electrónico" labelPlacement="floating" placeholder="Correo de usuario" [(ngModel)]="correoNickname" name="correoNickname"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label class="pos" position="floating"></ion-label>
+            <ion-input label="Ingresa tu contraseña" labelPlacement="floating" placeholder="Ingresa tu contraseña" type="password" [(ngModel)]="contrasena" name="contrasena">
+              <ion-input-password-toggle slot="end"></ion-input-password-toggle>
+            </ion-input>
+          </ion-item>
+          <ion-button expand="full" type="submit">Iniciar Sesión</ion-button>
+        </form>
+      </div>
+      <br><br><br>
+  
+      <div class="text-center">
         <p color="blancohielo">
-            <a (click)="irPagina()">¿Problemas con tu cuenta?</a>
+          <a (click)="irPagina()">¿Problemas con tu cuenta?</a>
         </p>
-        <div>
-            <p>O</p>
-        </div>
-        <div>
-            <p>No tienes cuenta? <a (click)="irRegister()">Regístrate aquí</a></p>
-        </div>
+        <p>O</p>
+        <p>
+          No tienes cuenta? <a (click)="irRegister()">Regístrate aquí</a>
+        </p>
+      </div>
     </div>
-</ion-content>
+  </ion-content>
+  

@@ -121,4 +121,7 @@ export class CuentaAdminPage implements OnInit {
       );
     }
   }
+  Ircuenta(){
+    this.navCtrl.navigateForward(['/cuenta']);
+  }
 }

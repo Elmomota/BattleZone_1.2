@@ -47,7 +47,7 @@ export class IniciarSesionPage {
     const alert = await this.alertController.create({
       header: 'Error',
       subHeader: 'Inicio de sesión fallido',
-      message: 'Correo, nickname o contraseña incorrectos.',
+      message: 'Correo o contraseña incorrectos.',
       buttons: ['OK']
     });
 

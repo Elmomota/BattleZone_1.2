@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service'; // Servicio SQLite
@@ -22,7 +22,7 @@ export class DetallesTorneoPage implements OnInit {
     private alertController: AlertController,
     private sqliteService: SqliteService,
     private torneoService: TorneoService,
-    private cdRef: ChangeDetectorRef
+    
   ) {}
 
   ngOnInit() {
@@ -41,6 +41,9 @@ export class DetallesTorneoPage implements OnInit {
     });
   }
 
+
+
+
   async cargarUsuariosInscritos(id_torneo: number) {
     try {
       this.usuarios = await this.sqliteService.obtenerUsuariosInscritos(id_torneo);
@@ -50,62 +53,95 @@ export class DetallesTorneoPage implements OnInit {
   }
   
 
-  async generarDuelos(torneoId: number, usuarios: Usuario[], numRondas: number) {
+  async generarDuelosYAvance(torneo: Torneo) {
     try {
-      let participantes = usuarios.map(usuario => usuario.pnombre + ' ' + usuario.papellido); // Extrae nombre y apellido
-      this.rondas = [];
-      console.log('Participantes:', participantes); // Verifica los participantes
+      // Obtener usuarios inscritos
+      const usuariosInscritos = await this.sqliteService.obtenerUsuariosInscritos(torneo.id);
+      if (!usuariosInscritos || usuariosInscritos.length !== torneo.numEquipos) {
+        console.error('La cantidad de usuarios inscritos no coincide con los cupos del torneo');
+        return;
+      }
+  
+      // Mezclar usuarios al azar para la primera ronda
+      const usuariosAleatorios = usuariosInscritos.sort(() => Math.random() - 0.5);
+      let participantes = usuariosAleatorios; // Participantes actuales
+      const duelosPorRonda: Duelo[][] = []; // Almacena todos los duelos del torneo
+  
+      // Calcular el número de rondas
+      const numRondas = Math.log2(torneo.numEquipos);
+  
+      // Generar duelos y avanzar ganadores
       for (let ronda = 1; ronda <= numRondas; ronda++) {
         const duelos: Duelo[] = [];
+        const ganadores: any[] = [];
+  
         for (let i = 0; i < participantes.length; i += 2) {
           const jugador1 = participantes[i];
-          const jugador2 = participantes[i + 1] || null;
-          duelos.push({
-            id_torneo: torneoId,
+          const jugador2 = participantes[i + 1];
+  
+          // Crear duelo
+          const duelo: Duelo = {
+            id_torneo: torneo.id,
             ronda,
-            jugador1,
-            jugador2,
+            jugador1: jugador1.nickname,
+            jugador2: jugador2?.nickname || null, // BYE si no hay segundo jugador
             estado_jugador1: 'pendiente',
             estado_jugador2: jugador2 ? 'pendiente' : 'ganó',
-            ganador: null,
-          });
+            ganador: null,  // El ganador se establecerá manualmente
+          };
+  
+          duelos.push(duelo);
         }
-        this.rondas.push(duelos);
-        participantes = duelos.map((duelo) => duelo.ganador || duelo.jugador1);
+  
+        // Guardar los duelos de la ronda
+        duelosPorRonda.push(duelos);
+  
+        // Los ganadores pasarán a la siguiente ronda una vez que se seleccionen manualmente
       }
-      console.log('Rondas generadas:', this.rondas); // Verifica la organización de los duelos
-      await this.sqliteService.insertarDuelo(this.rondas.reduce((acc, ronda) => acc.concat(ronda), []));
+  
+      // Guardar duelos en la base de datos
+      const duelosPlanificados = duelosPorRonda.reduce((acc, val) => acc.concat(val), []);
+
+      await this.sqliteService.insertarDuelo(duelosPlanificados);
+  
+      console.log('Duelos generados y guardados:', duelosPlanificados);
     } catch (error) {
-      console.error('Error al generar los duelos:', error);
+      console.error('Error al generar duelos:', error);
     }
   }
   
 
-  async seleccionarDuelo(duelo: Duelo) {
-    const alert = await this.alertController.create({
-      header: 'Actualizar Duelo',
-      message: `Selecciona el resultado para el duelo: ${duelo.jugador1} vs ${duelo.jugador2 || 'BYE'}`,
-      inputs: [
-        { type: 'radio', label: duelo.jugador1, value: 'jugador1' },
-        { type: 'radio', label: duelo.jugador2 || 'BYE', value: 'jugador2' },
-      ],
-      buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        {
-          text: 'Guardar',
-          handler: async (ganador) => {
-            duelo.estado_jugador1 = ganador === 'jugador1' ? 'ganó' : 'perdió';
-            duelo.estado_jugador2 = ganador === 'jugador2' ? 'ganó' : 'perdió';
-            duelo.ganador = ganador === 'jugador1' ? duelo.jugador1 : duelo.jugador2;
-            await this.sqliteService.actualizarDuelo(duelo);
-            await this.actualizarDuelos();
-          },
-        },
-      ],
-    });
+  
 
-    await alert.present();
-  }
+async seleccionarDuelo(duelo: Duelo) {
+  const alert = await this.alertController.create({
+    header: 'Actualizar Duelo',
+    message: `Selecciona el resultado para el duelo: ${duelo.jugador1} vs ${duelo.jugador2 || 'BYE'}`,
+    inputs: [
+      { type: 'radio', label: duelo.jugador1, value: 'jugador1' },
+      { type: 'radio', label: duelo.jugador2 || 'BYE', value: 'jugador2' },
+    ],
+    buttons: [
+      { text: 'Cancelar', role: 'cancel' },
+      {
+        text: 'Guardar',
+        handler: async (ganador) => {
+          // Actualizar el estado de los jugadores y el ganador
+          duelo.estado_jugador1 = ganador === 'jugador1' ? 'ganó' : 'perdió';
+          duelo.estado_jugador2 = ganador === 'jugador2' ? 'ganó' : 'perdió';
+          duelo.ganador = ganador === 'jugador1' ? duelo.jugador1 : duelo.jugador2;
+          
+          // Guardar el resultado del duelo
+          await this.sqliteService.actualizarDuelo(duelo);
+          await this.actualizarDuelos();
+        },
+      },
+    ],
+  });
+
+  await alert.present();
+}
+
 
   async actualizarDuelos() {
     if (this.torneo) {

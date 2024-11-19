@@ -362,17 +362,7 @@ async crearTablas() {
 
 ///////////////////SELECT////////////////////////////
 
-async validarRespuestaSeguridad(usuarioId: number, respuesta: string) {
-  const result = await this.dbInstance.executeSql(
-    `SELECT * FROM respuestas_seguridad
-     WHERE usuarioId = ? AND respuesta = ?`,
-    [usuarioId, respuesta]
-  );
-
-  return result.rows.length > 0;
-}
-
-async getPreguntaSeguridad(usuarioId: number): Promise<string | null> {
+async getPreguntasSeguridad(usuarioId: number): Promise<string[]> {
   const result = await this.dbInstance.executeSql(
     `SELECT p.pregunta FROM respuestas_seguridad rs
      JOIN preguntas p ON rs.preguntaId = p.id
@@ -380,8 +370,27 @@ async getPreguntaSeguridad(usuarioId: number): Promise<string | null> {
     [usuarioId]
   );
 
-  // Si hay resultados, devuelve el texto de la pregunta
-  return result.rows.length > 0 ? result.rows.item(0).pregunta : null;
+  const preguntas: string[] = [];
+  for (let i = 0; i < result.rows.length; i++) {
+    preguntas.push(result.rows.item(i).pregunta);
+  }
+
+  return preguntas;
+}
+
+async validarRespuestaSeguridad(
+  usuarioId: number,
+  pregunta: string,
+  respuesta: string
+): Promise<boolean> {
+  const result = await this.dbInstance.executeSql(
+    `SELECT * FROM respuestas_seguridad rs
+     JOIN preguntas p ON rs.preguntaId = p.id
+     WHERE rs.usuarioId = ? AND p.pregunta = ? AND rs.respuesta = ?`,
+    [usuarioId, pregunta, respuesta]
+  );
+
+  return result.rows.length > 0;
 }
 
 
@@ -541,6 +550,23 @@ selectTorneos() {
     }
   }
   
+  
+  async verificarContrasenaActual(idUsuario: number, contrasena: string): Promise<boolean> {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos no está lista.');
+      return false;
+    }
+  
+    const query = `SELECT * FROM usuarios WHERE id = ? AND contrasena = ?`;
+  
+    try {
+      const result = await this.dbInstance.executeSql(query, [idUsuario, contrasena]);
+      return result.rows.length > 0; // Si existe al menos un resultado, la contraseña es válida
+    } catch (error) {
+      console.error('Error al verificar la contraseña actual:', error);
+      return false;
+    }
+  }
   
   
   getUsuarioByCorreo(correo: string): Promise<any> {
@@ -975,6 +1001,10 @@ async actualizarDuelo(duelo: Duelo): Promise<void> {
       this.presentAlert('Error al actualizar torneo', JSON.stringify(error));
     }
   }
+
+
+
+
   async actualizarUsuario(usuario: Usuario) {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos no está lista.');
@@ -1007,6 +1037,26 @@ async actualizarDuelo(duelo: Duelo): Promise<void> {
       throw error;  // Lanzamos el error para que sea capturado por el componente
     }
   }
+  async actualizarUsuarioContra(usuario: Usuario): Promise<void> {
+    if (!this.dbInstance) {
+      console.error('La instancia de la base de datos es nula');
+      return;
+    }
+    try {
+      const sql = `UPDATE usuarios SET contrasena = ? WHERE id = ?`;
+      const params = [usuario.contrasena, usuario.id];
+      await this.dbInstance.executeSql(sql, params);
+      console.log('Contraseña actualizada exitosamente.');
+    } catch (error) {
+      console.error('Error al actualizar la contraseña:', error);
+      throw error;
+    }
+  }
+  
+
+
+
+
   async actualizarUsuarioPerfil(usuario: Usuario) {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos no está lista.');

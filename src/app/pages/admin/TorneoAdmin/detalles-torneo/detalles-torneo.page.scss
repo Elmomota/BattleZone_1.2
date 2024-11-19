@@ -70,35 +70,81 @@ ion-button {
 }
 .torneo {
   display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
+  flex-direction: column;
+  align-items: center;
 }
 
 .ronda {
+  margin: 10px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  justify-content: center;
 }
 
 .duelo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  border: 1px solid #ccc;
-  padding: 10px;
-  border-radius: 5px;
+  margin: 5px;
 }
 
 .jugador {
-  padding: 5px;
-}
-
-.jugador.ganador {
-  font-weight: bold;
-  color: green;
+  margin: 0 10px;
 }
 
 .vs {
   font-weight: bold;
+}
+
+.ganador {
+  color: green;
+}
+
+.torneo-container {
+  background-color: #f1f1f1;  /* Fondo gris claro */
+  padding: 20px;
+  border-radius: 8px;  /* Bordes redondeados */
+  margin-top: 20px;
+}
+
+.torneo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ronda {
+  margin-bottom: 15px;
+}
+
+.duelo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.jugador {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 5px 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+}
+
+.jugador.ganador {
+  background-color: #8bc34a;  /* Color verde para el ganador */
+  color: white;
+}
+
+.vs {
+  font-size: 18px;
+  font-weight: bold;
+  color: #616161;
+}
+
+.ion-card-content {
+  padding: 10px;
 }
