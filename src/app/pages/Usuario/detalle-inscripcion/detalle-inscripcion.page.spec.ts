@@ -1,52 +1,35 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DetalleInscripcionPage } from './detalle-inscripcion.page';
 import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';  // Para simular los parámetros de la ruta
+import { of } from 'rxjs';
 import { SqliteService } from 'src/app/services/sqlite.service';
-import { ToastController } from '@ionic/angular';
-
-// Mock para ActivatedRoute
-class ActivatedRouteStub {
-  snapshot = {
-    paramMap: {
-      get: (key: string) => {
-        if (key === 'id') {
-          return '123';  // Ejemplo de ID de torneo
-        }
-        return null;
-      }
-    }
-  };
-}
-
-// Mock para SqliteService
-class SqliteServiceMock {
-  obtenerSesion() {
-    return Promise.resolve({ id: 1, nombre: 'Usuario Test', correo: 'test@example.com' });
-  }
-  verificarInscripcionPorCorreoYNickname() {
-    return Promise.resolve(false);  // Simulamos que no está inscrito
-  }
-  inscribirTorneo() {
-    return Promise.resolve();  // Simulamos que la inscripción fue exitosa
-  }
-  actualizarTorneo() {
-    return Promise.resolve();  // Simulamos que la actualización fue exitosa
-  }
-}
+import { FormsModule } from '@angular/forms';
+import { NavController, AlertController, IonicModule, ToastController } from '@ionic/angular';
 
 describe('DetalleInscripcionPage', () => {
   let component: DetalleInscripcionPage;
   let fixture: ComponentFixture<DetalleInscripcionPage>;
+  let sqliteServiceSpy: jasmine.SpyObj<SqliteService>;
+  let toastControllerSpy: jasmine.SpyObj<ToastController>;
 
   beforeEach(async () => {
+    // Crear el Spy antes de configurar el TestBed
+    sqliteServiceSpy = jasmine.createSpyObj('SqliteService', ['obtenerSesion']);
+
     await TestBed.configureTestingModule({
       declarations: [DetalleInscripcionPage],
-      providers: [
-        { provide: ActivatedRoute, useClass: ActivatedRouteStub },
-        { provide: SqliteService, useClass: SqliteServiceMock },  // Mock del servicio SQLite
-        ToastController  // Mock o proveedor para ToastController
-      ]
+      imports: [FormsModule, IonicModule.forRoot()],
+      providers: [      
+        { provide: SqliteService, useValue: sqliteServiceSpy },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            queryParams: of({ usuario: JSON.stringify({ id: 1, nombre: 'John Doe', correo: 'john.doe@example.com' }) }),
+          },
+        },
+        NavController,
+        AlertController,
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DetalleInscripcionPage);
@@ -54,9 +37,22 @@ describe('DetalleInscripcionPage', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('debería obtener los datos del usuario si la sesión está activa', async () => {
+    // Configurar el mock para devolver un usuario simulado
+    const mockUsuario = { id: 1, nombre: 'John Doe', correo: 'john.doe@example.com' };
+    sqliteServiceSpy.obtenerSesion.and.returnValue(Promise.resolve(mockUsuario));
+
+    // Llamar al método
+    await component.obtenerDatosUsuario();
+
+    // Verificar que se haya llamado a obtenerSesion
+    expect(sqliteServiceSpy.obtenerSesion).toHaveBeenCalled();
+
+    // Verificar que el usuario se haya asignado correctamente
+    expect(component.usuario).toEqual(mockUsuario);
   });
 
-  // Aquí puedes agregar más pruebas si es necesario
+
+
+
 });
