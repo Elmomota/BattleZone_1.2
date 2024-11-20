@@ -2,54 +2,47 @@
 
     <!-- Botón de volver -->
     <ion-button fill="clear" class="icono-atras" (click)="irAtras()">
-        <ion-icon name="arrow-back-circle-outline"></ion-icon>
+      <ion-icon name="arrow-back-circle-outline"></ion-icon>
     </ion-button>
-
-
-
-
+  
     <!-- Imagen del logo del torneo -->
     <div class="logo-container">
-        <img src="assets/img/logoo.png" alt="Logo Torneo" class="logo-torneo" />
+      <img [src]="torneo.imagen || 'assets/img/logoo.png'" alt="Logo Torneo" class="logo-torneo" />
     </div>
-
-
-
-
+  
     <!-- Detalles del torneo -->
     <div class="detalles-torneo">
-        <h1>Torneo</h1>
-        <p>Ronda: <span>oponente</span></p>
-        <p>Oponente: <span>oponente</span></p>
+      <h1>{{ torneo.nombre }}</h1>
+      <p>Ronda: <span>{{ rondaActual }}</span></p>
+      <p>Oponente: <span>{{ oponente.nickname }}</span></p>
     </div>
-
-
-
-
-
+  
     <!-- Imagen y detalles del juego -->
     <div class="detalles-juego">
-        <img src="assets/img/valorant.jpg" alt="Valorant" class="imagen-juego" />
-        <p class="nombre-juego">Valorant</p>
+      <img [src]="'assets/img/' + torneo.juegoId + '.jpg'" alt="{{ torneo.juegoNombre }}" class="imagen-juego" />
+      <p class="nombre-juego">{{ torneo.juegoNombre }}</p>
     </div>
-
+  
     <!-- Sección de enfrentamiento -->
     <div class="enfrentamiento-container">
-        <div class="jugador">
-            <ion-avatar class="avatar">
-                <img src="assets/img/player1.png" alt="Jugador 1" />
-            </ion-avatar>
-        </div>
-
-        <div class="versus">
-            <p>VS</p>
-        </div>
-
-        <div class="jugador">
-            <ion-avatar class="avatar">
-                <img src="assets/img/player2.png" alt="Jugador 2" />
-            </ion-avatar>
-        </div>
+      <div class="jugador">
+        <ion-avatar class="avatar">
+          <img [src]="usuario.imagen_user || 'assets/img/player1.png'" alt="Jugador 1" />
+        </ion-avatar>
+        <p>{{ usuario.nickname }}</p>
+      </div>
+  
+      <div class="versus">
+        <p>VS</p>
+      </div>
+  
+      <div class="jugador">
+        <ion-avatar class="avatar">
+          <img [src]="oponente.imagen_user || 'assets/img/player2.png'" alt="Jugador 2" />
+        </ion-avatar>
+        <p>{{ oponente.nickname }}</p>
+      </div>
     </div>
-
-</ion-content>
+  
+  </ion-content>
+  

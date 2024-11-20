@@ -98,21 +98,22 @@
             <div *ngIf="paso === 3">
                 <p>Ultimo paso:</p>
                 <ion-item>
-                  <ion-label position="floating">Pregunta de Seguridad</ion-label>
-                  <ion-select [(ngModel)]="preguntaSeleccionadaId" name="preguntaSeleccionadaId" required>
-                    <ion-select-option *ngFor="let pregunta of preguntas" [value]="pregunta.id">{{ pregunta.pregunta }}</ion-select-option>
-                  </ion-select>
+                    <ion-label position="floating">Pregunta de Seguridad</ion-label>
+                    <ion-select [(ngModel)]="preguntaSeleccionadaId" name="preguntaSeleccionadaId" required>
+                        <ion-select-option *ngFor="let pregunta of preguntas" [value]="pregunta.id">{{ pregunta.pregunta }}</ion-select-option>
+                    </ion-select>
                 </ion-item>
-              
+            
                 <ion-item>
-                  <ion-label position="floating">Respuesta</ion-label>
-                  <ion-input [(ngModel)]="respuesta" name="respuesta" required></ion-input>
+                    <ion-label position="floating">Respuesta</ion-label>
+                    <ion-input [(ngModel)]="respuesta" name="respuesta" required></ion-input>
                 </ion-item>
                 <div *ngIf="!respuesta && registroForm.submitted" class="error">Debe ingresar una respuesta.</div>
-
+            
                 <ion-button expand="full" (click)="pasoAnterior()">Atrás</ion-button>
                 <ion-button expand="full" (click)="registrarUsuario()">Registrar</ion-button>
             </div>
+            
         </form>
 
         <div class="separator"></div>

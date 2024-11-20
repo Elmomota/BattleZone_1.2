@@ -20,6 +20,7 @@ export class CuentaAdminPage implements OnInit {
   searchTerm: string = '';
   selectedSegment: string = 'actuales'; // Valor inicial del segmento
   loading: boolean = true;
+ 
 
   constructor(
     private router: Router,

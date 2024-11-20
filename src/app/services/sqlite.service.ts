@@ -232,15 +232,18 @@ async crearTablas() {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         id_torneo INTEGER NOT NULL,
         ronda INTEGER NOT NULL,
-        jugador1 TEXT NOT NULL,
-        jugador2 TEXT,
-        estado_jugador1 TEXT DEFAULT 'pendiente', -- pendiente, ganó, perdió
-        estado_jugador2 TEXT DEFAULT 'pendiente', -- pendiente, ganó, perdió
-        ganador TEXT, -- nickname del ganador
-        FOREIGN KEY (id_torneo) REFERENCES torneos (id)
-        
+        id_jugador1 INTEGER NOT NULL,  -- Referencia al id del jugador 1
+        id_jugador2 INTEGER NOT NULL,  -- Referencia al id del jugador 2
+        estado_jugador1 TEXT DEFAULT 'pendiente',  -- pendiente, ganó, perdió
+        estado_jugador2 TEXT DEFAULT 'pendiente',  -- pendiente, ganó, perdió
+        ganador INTEGER,  -- ID del ganador
+        FOREIGN KEY (id_torneo) REFERENCES torneos (id),
+        FOREIGN KEY (id_jugador1) REFERENCES usuarios (id),
+        FOREIGN KEY (id_jugador2) REFERENCES usuarios (id),
+        FOREIGN KEY (ganador) REFERENCES usuarios (id)  -- Relacionamos al ganador con un usuario
       )`, []
     );
+    
 
     // Insertar un usuario administrador por defecto (si no existe)
     await this.dbInstance.executeSql(
@@ -363,10 +366,11 @@ async crearTablas() {
 
 async crearDuelo(duelo: any) {
   const query = `
-    INSERT INTO duelos (id_torneo, jugador1, jugador2, ronda, tiempoInicio) 
-    VALUES (?, ?, ?, ?, ?)
+    INSERT INTO duelos (id_torneo, id_jugador1, id_jugador2, ronda) 
+    VALUES (?, ?, ?, ?)
   `;
-  const values = [duelo.id_torneo, duelo.jugador1, duelo.jugador2, duelo.ronda, duelo.tiempoInicio];
+  const values = [duelo.id_torneo, duelo.id_jugador1, duelo.id_jugador2, duelo.ronda];
+
   try {
     await this.dbInstance.executeSql(query, values);
     console.log('Duelo creado:', duelo);
@@ -374,6 +378,7 @@ async crearDuelo(duelo: any) {
     console.error('Error al crear el duelo:', error);
   }
 }
+
 
 async eliminarJugadorPerdedor(nickname: string) {
   const query = `
@@ -395,24 +400,31 @@ async eliminarJugadorPerdedor(nickname: string) {
 
 
 
-async insertarDueloConUsuario(idTorneo: number, ronda: number, jugador1: string, jugador2: string | null = null): Promise<void> {
+async insertarDueloConUsuario(idTorneo: number, ronda: number, jugador1: number, jugador2: number | null = null): Promise<void> {
   if (!this.dbInstance) {
     console.error('La base de datos no está inicializada.');
     return;
   }
 
   try {
+    // Asegúrate de que los parámetros sean números (ID de los jugadores)
     const query = `
-      INSERT INTO duelos (id_torneo, ronda, jugador1, jugador2) 
+      INSERT INTO duelos (id_torneo, ronda, id_jugador1, id_jugador2) 
       VALUES (?, ?, ?, ?);
     `;
+    
+    // Ejecuta la consulta con los valores correspondientes
     await this.dbInstance.executeSql(query, [idTorneo, ronda, jugador1, jugador2]);
+
+    // Muestra la alerta de éxito
     this.presentAlert('Éxito', 'El duelo ha sido agregado correctamente.');
   } catch (error) {
+    // Muestra la alerta de error si algo falla
     this.presentAlert('Error', 'No se pudo agregar el duelo: ' + JSON.stringify(error));
     console.error('Error al insertar duelo:', error);
   }
 }
+
 
 
 
@@ -462,15 +474,6 @@ async validarRespuestaSeguridad(
 
 
 
-async obtenerDuelosPorTorneo(id_torneo: number): Promise<Duelo[]> {
-  const query = `SELECT * FROM duelos WHERE id_torneo = ? ORDER BY ronda ASC, id ASC`;
-  const result = await this.dbInstance.executeSql(query, [id_torneo]);
-  const duelos: Duelo[] = [];
-  for (let i = 0; i < result.rows.length; i++) {
-    duelos.push(result.rows.item(i));
-  }
-  return duelos;
-}
 
 
 
@@ -794,6 +797,37 @@ async getPreguntas(): Promise<Preguntas[]> {
 }
 
 
+async obtenerDuelosPorTorneo(id_torneo: number): Promise<Duelo[]> {
+  const query = 'SELECT * FROM duelos WHERE id_torneo = ? ORDER BY ronda, id';
+  const resultados = await this.dbInstance.executeSql(query, [id_torneo]);
+  const duelos: Duelo[] = [];
+  for (let i = 0; i < resultados.rows.length; i++) {
+      duelos.push(resultados.rows.item(i));
+  }
+  return duelos;
+}
+async obtenerDuelosDelUsuario(idTorneo: number, idUsuario: number) {
+  try {
+    const query = `
+      SELECT * FROM duelos 
+      WHERE id_torneo = ? 
+      AND (id_jugador1 = ? OR id_jugador2 = ?)
+    `;
+    const result = await this.dbInstance.executeSql(query, [idTorneo, idUsuario, idUsuario]);
+    
+    const duelos = [];
+    for (let i = 0; i < result.rows.length; i++) {
+      duelos.push(result.rows.item(i));
+    }
+    return duelos;
+  } catch (error) {
+    console.error('Error al obtener los duelos:', error);
+    throw error;
+  }
+}
+
+
+
 
 
 
@@ -844,8 +878,8 @@ async insertarDuelo(duelos: Duelo | Duelo[]): Promise<void> {
       const values = [
         duelo.id_torneo,
         duelo.ronda,
-        duelo.jugador1,
-        duelo.jugador2,
+        duelo.id_jugador1,  // Cambié a 'id_jugador1'
+        duelo.id_jugador2,  // Cambié a 'id_jugador2'
         duelo.estado_jugador1,
         duelo.estado_jugador2,
         duelo.ganador,
@@ -1039,18 +1073,19 @@ async actualizarDuelo(duelo: Duelo): Promise<void> {
   }
 
   const sql = `
-    UPDATE duelo
+    UPDATE duelos
     SET estado_jugador1 = ?, estado_jugador2 = ?, ganador = ?
-    WHERE id_torneo = ? AND ronda = ? AND jugador1 = ? AND jugador2 = ?
+    WHERE id_torneo = ? AND ronda = ? AND id_jugador1 = ? AND id_jugador2 = ?
   `;
+
   const values = [
-    duelo.estado_jugador1,
-    duelo.estado_jugador2,
-    duelo.ganador,
-    duelo.id_torneo,
-    duelo.ronda,
-    duelo.jugador1,
-    duelo.jugador2,
+    duelo.estado_jugador1,  // Estado del jugador 1
+    duelo.estado_jugador2,  // Estado del jugador 2
+    duelo.ganador,  // ID del ganador
+    duelo.id_torneo,  // ID del torneo
+    duelo.ronda,  // Ronda del duelo
+    duelo.id_jugador1,  // ID del jugador 1
+    duelo.id_jugador2,  // ID del jugador 2
   ];
 
   try {

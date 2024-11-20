@@ -1,5 +1,5 @@
 export class Torneo {
-  id!: number;             // ID del torneo
+  id?: number;             // ID del torneo
   nombre!: string;         // Nombre del torneo
   juegoId!: number;        // ID del juego asociado
   estado!: string;         // Estado del torneo

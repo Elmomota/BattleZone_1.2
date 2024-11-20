@@ -2,36 +2,51 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import { SqliteService } from 'src/app/services/sqlite.service'; // Servicio SQLite
-import { TorneoService } from 'src/app/services/torneo-service.service'; // Servicio de notificaciones
-import { Duelo } from 'src/app/services/duelo'; // Clase Duelo
-import { Torneo } from 'src/app/services/torneo'; // Clase Torneo
-import { Usuario } from 'src/app/services/usuario';
+import { TorneoService } from 'src/app/services/torneo-service.service'; // Servicio de notificaciones de torneos
+import { Duelo } from 'src/app/services/duelo';
+import { Torneo } from 'src/app/services/torneo';
+
 @Component({
   selector: 'app-detalles-torneo',
   templateUrl: './detalles-torneo.page.html',
   styleUrls: ['./detalles-torneo.page.scss'],
 })
 export class DetallesTorneoPage implements OnInit {
-  torneo?: Torneo;  // Ahora usamos la clase Torneo
-  usuarios: Usuario[] = []; // Cambiado para usar Usuario en lugar de string[]
-  rondas: Duelo[][] = [];
-
+  segment: string = 'info';
+  cambiarSegmento(event: any) {
+    this.segment = event.detail.value; // Cambia el segmento según la selección
+  }
+  
+  torneo: any; // Información del torneo
+  usuarios: Array<{ id: number; nombre: string; apellido: string; nickname: string; correo: string }> = [];
+  duelos: Duelo[] = []; // Lista de duelos creados
+  
+  nuevoDuelo = {
+    id_torneo: null,
+    ronda: 1,
+    id_jugador1: 0,  // ID del jugador 1, debe ser un número
+    id_jugador2: 0,  // ID del jugador 2, debe ser un número
+    estado_jugador1: 'Pendiente',
+    estado_jugador2: 'Pendiente',
+    ganador: null,
+  };
+  
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private alertController: AlertController,
-    private sqliteService: SqliteService,
-    private torneoService: TorneoService,
-    
+    private sqliteService: SqliteService, // Servicio SQLite
+    private torneoService: TorneoService // Servicio de notificaciones
   ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       if (params && params['torneo']) {
         try {
-          this.torneo = JSON.parse(params['torneo']);
+          this.torneo = Object.assign(new Torneo(), JSON.parse(params['torneo']));
           if (this.torneo && this.torneo.id) {
             this.cargarUsuariosInscritos(this.torneo.id);
+            this.cargarDuelos(this.torneo.id); // Cargar duelos del torneo
           }
         } catch (error) {
           console.error('Error al parsear el torneo:', error);
@@ -41,8 +56,24 @@ export class DetallesTorneoPage implements OnInit {
     });
   }
 
+  async cargarDuelos(id_torneo: number) {
+    try {
+      const duelos = await this.sqliteService.obtenerDuelosPorTorneo(id_torneo);
+      this.duelos = duelos;
+    } catch (error) {
+      console.error('Error al cargar los duelos:', error);
+    }
+  }
 
-
+  getDuelosPorRonda() {
+    return this.duelos.reduce((rondas, duelo) => {
+      if (!rondas[duelo.ronda]) {
+        rondas[duelo.ronda] = [];
+      }
+      rondas[duelo.ronda].push(duelo);
+      return rondas;
+    }, {} as Record<number, Duelo[]>);
+  }
 
   async cargarUsuariosInscritos(id_torneo: number) {
     try {
@@ -51,112 +82,13 @@ export class DetallesTorneoPage implements OnInit {
       console.error('Error al cargar usuarios inscritos:', error);
     }
   }
-  
-
-  async generarDuelosYAvance(torneo: Torneo) {
-    try {
-      // Obtener usuarios inscritos
-      const usuariosInscritos = await this.sqliteService.obtenerUsuariosInscritos(torneo.id);
-      if (!usuariosInscritos || usuariosInscritos.length !== torneo.numEquipos) {
-        console.error('La cantidad de usuarios inscritos no coincide con los cupos del torneo');
-        return;
-      }
-  
-      // Mezclar usuarios al azar para la primera ronda
-      const usuariosAleatorios = usuariosInscritos.sort(() => Math.random() - 0.5);
-      let participantes = usuariosAleatorios; // Participantes actuales
-      const duelosPorRonda: Duelo[][] = []; // Almacena todos los duelos del torneo
-  
-      // Calcular el número de rondas
-      const numRondas = Math.log2(torneo.numEquipos);
-  
-      // Generar duelos y avanzar ganadores
-      for (let ronda = 1; ronda <= numRondas; ronda++) {
-        const duelos: Duelo[] = [];
-        const ganadores: any[] = [];
-  
-        for (let i = 0; i < participantes.length; i += 2) {
-          const jugador1 = participantes[i];
-          const jugador2 = participantes[i + 1];
-  
-          // Crear duelo
-          const duelo: Duelo = {
-            id_torneo: torneo.id,
-            ronda,
-            jugador1: jugador1.nickname,
-            jugador2: jugador2?.nickname || null, // BYE si no hay segundo jugador
-            estado_jugador1: 'pendiente',
-            estado_jugador2: jugador2 ? 'pendiente' : 'ganó',
-            ganador: null,  // El ganador se establecerá manualmente
-          };
-  
-          duelos.push(duelo);
-        }
-  
-        // Guardar los duelos de la ronda
-        duelosPorRonda.push(duelos);
-  
-        // Los ganadores pasarán a la siguiente ronda una vez que se seleccionen manualmente
-      }
-  
-      // Guardar duelos en la base de datos
-      const duelosPlanificados = duelosPorRonda.reduce((acc, val) => acc.concat(val), []);
-
-      await this.sqliteService.insertarDuelo(duelosPlanificados);
-  
-      console.log('Duelos generados y guardados:', duelosPlanificados);
-    } catch (error) {
-      console.error('Error al generar duelos:', error);
-    }
-  }
-  
-
-  
-
-async seleccionarDuelo(duelo: Duelo) {
-  const alert = await this.alertController.create({
-    header: 'Actualizar Duelo',
-    message: `Selecciona el resultado para el duelo: ${duelo.jugador1} vs ${duelo.jugador2 || 'BYE'}`,
-    inputs: [
-      { type: 'radio', label: duelo.jugador1, value: 'jugador1' },
-      { type: 'radio', label: duelo.jugador2 || 'BYE', value: 'jugador2' },
-    ],
-    buttons: [
-      { text: 'Cancelar', role: 'cancel' },
-      {
-        text: 'Guardar',
-        handler: async (ganador) => {
-          // Actualizar el estado de los jugadores y el ganador
-          duelo.estado_jugador1 = ganador === 'jugador1' ? 'ganó' : 'perdió';
-          duelo.estado_jugador2 = ganador === 'jugador2' ? 'ganó' : 'perdió';
-          duelo.ganador = ganador === 'jugador1' ? duelo.jugador1 : duelo.jugador2;
-          
-          // Guardar el resultado del duelo
-          await this.sqliteService.actualizarDuelo(duelo);
-     
-        },
-      },
-    ],
-  });
-
-  await alert.present();
-}
-
-
-
-
-
-
-
-
-
-
-  
 
   modificarTorneo() {
     if (this.torneo && this.torneo.id) {
       this.router.navigate(['/modificar-torneo'], {
-        queryParams: { torneo: JSON.stringify(this.torneo) },
+        queryParams: {
+          torneo: JSON.stringify(this.torneo) // Pasa el objeto del torneo
+        }
       });
     } else {
       console.warn('No se puede modificar, torneo no válido');
@@ -177,13 +109,13 @@ async seleccionarDuelo(duelo: Duelo) {
           handler: async () => {
             if (this.torneo) {
               try {
-                await this.sqliteService.eliminarInscripcionesPorTorneo(this.torneo.id);
-                await this.sqliteService.eliminarTorneo(this.torneo.id);
+                await this.sqliteService.eliminarInscripcionesPorTorneo(this.torneo.id!);
+                await this.sqliteService.eliminarTorneo(this.torneo.id!);
                 this.torneoService.notificarTorneoEliminado();
                 const successAlert = await this.alertController.create({
                   header: 'Éxito',
                   message: 'El torneo ha sido eliminado con éxito.',
-                  buttons: ['OK'],
+                  buttons: ['OK']
                 });
                 await successAlert.present();
                 this.router.navigate(['/cuenta-admin']);
@@ -192,16 +124,60 @@ async seleccionarDuelo(duelo: Duelo) {
                 const errorAlert = await this.alertController.create({
                   header: 'Error',
                   message: 'Hubo un error al eliminar el torneo. Inténtalo de nuevo.',
-                  buttons: ['OK'],
+                  buttons: ['OK']
                 });
                 await errorAlert.present();
               }
             }
-          },
-        },
-      ],
+          }
+        }
+      ]
     });
 
     await alert.present();
+  }
+
+  async guardarDuelo() {
+    if (!this.nuevoDuelo.id_jugador1 || !this.nuevoDuelo.id_jugador2) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'Selecciona ambos jugadores para el duelo.',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return;
+    }
+
+    if (this.nuevoDuelo.id_jugador1 === this.nuevoDuelo.id_jugador2) {
+      const alert = await this.alertController.create({
+        header: 'Error',
+        message: 'No puedes seleccionar el mismo jugador dos veces.',
+        buttons: ['OK']
+      });
+      await alert.present();
+      return;
+    }
+
+    try {
+      const duelo: Duelo = { ...this.nuevoDuelo, id_torneo: this.torneo.id };
+      await this.sqliteService.insertarDuelo(duelo);
+      this.duelos.push(duelo);
+      const successAlert = await this.alertController.create({
+        header: 'Éxito',
+        message: 'El duelo se ha guardado correctamente.',
+        buttons: ['OK']
+      });
+      await successAlert.present();
+      this.nuevoDuelo.id_jugador1 = 0;
+      this.nuevoDuelo.id_jugador2 = 0;
+    } catch (error) {
+      console.error('Error al guardar el duelo:', error);
+      const errorAlert = await this.alertController.create({
+        header: 'Error',
+        message: 'Hubo un error al guardar el duelo. Inténtalo de nuevo.',
+        buttons: ['OK']
+      });
+      await errorAlert.present();
+    }
   }
 }
