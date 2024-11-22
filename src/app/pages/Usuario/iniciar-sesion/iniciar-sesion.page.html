@@ -6,7 +6,8 @@
         <form (ngSubmit)="loginUsuario()">
           <ion-item>
             <ion-label class="pos" position="floating"></ion-label>
-            <ion-input label="Ingresa tu correo electrónico" labelPlacement="floating" placeholder="Correo de usuario" [(ngModel)]="correoNickname" name="correoNickname"></ion-input>
+            <ion-input label="Ingresa tu correo electrónico" labelPlacement="floating" placeholder="Correo de usuario" [(ngModel)]="correoNickname" name="correoNickname" (ionInput)="correoNickname = (correoNickname || '').toLowerCase()"></ion-input>
+
           </ion-item>
           <ion-item>
             <ion-label class="pos" position="floating"></ion-label>

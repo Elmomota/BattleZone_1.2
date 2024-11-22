@@ -40,35 +40,42 @@ export class CambiarContraPage implements OnInit {
   }
 
   async cambiarContrasena() {
+    const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  
     if (!this.contrasenaActual || !this.nuevaContrasena || !this.confirmarContrasena) {
       await this.presentAlert('Error', 'Todos los campos son obligatorios.');
       return;
     }
-
+  
     if (this.nuevaContrasena !== this.confirmarContrasena) {
       await this.presentAlert('Error', 'Las nuevas contraseñas no coinciden.');
       return;
     }
-
+  
+    if (!passwordPattern.test(this.nuevaContrasena)) {
+      await this.presentAlert('Error', 'La nueva contraseña debe tener al menos 8 caracteres, una letra mayúscula, un número y un carácter especial.');
+      return;
+    }
+  
     try {
       // Verificar si la contraseña actual es correcta
       const usuarioVerificado = await this.sqliteService.loginUsuario(
         this.usuario.correo,
         this.contrasenaActual
       );
-
+  
       if (usuarioVerificado) {
         // Actualizar la contraseña en la base de datos
         this.usuario.contrasena = this.nuevaContrasena;
         await this.sqliteService.actualizarUsuarioContra(this.usuario);
-
+  
         const alert = await this.alertController.create({
           header: 'Éxito',
           message: 'Contraseña actualizada correctamente.',
           buttons: ['OK'],
         });
         await alert.present();
-
+  
         this.navController.navigateBack('/cuenta');
       } else {
         await this.presentAlert('Error', 'La contraseña actual es incorrecta.');
@@ -78,6 +85,7 @@ export class CambiarContraPage implements OnInit {
       await this.presentAlert('Error', 'No se pudo actualizar la contraseña. Inténtalo de nuevo.');
     }
   }
+  
 
   async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({

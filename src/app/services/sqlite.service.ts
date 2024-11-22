@@ -345,7 +345,7 @@ async crearTablas() {
     );
 
     // Mostrar mensaje de bienvenida
-    this.presentAlert('Bienvenido a', 'BATTLE ZONE');
+    console.log('Bienvenido a', 'BATTLE ZONE');
 
     // Cargar datos
     this.selectTorneos();
@@ -354,7 +354,7 @@ async crearTablas() {
 
   } catch (error) {
     // Mostrar alerta en caso de error
-    this.presentAlert('Creación de Tablas', 'Error: ' + JSON.stringify(error));
+    console.error('Creación de Tablas', 'Error: ' + JSON.stringify(error));
   }
 }
 

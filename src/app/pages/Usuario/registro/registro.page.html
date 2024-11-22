@@ -26,13 +26,16 @@
                 <div *ngIf="nickname.invalid && nickname.touched" class="error">El nickname debe tener al menos 3 caracteres.</div>
 
                 <!------------------- correo -------------------------------->
-                <ion-item>
+                <ion-item> 
                     <ion-label position="floating">Correo</ion-label>
-                    <ion-input [(ngModel)]="nuevoUsuario.correo" name="correo" required email #correo="ngModel"></ion-input>
+                     <ion-input [(ngModel)]="nuevoUsuario.correo" name="correo" required email #correo="ngModel" (ionInput)="nuevoUsuario.correo = (nuevoUsuario.correo || '').toLowerCase()"></ion-input> 
                 </ion-item>
                 <div *ngIf="correo.invalid && correo.touched" class="error">Debe ingresar un correo válido.</div>
 
-                <ion-button expand="full" (click)="siguientePaso()">Siguiente</ion-button>
+                <div  class="button-container">
+                    <ion-button expand="block" (click)="siguientePaso()" class="right"  >→</ion-button >
+                </div>
+                
             </div>
 
             <div *ngIf="paso === 2">
@@ -91,8 +94,10 @@
                 
                 <div *ngIf="pais.invalid && pais.touched" class="error">Debe ingresar un país.</div>
 
-                <ion-button expand="full" (click)="pasoAnterior()">Atrás</ion-button>
-                <ion-button expand="full" (click)="siguientePaso()">Siguiente</ion-button>
+                <div class="button-container"> 
+                    <ion-button expand="block" (click)="pasoAnterior()" class="left">←</ion-button> 
+                    <ion-button expand="block" (click)="siguientePaso()" class="right">→</ion-button> 
+                </div>
             </div>
 
             <div *ngIf="paso === 3">
@@ -110,8 +115,11 @@
                 </ion-item>
                 <div *ngIf="!respuesta && registroForm.submitted" class="error">Debe ingresar una respuesta.</div>
             
-                <ion-button expand="full" (click)="pasoAnterior()">Atrás</ion-button>
-                <ion-button expand="full" (click)="registrarUsuario()">Registrar</ion-button>
+                <div class="button-container">
+                    <ion-button expand="block" (click)="pasoAnterior()" class="left">←</ion-button>
+                <ion-button expand="full" (click)="registrarUsuario()"  class="boton-redondo">Registrar</ion-button>
+                </div>
+                
             </div>
             
         </form>

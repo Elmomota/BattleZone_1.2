@@ -122,6 +122,8 @@ export class ForgotPasswordPage implements OnInit {
   }
 
   async cambiarContrasena() {
+    const passwordPattern = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  
     if (!this.nuevaContrasena || !this.confirmarContrasena) {
       await this.presentAlert('Error', 'Debes completar ambos campos.');
       return;
@@ -129,6 +131,11 @@ export class ForgotPasswordPage implements OnInit {
   
     if (this.nuevaContrasena !== this.confirmarContrasena) {
       await this.presentAlert('Error', 'Las contraseñas no coinciden.');
+      return;
+    }
+  
+    if (!passwordPattern.test(this.nuevaContrasena)) {
+      await this.presentAlert('Error', 'La contraseña debe tener al menos 8 caracteres, una letra mayúscula, un número y un carácter especial.');
       return;
     }
   
