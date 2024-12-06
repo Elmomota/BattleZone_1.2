@@ -98,6 +98,16 @@
                     <ion-button expand="block" (click)="pasoAnterior()" class="left">←</ion-button> 
                     <ion-button expand="block" (click)="siguientePaso()" class="right">→</ion-button> 
                 </div>
+
+                <div>
+                    <label>Foto de Perfil</label>
+                    <div class="avatar">
+                      <img *ngIf="imagenPerfil" [src]="imagenPerfil" alt="Imagen de perfil" style="width: 150px; height: 150px; border-radius: 50%;">
+                    </div>
+                    <ion-button (click)="seleccionarFoto()">Seleccionar Foto</ion-button>
+                  </div>
+                  
+
             </div>
 
             <div *ngIf="paso === 3">

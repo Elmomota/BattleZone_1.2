@@ -34,16 +34,18 @@
       <!-- Foto de Perfil -->
       <ion-item>
         <ion-label>Foto de Perfil</ion-label>
-        <input type="file" #fileInput (change)="onFileSelected($event)" hidden />
-        <ion-button class="boton-imagen" (click)="triggerFileInput(fileInput)">Seleccionar Imagen</ion-button>
+        <ion-button class="boton-imagen" (click)="seleccionarFoto()">Seleccionar Imagen</ion-button>
       </ion-item>
 
       <!-- Vista previa de la imagen -->
-      <ion-item *ngIf="previewImage">
-        <img [src]="previewImage" alt="Vista previa de la imagen" style="width: 100%; height: auto; border-radius: 10px;" />
+      <ion-item *ngIf="previewImage || usuario.imagen_user">
+        <img [src]="previewImage || usuario.imagen_user || 'assets/default-profile.png'" 
+             alt="Vista previa de la imagen" 
+             style="width: 100%; height: auto; border-radius: 10px;" />
       </ion-item>
 
       <ion-button expand="full" type="submit">Guardar Cambios</ion-button>
     </form>
   </div>
 </ion-content>
+

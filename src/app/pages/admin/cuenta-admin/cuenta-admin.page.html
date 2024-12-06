@@ -95,6 +95,9 @@
                                 <ion-label>
                                     <p><strong>Email:</strong> {{usuario.correo}}</p>
                                 </ion-label>
+                                <ion-thumbnail slot="end">
+                                    <img [src]="usuario.imagen_user" alt="{{usuario.imagen_user}}">
+                                </ion-thumbnail>
                             </ion-item>
                         </ion-card-content>
                     </ion-card>

@@ -20,7 +20,7 @@
             </ion-list>
 
             <ion-avatar class="avatar">
-                <ion-icon id="icono-user" name="person-circle-outline"></ion-icon>
+                <img [src]="usuario.imagen_user || 'assets/img/default-avatar.png'" alt="Foto de perfil del usuario" />
             </ion-avatar>
 
             <div class="info-perfil">
@@ -52,44 +52,7 @@
             <ion-button (click)="cambiarContra()">Modificar Contraseña</ion-button>
             <hr />
 
-            <!-- Segmento -->
-            <ion-segment [(ngModel)]="seleccion">
-                <ion-segment-button value="Torneos jugados" class="segmento-stats">
-                    <ion-label style="white-space: pre-line">Torneos jugados</ion-label>
-                </ion-segment-button>
-                <ion-segment-button value="Historial" class="segmento-stats">
-                    <ion-label>Tus torneos</ion-label>
-                </ion-segment-button>
-            </ion-segment>
 
-            <!-- Torneos Historial -->
-            <div *ngIf="seleccion == 'Historial'">
-                <ion-card id="torneos">
-                    <ion-card-content class="torneos">
-                        <div class="ov">
-                            <ion-card *ngFor="let torneo of torneosJugados">
-                                <div *ngIf="'Finalizado' == torneo.estado">
-                                    <ion-card-content>
-                                        <div class="distribucion-historial1">
-                                            <img 
-                                                class="imagen-historial1" 
-                                                [src]="torneo.imagen || 'assets/img/default.jpg'" 
-                                                alt="{{torneo.nombre}}" 
-                                                onerror="this.src='assets/img/default.jpg'" />
-                                            <div class="texto">
-                                                <h6>{{torneo.nombre}}</h6>
-                                                <p>{{torneo.tipo}}</p>
-                                                <p>Puesto: {{torneo.puesto}}</p>
-                                                <p>Fecha: {{torneo.fecha}}</p>
-                                            </div>
-                                        </div>
-                                    </ion-card-content>
-                                </div>
-                            </ion-card>
-                        </div>
-                    </ion-card-content>
-                </ion-card>
-            </div>
         </div>
     </div>
 </ion-content>

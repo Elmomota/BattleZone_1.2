@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController } from '@ionic/angular';
-import { SqliteService } from 'src/app/services/sqlite.service'; // Importa tu servicio SQLite
-import { Network } from '@capacitor/network'; // Importa el plugin Network
-import { AlertController } from '@ionic/angular'; // Para mostrar alertas
+import { MenuController, AlertController } from '@ionic/angular';
+import { SqliteService } from 'src/app/services/sqlite.service'; // Servicio SQLite
+import { Network } from '@capacitor/network'; // Plugin Network
 
 @Component({
   selector: 'app-root',
@@ -16,60 +15,57 @@ export class AppComponent implements OnInit {
     { title: 'Torneos', url: '/torneos', icon: 'trophy' },
     { title: 'Mi Perfil', url: '/cuenta', icon: 'person' },
   ];
-  private rolUsuario: number | null = null; // Para almacenar el rol del usuario
+  private rolUsuario: number | null = null; // Rol actual del usuario
 
   constructor(
     private router: Router,
     private menuCtrl: MenuController,
-    private sqliteService: SqliteService, // Inyecta el servicio SQLite
-    private alertCtrl: AlertController // Inyecta el servicio AlertController
+    private sqliteService: SqliteService, // Servicio SQLite
+    private alertCtrl: AlertController // AlertController para mostrar mensajes
   ) {}
 
   ngOnInit() {
-    this.checkSession(); // Verifica la sesión al iniciar la aplicación
-    this.checkNetworkStatus(); // Verifica el estado de la conexión al iniciar la aplicación
+    // Suscribirse a los cambios de sesión
+    this.sqliteService.usuarioSesion$.subscribe((usuario) => {
+      if (usuario) {
+        this.rolUsuario = usuario.rol; // Actualiza el rol del usuario
+        this.updateMenu(); // Actualiza las opciones del menú
+      } else {
+        this.rolUsuario = null; // Limpia el rol
+        this.appPages = []; // Limpia las opciones del menú
+        this.router.navigate(['/inicio']); // Redirige al login
+      }
+    });
+
+    this.checkSession(); // Verifica la sesión inicial
+    this.checkNetworkStatus(); // Monitorea el estado de la red
   }
 
-  // Función para verificar la sesión
+  // Verifica la sesión almacenada al iniciar
   async checkSession() {
     try {
-      // Recupera la sesión desde SQLite o localStorage/sessionStorage
-      const session = await this.sqliteService.obtenerSesion(); // Asumiendo que tienes una función que recupera la sesión desde la base de datos
-    
+      const session = await this.sqliteService.obtenerSesion(); // Recupera la sesión
       if (session) {
-        this.rolUsuario = session.rol; // Guarda el rol del usuario
-
-        // Actualiza las opciones del menú según el rol
-        this.updateMenu();
-
-        // Redirige al usuario dependiendo de su rol
-        if (session.rol === 1) {
-          // Redirige al administrador
-          this.router.navigate(['/cuenta-admin']);
-        } else if (session.rol === 2) {
-          // Redirige al cliente
-          this.router.navigate(['/home']);
-        }
+        this.sqliteService.usuarioSesionSubject.next(session); // Emite la sesión actual
       } else {
-        // Si no hay sesión, redirige a la página de inicio (login)
-        this.router.navigate(['/inicio']);
+        this.router.navigate(['/inicio']); // Redirige al login si no hay sesión
       }
     } catch (error) {
       console.error('Error al obtener la sesión:', error);
-      this.router.navigate(['/inicio']); // Redirige al login si hay un error
+      this.router.navigate(['/inicio']); // Redirige al login si ocurre un error
     }
   }
 
-  // Función para actualizar el menú según el rol del usuario
+  // Actualiza el menú según el rol del usuario
   updateMenu() {
     if (this.rolUsuario === 1) {
-      // Rol de administrador: cambia "Home" a "Cuenta Admin" y elimina "Torneos"
+      // Menú para administrador
       this.appPages = [
         { title: 'Cuenta Admin', url: '/cuenta-admin', icon: 'person' },
         { title: 'Mi Perfil', url: '/cuenta', icon: 'person' },
       ];
     } else if (this.rolUsuario === 2) {
-      // Rol de cliente: mantiene el menú completo
+      // Menú para cliente
       this.appPages = [
         { title: 'Home', url: '/home', icon: 'home' },
         { title: 'Torneos', url: '/torneos', icon: 'trophy' },
@@ -79,17 +75,16 @@ export class AppComponent implements OnInit {
     }
   }
 
-  // Función para verificar el estado de la conexión a Internet
+  // Verifica el estado de la conexión a Internet
   async checkNetworkStatus() {
     const status = await Network.getStatus();
 
     if (!status.connected) {
-      // Si no hay conexión a Internet, muestra una alerta y redirige al inicio
-      this.showNoInternetAlert();
+      this.showNoInternetAlert(); // Muestra alerta si no hay conexión
       this.router.navigate(['/inicio']);
     }
 
-    // Detecta el cambio de estado de la conexión
+    // Escucha cambios en la conexión
     Network.addListener('networkStatusChange', (status) => {
       if (!status.connected) {
         console.log('Sin conexión a Internet');
@@ -97,34 +92,26 @@ export class AppComponent implements OnInit {
         this.router.navigate(['/inicio']);
       } else {
         console.log('Conexión a Internet disponible');
-        // Aquí puedes liberar la navegación o tomar alguna acción
       }
     });
   }
 
-  // Función para mostrar la alerta cuando no haya Internet
+  // Muestra una alerta cuando no hay conexión a Internet
   async showNoInternetAlert() {
     const alert = await this.alertCtrl.create({
       header: 'Sin Conexión',
       message: 'No tienes conexión a Internet. Revisa tu conexión y vuelve a intentarlo.',
-      buttons: ['OK']
+      buttons: ['OK'],
     });
-
     await alert.present();
   }
 
-  // Función para cerrar sesión
+  // Cierra sesión y elimina la sesión almacenada
   async logout() {
-    // Llamar a eliminarSesion() del servicio SQLite para eliminar la sesión almacenada
-    await this.sqliteService.eliminarSesion();
-
-    // Limpiar datos adicionales si es necesario (localStorage, sessionStorage, etc.)
-    localStorage.clear(); // O sessionStorage.clear() si usas sessionStorage
-
-    // Cierra el menú si está abierto
-    this.menuCtrl.close();
-
-    // Redirige al usuario a la página de inicio de sesión
-    this.router.navigate(['/inicio']);
+    await this.sqliteService.eliminarSesion(); // Elimina la sesión de SQLite
+    this.rolUsuario = null; // Limpia el rol
+    this.appPages = []; // Limpia las opciones del menú
+    await this.menuCtrl.close(); // Cierra el menú
+    this.router.navigate(['/inicio']); // Redirige al login
   }
 }

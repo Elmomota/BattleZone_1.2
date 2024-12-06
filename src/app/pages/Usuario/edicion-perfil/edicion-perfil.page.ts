@@ -58,21 +58,37 @@ export class EdicionPerfilPage implements OnInit {
     }
   }
 
-  onFileSelected(event: any): void {
-    const file = event.target.files[0];
+  // Nueva función para seleccionar una foto con validaciones
+  seleccionarFoto(): void {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (event: any) => {
+      const archivo = event.target.files[0];
+      if (!archivo) {
+        alert('No se seleccionó ninguna imagen.');
+        return;
+      }
 
-    if (file) {
-      const reader = new FileReader();
+      const tiposPermitidos = ['image/png', 'image/jpeg', 'image/jpg'];
+      if (!tiposPermitidos.includes(archivo.type)) {
+        alert('Solo se permiten imágenes en formato PNG o JPEG.');
+        return;
+      }
 
-      reader.onload = () => {
-        this.previewImage = reader.result as string;
+      if (archivo.size > 2 * 1024 * 1024) { // Máximo 2MB
+        alert('La imagen no debe superar los 2MB.');
+        return;
+      }
+
+      const lector = new FileReader();
+      lector.onload = () => {
+        this.previewImage = lector.result as string; // Asigna la imagen cargada a la propiedad
+        this.usuario.imagen_user = this.previewImage; // Guarda la imagen en el usuario
       };
+      lector.readAsDataURL(archivo);
+    };
 
-      reader.readAsDataURL(file);
-    }
-  }
-
-  triggerFileInput(fileInput: HTMLInputElement): void {
-    fileInput.click(); // Activa el input de archivo
+    input.click(); // Abre el selector de archivos
   }
 }

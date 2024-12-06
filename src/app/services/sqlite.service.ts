@@ -67,17 +67,25 @@ export class SqliteService {
   async guardarSesion(usuario: any) {
     if (!this._storage) await this.init();
     await this._storage?.set('usuario', usuario);
+    this.usuarioSesionSubject.next(usuario); // Emitir el cambio de sesión
 }
+
 
 async obtenerSesion() {
-    if (!this._storage) await this.init();
-    return await this._storage?.get('usuario');
+  if (!this._storage) await this.init();
+  const usuario = await this._storage?.get('usuario');
+  this.usuarioSesionSubject.next(usuario); // Emitir la sesión actual
+  return usuario;
 }
 
+
+
 async eliminarSesion() {
-    if (!this._storage) await this.init();
-    await this._storage?.remove('usuario');
+  if (!this._storage) await this.init();
+  await this._storage?.remove('usuario');
+  this.usuarioSesionSubject.next(null); // Emitir que no hay sesión
 }
+
 
 async actualizarSesion(usuario: Usuario) {
   if (!this._storage) await this.init();
