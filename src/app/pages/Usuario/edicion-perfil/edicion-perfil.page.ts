@@ -39,16 +39,32 @@ export class EdicionPerfilPage implements OnInit {
 
   async guardarCambios() {
     try {
-      await this.sqliteService.actualizarSesion(this.usuario);
+      // Verifica que el usuario tiene todos los datos necesarios antes de actualizar
+      if (!this.usuario.id) {
+        const alert = await this.alertController.create({
+          header: 'Error',
+          message: 'El usuario no tiene un ID válido. No se pueden guardar los cambios.',
+          buttons: ['OK'],
+        });
+        await alert.present();
+        return;
+      }
+  
+      // Llama al servicio para actualizar el usuario
+      await this.sqliteService.actualizarUsuario(this.usuario);
+  
       const alert = await this.alertController.create({
         header: 'Perfil Actualizado',
         message: 'Los cambios se guardaron correctamente.',
         buttons: ['OK'],
       });
       await alert.present();
+  
+      // Redirige al usuario a la página de cuenta
       this.navController.navigateBack('/cuenta');
     } catch (error) {
       console.error('Error al guardar los cambios:', error);
+  
       const alert = await this.alertController.create({
         header: 'Error',
         message: 'No se pudieron guardar los cambios. Inténtalo de nuevo.',
@@ -57,6 +73,7 @@ export class EdicionPerfilPage implements OnInit {
       await alert.present();
     }
   }
+  
 
   // Nueva función para seleccionar una foto con validaciones
   seleccionarFoto(): void {

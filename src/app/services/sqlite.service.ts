@@ -1136,14 +1136,10 @@ async actualizarDuelo(duelo: Duelo): Promise<void> {
       return;
     }
   
-    // Verifica que el usuario tiene un ID válido
-    if (!usuario.id) {
-      console.error('El usuario no tiene un ID válido.');
-      return;
-    }
-  
     // Consulta SQL para actualizar los datos del usuario
-    const sql = `UPDATE usuarios SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, fechaNacimiento = ?, pais = ? WHERE id = ?`;
+    const sql = `UPDATE usuarios 
+                 SET pnombre = ?, papellido = ?, nickname = ?, correo = ?, fechaNacimiento = ?, pais = ?, imagen_user = ? 
+                 WHERE id = ?`;
     const values = [
       usuario.pnombre,
       usuario.papellido,
@@ -1151,6 +1147,7 @@ async actualizarDuelo(duelo: Duelo): Promise<void> {
       usuario.correo,
       usuario.fechaNacimiento,
       usuario.pais,
+      usuario.imagen_user, // Este valor debe preceder al ID en la consulta
       usuario.id,
     ];
   
@@ -1159,9 +1156,12 @@ async actualizarDuelo(duelo: Duelo): Promise<void> {
       console.log('Usuario actualizado con éxito.');
     } catch (error) {
       console.error('Error al actualizar el usuario:', error);
-      throw error;  // Lanzamos el error para que sea capturado por el componente
+      throw error; // Lanza el error para que sea manejado en el componente
     }
   }
+
+  
+  
   async actualizarUsuarioContra(usuario: Usuario): Promise<void> {
     if (!this.dbInstance) {
       console.error('La instancia de la base de datos es nula');

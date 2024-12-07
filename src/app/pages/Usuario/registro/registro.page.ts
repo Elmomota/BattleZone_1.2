@@ -62,7 +62,7 @@ export class RegistroPage {
   }
 
   
-  
+
   siguientePaso() {
     if (this.paso === 1) {
       if (this.validarPaso1()) {
@@ -167,43 +167,48 @@ export class RegistroPage {
   
 
   registrarUsuario() {
-    this.sqliteService.getUsuarioByCorreo(this.nuevoUsuario.correo)
-      .then(existe => {
-        if (existe) {
-          alert('El correo o nickname ya están en uso.');
-        } else {
-          this.sqliteService.addUsuario(this.nuevoUsuario)
-            .then((usuarioId) => {
-              if (usuarioId && this.preguntaSeleccionadaId && this.respuesta) {
-                const nuevaRespuesta = new Respuestas();
-                nuevaRespuesta.preguntaId = this.preguntaSeleccionadaId;
-                nuevaRespuesta.usuarioId = usuarioId;
-                nuevaRespuesta.respuesta = this.respuesta;
+  this.sqliteService.getUsuarioByCorreo(this.nuevoUsuario.correo)
+    .then(existe => {
+      if (existe) {
+        alert('El correo o nickname ya están en uso.');
+      } else {
+        // Asignar la imagen seleccionada al nuevo usuario
+        this.nuevoUsuario.imagen_user = this.imagenPerfil;
 
-                this.sqliteService.addRespuesta(
-                  nuevaRespuesta.preguntaId,
-                  nuevaRespuesta.usuarioId,
-                  nuevaRespuesta.respuesta
-                )
-                .then(() => {
-                  this.router.navigate(['/iniciar-sesion']);
-                })
-                .catch(error => {
-                  console.error('Error al guardar la respuesta de seguridad:', error);
-                });
-              } else {
-                console.error('No se pudo obtener el ID del usuario.');
-              }
-            })
-            .catch(error => {
-              console.error('Error al registrar usuario:', error);
-            });
-        }
-      })
-      .catch(error => {
-        console.error('Error al validar usuario:', error);
-      });
-  }
+        // Guardar el usuario en la base de datos
+        this.sqliteService.addUsuario(this.nuevoUsuario)
+          .then((usuarioId) => {
+            if (usuarioId && this.preguntaSeleccionadaId && this.respuesta) {
+              const nuevaRespuesta = new Respuestas();
+              nuevaRespuesta.preguntaId = this.preguntaSeleccionadaId;
+              nuevaRespuesta.usuarioId = usuarioId;
+              nuevaRespuesta.respuesta = this.respuesta;
+
+              this.sqliteService.addRespuesta(
+                nuevaRespuesta.preguntaId,
+                nuevaRespuesta.usuarioId,
+                nuevaRespuesta.respuesta
+              )
+              .then(() => {
+                this.router.navigate(['/iniciar-sesion']);
+              })
+              .catch(error => {
+                console.error('Error al guardar la respuesta de seguridad:', error);
+              });
+            } else {
+              console.error('No se pudo obtener el ID del usuario.');
+            }
+          })
+          .catch(error => {
+            console.error('Error al registrar usuario:', error);
+          });
+      }
+    })
+    .catch(error => {
+      console.error('Error al validar usuario:', error);
+    });
+}
+
 
   calcularEdad(event: any) {
     const fechaNacimiento = new Date(event.detail.value);
